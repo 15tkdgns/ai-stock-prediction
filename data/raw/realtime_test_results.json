@@ -1,0 +1,62 @@
+{
+  "test_timestamp": "2025-07-18T15:23:29.764031",
+  "model_used": "gradient_boosting",
+  "total_predictions": 5,
+  "results": [
+    {
+      "ticker": "AAPL",
+      "timestamp": "2025-07-18T15:23:29.764031",
+      "current_price": 210.02000427246094,
+      "model": "gradient_boosting",
+      "prediction": {
+        "prediction": 0,
+        "event_probability": 6.6812385793804465e-06,
+        "confidence": 0.9999933187614206
+      }
+    },
+    {
+      "ticker": "MSFT",
+      "timestamp": "2025-07-18T15:23:29.764031",
+      "current_price": 511.70001220703125,
+      "model": "gradient_boosting",
+      "prediction": {
+        "prediction": 0,
+        "event_probability": 6.6812385793804465e-06,
+        "confidence": 0.9999933187614206
+      }
+    },
+    {
+      "ticker": "GOOGL",
+      "timestamp": "2025-07-18T15:23:29.764031",
+      "current_price": 183.5800018310547,
+      "model": "gradient_boosting",
+      "prediction": {
+        "prediction": 0,
+        "event_probability": 6.6812385793804465e-06,
+        "confidence": 0.9999933187614206
+      }
+    },
+    {
+      "ticker": "AMZN",
+      "timestamp": "2025-07-18T15:23:29.764031",
+      "current_price": 223.8800048828125,
+      "model": "gradient_boosting",
+      "prediction": {
+        "prediction": 0,
+        "event_probability": 6.6812385793804465e-06,
+        "confidence": 0.9999933187614206
+      }
+    },
+    {
+      "ticker": "TSLA",
+      "timestamp": "2025-07-18T15:23:29.764031",
+      "current_price": 319.4100036621094,
+      "model": "gradient_boosting",
+      "prediction": {
+        "prediction": 0,
+        "event_probability": 6.6812385793804465e-06,
+        "confidence": 0.9999933187614206
+      }
+    }
+  ]
+}

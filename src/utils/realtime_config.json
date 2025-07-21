@@ -1,0 +1,29 @@
+{
+  "test_tickers": [
+    "AAPL",
+    "MSFT",
+    "GOOGL",
+    "AMZN",
+    "TSLA"
+  ],
+  "data_interval": "1m",
+  "prediction_interval": 300,
+  "api_config": {
+    "use_yahoo_rss": true,
+    "use_free_news_api": true,
+    "newsapi_key": null
+  },
+  "monitoring_thresholds": {
+    "confidence_threshold": 0.75,
+    "warning_threshold": 0.65,
+    "action_threshold": 0.75,
+    "drift_threshold": 0.1,
+    "retrain_accuracy_threshold": 0.6
+  },
+  "performance_window": 100,
+  "business_thresholds": {
+    "price_change_major": 0.05,
+    "volume_spike": 3.0,
+    "volatility_high": 0.9
+  }
+}

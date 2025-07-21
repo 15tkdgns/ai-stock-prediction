@@ -1,0 +1,62 @@
+{
+  "timestamp": "2025-07-21T17:46:50.139707",
+  "model_performance": {
+    "loaded_models": [
+      "random_forest",
+      "gradient_boosting"
+    ],
+    "confidence_metrics": {
+      "random_forest": {
+        "mean_confidence": 0.5330894308943092,
+        "std_confidence": 0.012502362788124294,
+        "low_confidence_ratio": 1.0,
+        "high_confidence_ratio": 0.0,
+        "confidence_distribution": {
+          "very_low": 0.0,
+          "low": 1.0,
+          "medium": 0.0,
+          "high": 0.0
+        }
+      },
+      "gradient_boosting": {
+        "mean_confidence": 0.9999652281632818,
+        "std_confidence": 3.3306690738754696e-16,
+        "low_confidence_ratio": 0.0,
+        "high_confidence_ratio": 1.0,
+        "confidence_distribution": {
+          "very_low": 0.0,
+          "low": 0.0,
+          "medium": 0.0,
+          "high": 1.0
+        }
+      }
+    },
+    "feature_drift_summary": {
+      "total_features": 21,
+      "drift_detected": 18,
+      "high_severity_drift": 12
+    }
+  },
+  "explainability": {
+    "shap_available": true,
+    "lime_available": true,
+    "feature_importance_methods": [
+      "random_forest_builtin",
+      "random_forest_permutation",
+      "gradient_boosting_builtin",
+      "gradient_boosting_permutation"
+    ]
+  },
+  "alerts": [
+    {
+      "type": "low_confidence",
+      "message": "random_forest: \ub0ae\uc740 \uc2e0\ub8b0\ub3c4 \uc608\uce21 \ube44\uc728 \ub192\uc74c (1.000)",
+      "severity": "warning"
+    },
+    {
+      "type": "feature_drift",
+      "message": "\uace0\uac15\ub3c4 \ud2b9\uc131 \ub4dc\ub9ac\ud504\ud2b8 12\uac1c \ud0d0\uc9c0",
+      "severity": "critical"
+    }
+  ]
+}

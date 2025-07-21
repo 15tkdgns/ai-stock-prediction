@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>프로젝트 대시보드</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/date-fns@2.29.3/index.min.js"></script>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Header -->
+        <header class="header">
+            <h1>AI 주식 예측 시스템 대시보드</h1>
+            <div class="status-indicator">
+                <span id="system-status" class="status-dot online"></span>
+                <span id="last-update">마지막 업데이트: 로딩중...</span>
+            </div>
+        </header>
+
+        <!-- Main Dashboard Grid -->
+        <main class="dashboard-grid">
+            <!-- Real-time System Status -->
+            <section class="widget large-widget">
+                <h2>실시간 시스템 상태</h2>
+                <div class="system-metrics">
+                    <div class="metric-card">
+                        <h3>모델 성능</h3>
+                        <div id="model-accuracy" class="metric-value">--</div>
+                        <div class="metric-label">정확도</div>
+                    </div>
+                    <div class="metric-card">
+                        <h3>처리 속도</h3>
+                        <div id="processing-speed" class="metric-value">--</div>
+                        <div class="metric-label">예측/초</div>
+                    </div>
+                    <div class="metric-card">
+                        <h3>활성 모델</h3>
+                        <div id="active-models" class="metric-value">--</div>
+                        <div class="metric-label">개</div>
+                    </div>
+                    <div class="metric-card">
+                        <h3>데이터 소스</h3>
+                        <div id="data-sources" class="metric-value">--</div>
+                        <div class="metric-label">연결됨</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Model Performance Chart -->
+            <section class="widget medium-widget">
+                <h2>모델 성능 추이</h2>
+                <canvas id="performance-chart"></canvas>
+            </section>
+
+            <!-- Real-time Predictions -->
+            <section class="widget medium-widget">
+                <h2>실시간 예측 결과</h2>
+                <div class="predictions-container">
+                    <div class="prediction-item">
+                        <span class="stock-symbol">AAPL</span>
+                        <span class="prediction-direction up">↗ +2.3%</span>
+                        <span class="confidence">신뢰도: 87%</span>
+                    </div>
+                    <div class="prediction-item">
+                        <span class="stock-symbol">GOOGL</span>
+                        <span class="prediction-direction down">↘ -1.2%</span>
+                        <span class="confidence">신뢰도: 92%</span>
+                    </div>
+                    <div class="prediction-item">
+                        <span class="stock-symbol">MSFT</span>
+                        <span class="prediction-direction up">↗ +0.8%</span>
+                        <span class="confidence">신뢰도: 79%</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Trading Volume Chart -->
+            <section class="widget large-widget">
+                <h2>거래량 분석</h2>
+                <canvas id="volume-chart"></canvas>
+            </section>
+
+            <!-- Feature Importance -->
+            <section class="widget medium-widget">
+                <h2>특성 중요도</h2>
+                <div class="feature-list">
+                    <div class="feature-item">
+                        <span class="feature-name">뉴스 감정 분석</span>
+                        <div class="importance-bar">
+                            <div class="importance-fill" style="width: 92%"></div>
+                        </div>
+                        <span class="importance-value">92%</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-name">기술적 지표</span>
+                        <div class="importance-bar">
+                            <div class="importance-fill" style="width: 87%"></div>
+                        </div>
+                        <span class="importance-value">87%</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-name">거래량 패턴</span>
+                        <div class="importance-bar">
+                            <div class="importance-fill" style="width: 74%"></div>
+                        </div>
+                        <span class="importance-value">74%</span>
+                    </div>
+                    <div class="feature-item">
+                        <span class="feature-name">시장 상관관계</span>
+                        <div class="importance-bar">
+                            <div class="importance-fill" style="width: 68%"></div>
+                        </div>
+                        <span class="importance-value">68%</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- System Logs -->
+            <section class="widget large-widget">
+                <h2>시스템 로그</h2>
+                <div class="log-container" id="system-logs">
+                    <div class="log-entry info">
+                        <span class="timestamp">14:32:15</span>
+                        <span class="log-level">INFO</span>
+                        <span class="log-message">모델 훈련 완료 - 정확도: 89.3%</span>
+                    </div>
+                    <div class="log-entry success">
+                        <span class="timestamp">14:31:42</span>
+                        <span class="log-level">SUCCESS</span>
+                        <span class="log-message">데이터 수집 파이프라인 정상 작동</span>
+                    </div>
+                    <div class="log-entry warning">
+                        <span class="timestamp">14:30:18</span>
+                        <span class="log-level">WARNING</span>
+                        <span class="log-message">API 응답 지연 감지: 평균 1.2초</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Model Comparison -->
+            <section class="widget medium-widget">
+                <h2>모델 비교</h2>
+                <canvas id="model-comparison-chart"></canvas>
+            </section>
+
+            <!-- Alert Panel -->
+            <section class="widget small-widget">
+                <h2>알림</h2>
+                <div class="alert-list">
+                    <div class="alert-item high">
+                        <span class="alert-icon">⚠️</span>
+                        <span class="alert-message">높은 변동성 감지</span>
+                    </div>
+                    <div class="alert-item medium">
+                        <span class="alert-icon">📊</span>
+                        <span class="alert-message">모델 재훈련 권장</span>
+                    </div>
+                    <div class="alert-item low">
+                        <span class="alert-icon">💾</span>
+                        <span class="alert-message">백업 완료</span>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="dashboard.js"></script>
+</body>
+</html>

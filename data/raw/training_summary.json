@@ -1,0 +1,74 @@
+{
+  "training_timestamp": "2025-07-18T15:18:55.864527",
+  "dataset_info": {
+    "total_records": 615,
+    "unique_tickers": 5,
+    "tickers": [
+      "AAPL",
+      "MSFT",
+      "GOOGL",
+      "AMZN",
+      "TSLA"
+    ],
+    "date_range": {
+      "start": "2025-01-21 00:00:00-05:00",
+      "end": "2025-07-17 00:00:00-04:00"
+    },
+    "features_count": 22
+  },
+  "event_statistics": {
+    "major_events": 91,
+    "major_event_rate": 0.14796747967479676,
+    "price_events": 40,
+    "volume_events": 1,
+    "volatility_events": 62
+  },
+  "model_performance": {
+    "random_forest": {
+      "train_score": 1.0,
+      "test_score": 0.991869918699187
+    },
+    "gradient_boosting": {
+      "train_score": 1.0,
+      "test_score": 1.0
+    },
+    "lstm": {
+      "train_score": 1.0,
+      "test_score": 0.9756097793579102
+    }
+  },
+  "best_model": [
+    "gradient_boosting",
+    {
+      "train_score": 1.0,
+      "test_score": 1.0
+    }
+  ],
+  "ticker_statistics": {
+    "AAPL": {
+      "records": 123,
+      "major_events": 4,
+      "event_rate": 0.032520325203252036
+    },
+    "MSFT": {
+      "records": 123,
+      "major_events": 17,
+      "event_rate": 0.13821138211382114
+    },
+    "GOOGL": {
+      "records": 123,
+      "major_events": 3,
+      "event_rate": 0.024390243902439025
+    },
+    "AMZN": {
+      "records": 123,
+      "major_events": 4,
+      "event_rate": 0.032520325203252036
+    },
+    "TSLA": {
+      "records": 123,
+      "major_events": 63,
+      "event_rate": 0.5121951219512195
+    }
+  }
+}

@@ -1,0 +1,272 @@
+{
+  "latest_predictions": [
+    {
+      "ticker": "AAPL",
+      "timestamp": "2025-07-21T17:46:52.425630",
+      "features": {
+        "ticker": "AAPL",
+        "timestamp": "2025-07-21T17:46:52.422117",
+        "open": 210.99000549316406,
+        "high": 211.22999572753906,
+        "low": 210.99000549316406,
+        "close": 211.22000122070312,
+        "volume": 838974.0,
+        "sma_20": 211.0255210876465,
+        "sma_50": 211.0059020996094,
+        "rsi": 59.559789314476006,
+        "macd": 0,
+        "bb_upper": 211.2001584276198,
+        "bb_lower": 210.85088374767318,
+        "atr": 0.08731866998665982,
+        "volatility": 0.08731866998665982,
+        "obv": 0,
+        "price_change": 0.0010900787788572014,
+        "volume_change": 1.3928366688627827,
+        "unusual_volume": 0,
+        "price_spike": 0,
+        "news_sentiment": 0.27656565656565657,
+        "news_polarity": 0.05767676767676768,
+        "news_count": 5
+      },
+      "predictions": {
+        "random_forest": {
+          "prediction": 0,
+          "probability": 0.03,
+          "confidence": 0.97
+        },
+        "gradient_boosting": {
+          "prediction": 0,
+          "probability": 6.6812385793804465e-06,
+          "confidence": 0.9999933187614206
+        }
+      }
+    },
+    {
+      "ticker": "MSFT",
+      "timestamp": "2025-07-21T17:46:53.069791",
+      "features": {
+        "ticker": "MSFT",
+        "timestamp": "2025-07-21T17:46:53.066291",
+        "open": 509.989990234375,
+        "high": 510.04998779296875,
+        "low": 509.9599914550781,
+        "close": 509.9599914550781,
+        "volume": 303358.0,
+        "sma_20": 509.91424865722655,
+        "sma_50": 510.5205889892578,
+        "rsi": 71.5131757674545,
+        "macd": 0,
+        "bb_upper": 510.5846237839996,
+        "bb_lower": 509.2438735304535,
+        "atr": 0.3351875633865051,
+        "volatility": 0.3351875633865051,
+        "obv": 0,
+        "price_change": -0.00011763766104497067,
+        "volume_change": 0.9096775005822993,
+        "unusual_volume": 0,
+        "price_spike": 0,
+        "news_sentiment": 0.2119090909090909,
+        "news_polarity": 0.2119090909090909,
+        "news_count": 5
+      },
+      "predictions": {
+        "random_forest": {
+          "prediction": 0,
+          "probability": 0.01,
+          "confidence": 0.99
+        },
+        "gradient_boosting": {
+          "prediction": 0,
+          "probability": 6.6812385793804465e-06,
+          "confidence": 0.9999933187614206
+        }
+      }
+    },
+    {
+      "ticker": "GOOGL",
+      "timestamp": "2025-07-21T17:46:53.628402",
+      "features": {
+        "ticker": "GOOGL",
+        "timestamp": "2025-07-21T17:46:53.619591",
+        "open": 185.02499389648438,
+        "high": 185.0800018310547,
+        "low": 184.8800048828125,
+        "close": 185.0399932861328,
+        "volume": 557116.0,
+        "sma_20": 184.92432403564453,
+        "sma_50": 184.81953521728516,
+        "rsi": 63.79278591912441,
+        "macd": 0,
+        "bb_upper": 185.17531419700487,
+        "bb_lower": 184.6733338742842,
+        "atr": 0.12549508068017365,
+        "volatility": 0.12549508068017365,
+        "obv": 0,
+        "price_change": 5.401560234488739e-05,
+        "volume_change": 0.7729279042754627,
+        "unusual_volume": 0,
+        "price_spike": 0,
+        "news_sentiment": 0.2829734848484849,
+        "news_polarity": 0.06672348484848485,
+        "news_count": 5
+      },
+      "predictions": {
+        "random_forest": {
+          "prediction": 0,
+          "probability": 0.0,
+          "confidence": 1.0
+        },
+        "gradient_boosting": {
+          "prediction": 0,
+          "probability": 6.6812385793804465e-06,
+          "confidence": 0.9999933187614206
+        }
+      }
+    },
+    {
+      "ticker": "AMZN",
+      "timestamp": "2025-07-21T17:46:54.319635",
+      "features": {
+        "ticker": "AMZN",
+        "timestamp": "2025-07-21T17:46:54.310946",
+        "open": 226.0500030517578,
+        "high": 226.19000244140625,
+        "low": 225.94000244140625,
+        "close": 226.1199951171875,
+        "volume": 462522.0,
+        "sma_20": 226.0113494873047,
+        "sma_50": 225.9523440551758,
+        "rsi": 58.14986089872322,
+        "macd": 0,
+        "bb_upper": 226.25437387733194,
+        "bb_lower": 225.76832509727745,
+        "atr": 0.12151219501362785,
+        "volatility": 0.12151219501362785,
+        "obv": 0,
+        "price_change": 0.0003326566794059054,
+        "volume_change": 0.584223596102139,
+        "unusual_volume": 0,
+        "price_spike": 0,
+        "news_sentiment": 0.17803030303030304,
+        "news_polarity": -0.021969696969696965,
+        "news_count": 5
+      },
+      "predictions": {
+        "random_forest": {
+          "prediction": 0,
+          "probability": 0.0,
+          "confidence": 1.0
+        },
+        "gradient_boosting": {
+          "prediction": 0,
+          "probability": 6.6812385793804465e-06,
+          "confidence": 0.9999933187614206
+        }
+      }
+    },
+    {
+      "ticker": "TSLA",
+      "timestamp": "2025-07-21T17:46:54.875933",
+      "features": {
+        "ticker": "TSLA",
+        "timestamp": "2025-07-21T17:46:54.872286",
+        "open": 329.4599914550781,
+        "high": 329.8599853515625,
+        "low": 329.3599853515625,
+        "close": 329.54998779296875,
+        "volume": 699552.0,
+        "sma_20": 328.8997039794922,
+        "sma_50": 329.1527813720703,
+        "rsi": 69.91007365295404,
+        "macd": 0,
+        "bb_upper": 329.7153109586166,
+        "bb_lower": 328.08409700036776,
+        "atr": 0.407803489562224,
+        "volatility": 0.407803489562224,
+        "obv": 0,
+        "price_change": 0.0004249540976386467,
+        "volume_change": 0.829970570924073,
+        "unusual_volume": 0,
+        "price_spike": 0,
+        "news_sentiment": 0.1888068181818182,
+        "news_polarity": 0.1608901515151515,
+        "news_count": 5
+      },
+      "predictions": {
+        "random_forest": {
+          "prediction": 0,
+          "probability": 0.04,
+          "confidence": 0.96
+        },
+        "gradient_boosting": {
+          "prediction": 0,
+          "probability": 6.6812385793804465e-06,
+          "confidence": 0.9999933187614206
+        }
+      }
+    }
+  ],
+  "performance_metrics": {
+    "AAPL": {
+      "total_predictions": 1,
+      "correct_predictions": 2,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "confidence_scores": [
+        0.97,
+        0.9999933187614206
+      ],
+      "accuracy": 2.0,
+      "avg_confidence": 0.9849966593807102
+    },
+    "MSFT": {
+      "total_predictions": 1,
+      "correct_predictions": 2,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "confidence_scores": [
+        0.99,
+        0.9999933187614206
+      ],
+      "accuracy": 2.0,
+      "avg_confidence": 0.9949966593807102
+    },
+    "GOOGL": {
+      "total_predictions": 1,
+      "correct_predictions": 2,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "confidence_scores": [
+        1.0,
+        0.9999933187614206
+      ],
+      "accuracy": 2.0,
+      "avg_confidence": 0.9999966593807104
+    },
+    "AMZN": {
+      "total_predictions": 1,
+      "correct_predictions": 2,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "confidence_scores": [
+        1.0,
+        0.9999933187614206
+      ],
+      "accuracy": 2.0,
+      "avg_confidence": 0.9999966593807104
+    },
+    "TSLA": {
+      "total_predictions": 1,
+      "correct_predictions": 2,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "confidence_scores": [
+        0.96,
+        0.9999933187614206
+      ],
+      "accuracy": 2.0,
+      "avg_confidence": 0.9799966593807103
+    }
+  },
+  "last_update": "2025-07-21T17:46:54.876143"
+}
