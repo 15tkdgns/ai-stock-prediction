@@ -1,18 +1,21 @@
 import os
-import os
 import json
 import threading
 import time
 from datetime import datetime
 import logging
 import sys
+import pandas as pd # pandas import 추가
 sys.path.append('../testing')
 sys.path.append('../utils')
 sys.path.append('../core')
 sys.path.append('../models')
+sys.path.append('../features') # features 경로 추가
+
 from validation_checker import DataValidationChecker
 from xai_monitoring import XAIMonitoringSystem
 from realtime_testing_system import RealTimeTestingSystem
+from llm_feature_extractor import extract_llm_features # llm_feature_extractor 임포트
 
 import tensorflow as tf
 
@@ -70,6 +73,32 @@ class SystemOrchestrator:
             self.logger.error(f"컴포넌트 초기화 실패: {e}")
             return False
             
+    def _run_llm_feature_extraction(self):
+        """LLM 특징 추출 실행"""
+        self.logger.info("LLM 특징 추출 시작")
+        try:
+            # news_sentiment_data.csv 로드
+            news_data_path = os.path.join(self.data_dir, 'news_sentiment_data.csv')
+            if not os.path.exists(news_data_path):
+                self.logger.error(f"뉴스 감성 데이터 파일을 찾을 수 없습니다: {news_data_path}")
+                return False
+
+            news_df = pd.read_csv(news_data_path)
+            
+            # LLM 특징 추출
+            llm_enhanced_features = extract_llm_features(news_df)
+            
+            # 추출된 특징 저장
+            output_path = os.path.join(self.data_dir.replace('raw', 'processed'), 'llm_enhanced_features.csv')
+            os.makedirs(os.path.dirname(output_path), exist_ok=True)
+            llm_enhanced_features.to_csv(output_path, index=False)
+            
+            self.logger.info(f"✅ LLM 특징 추출 완료 및 저장: {output_path}")
+            return True
+        except Exception as e:
+            self.logger.error(f"LLM 특징 추출 중 오류: {e}")
+            return False
+
     def run_system_validation(self):
         """시스템 전체 검증"""
         self.logger.info("시스템 검증 시작")
@@ -195,21 +224,26 @@ class SystemOrchestrator:
         if not self.initialize_components():
             return False
             
-        # 2. 시스템 검증
+        # 2. LLM 특징 추출 (새로운 단계 추가)
+        if not self._run_llm_feature_extraction():
+            self.logger.error("LLM 특징 추출 실패로 인해 중단됨")
+            return False
+
+        # 3. 시스템 검증 (기존 2단계)
         if not self.run_system_validation():
             self.logger.error("시스템 검증 실패로 인해 중단됨")
             return False
             
-        # 3. XAI 모니터링 실행
+        # 4. XAI 모니터링 실행 (기존 3단계)
         if not self.run_xai_monitoring():
             self.logger.warning("XAI 모니터링 실패, 계속 진행")
             
-        # 4. 실시간 테스트 시작
+        # 5. 실시간 테스트 시작 (기존 4단계)
         if not self.start_realtime_testing():
             self.logger.error("실시간 테스트 시작 실패")
             return False
             
-        # 5. 헬스 모니터링 시작 (별도 스레드)
+        # 6. 헬스 모니터링 시작 (별도 스레드) (기존 5단계)
         health_thread = threading.Thread(target=self.monitor_system_health)
         health_thread.daemon = True
         health_thread.start()

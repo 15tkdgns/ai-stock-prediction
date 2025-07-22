@@ -1,13 +1,19 @@
-// 대시보드 메인 JavaScript 파일
+// 확장된 대시보드 메인 JavaScript 파일
 class DashboardManager {
     constructor() {
         this.charts = {};
         this.updateInterval = 5000; // 5초마다 업데이트
+        this.newsUpdateInterval = 30000; // 30초마다 뉴스 업데이트
         this.dataEndpoints = {
             systemStatus: '../data/raw/system_status.json',
             realtimeResults: '../data/raw/realtime_results.json',
-            monitoringData: '../data/raw/monitoring_dashboard.json'
+            monitoringData: '../data/raw/monitoring_dashboard.json',
+            newsData: '../data/raw/news_data.csv',
+            stockData: '../data/raw/training_features.csv'
         };
+        
+        this.newsCache = [];
+        this.sourceFiles = {};
         
         this.init();
     }
@@ -17,6 +23,59 @@ class DashboardManager {
         this.startRealTimeUpdates();
         this.loadInitialData();
         this.setupEventListeners();
+        
+        // 확장 기능 초기화
+        if (typeof DashboardExtensions !== 'undefined') {
+            this.initExtensions();
+        }
+        this.updateAPIStatusDisplay(); // API 상태 표시 추가
+    }
+
+    // API 상태 표시 업데이트
+    updateAPIStatusDisplay() {
+        const apiStatus = window.sp500APIManager.getAPIStatus();
+        const container = document.getElementById('api-status-container');
+        if (!container) {
+            console.warn('API 상태를 표시할 HTML 요소 #api-status-container를 찾을 수 없습니다.');
+            return;
+        }
+
+        let html = '<h3>API 활성화 상태</h3><div class="api-status-grid">';
+        for (const apiName in apiStatus) {
+            const status = apiStatus[apiName];
+            let statusClass = '';
+            let statusText = '';
+            switch (status) {
+                case 'active':
+                    statusClass = 'status-dot online';
+                    statusText = '활성';
+                    break;
+                case 'error':
+                    statusClass = 'status-dot offline';
+                    statusText = '오류';
+                    break;
+                case 'no_key':
+                    statusClass = 'status-dot warning';
+                    statusText = '키 없음';
+                    break;
+                case 'demo_key':
+                    statusClass = 'status-dot warning';
+                    statusText = '데모 키';
+                    break;
+                default:
+                    statusClass = 'status-dot unknown';
+                    statusText = '알 수 없음';
+            }
+            html += `
+                <div class="api-status-item">
+                    <span class="api-name">${apiName}</span>
+                    <span class="${statusClass}"></span>
+                    <span class="api-status-text">${statusText}</span>
+                </div>
+            `;
+        }
+        html += '</div>';
+        container.innerHTML = html;
     }
 
     // 초기 데이터 로드
@@ -396,9 +455,40 @@ class DashboardManager {
         });
 
         // 새로고침 버튼 (헤더 클릭)
-        document.querySelector('.header h1').addEventListener('click', () => {
+        document.querySelector('.content-header h1').addEventListener('click', () => {
             this.refreshAllData();
         });
+
+        // 뉴스 업데이트 이벤트 리스너
+        window.addEventListener('newsUpdate', (event) => {
+            this.extensions.updateLlmAnalysisSummary();
+        });
+
+        // 모바일 메뉴 토글 버튼 이벤트 리스너
+        // 모바일 뷰에서 사이드바를 열고 닫는 기능을 제어합니다.
+        const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+        const sidebar = document.querySelector('.sidebar');
+        const mainContent = document.querySelector('.main-content');
+
+        if (mobileMenuToggle && sidebar && mainContent) {
+            mobileMenuToggle.addEventListener('click', () => {
+                // 사이드바의 'open' 클래스를 토글하여 표시/숨김을 제어합니다.
+                sidebar.classList.toggle('open');
+                // 메인 콘텐츠의 'shifted' 클래스를 토글하여 사이드바가 열렸을 때 콘텐츠를 이동시킵니다.
+                mainContent.classList.toggle('shifted');
+            });
+
+            // 사이드바 메뉴 항목 클릭 시 사이드바 닫기 (모바일 환경에서만 작동)
+            sidebar.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', () => {
+                    // 현재 화면 너비가 768px 이하일 때만 사이드바를 닫습니다.
+                    if (window.innerWidth <= 768) {
+                        sidebar.classList.remove('open');
+                        mainContent.classList.remove('shifted');
+                    }
+                });
+            });
+        }
     }
 
     // 위젯 상세 정보 표시

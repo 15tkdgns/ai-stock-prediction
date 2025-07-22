@@ -1,14 +1,14 @@
 {
     "random_forest": {
         "train_accuracy": 1.0,
-        "test_accuracy": 0.991869918699187
+        "test_accuracy": 1.0
     },
     "gradient_boosting": {
         "train_accuracy": 1.0,
         "test_accuracy": 1.0
     },
     "lstm": {
-        "train_accuracy": 1.0,
-        "test_accuracy": 0.9837398529052734
+        "train_accuracy": 0.9990457892417908,
+        "test_accuracy": 0.982824444770813
     }
 }

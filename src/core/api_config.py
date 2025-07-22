@@ -18,11 +18,83 @@ class APIManager:
             'market_data': {
                 'primary': 'yfinance',
                 'secondary': 'alpha_vantage_free'
+            },
+            'sp500_data': {
+                "ALPHA_VANTAGE": {
+                    "base_url": "https://www.alphavantage.co/query",
+                    "api_key": "XL71HG5D4EBIUZ6L"
+                },
+                "TWELVE_DATA": {
+                    "base_url": "https://api.twelvedata.com",
+                    "api_key": "YOUR_TWELVE_DATA_API_KEY"  # Replace with your actual API key
+                },
+                "FINNHUB": {
+                    "base_url": "https://finnhub.io/api/v1",
+                    "api_key": "YOUR_FINNHUB_API_KEY"  # Replace with your actual API key
+                },
+                "MARKETAUX": {
+                    "base_url": "https://api.marketaux.com/v1",
+                    "api_key": "lktDvope4smOUe1Lwx2TaC5OsYVCFbTmPRGxwmCT"
+                },
+                "POLYGON": {
+                    "base_url": "https://api.polygon.io",
+                    "api_key": "oiPSORSBg0kPrrmoaSJUiVTkAdslJFb8"
+                }
             }
         }
+        # API keys should ideally be loaded from environment variables or a secure key management system
+        # rather than hardcoded in the file.
         
         self.logger = logging.getLogger(__name__)
         
+    def get_news_data_marketaux(self, ticker, limit=10):
+        """Marketaux API를 통한 뉴스 데이터 수집"""
+        try:
+            api_key = self.apis['sp500_data']['MARKETAUX']['api_key']
+            url = f"{self.apis['sp500_data']['MARKETAUX']['base_url']}/news/all?symbols={ticker}&filter_entities=true&language=en&api_token={api_key}"
+
+            response = requests.get(url)
+            if not response.ok:
+                self.logger.error(f"Marketaux API request failed with status {response.status_code}: {response.text}")
+                return []
+
+            self.logger.info(f"Marketaux API raw response text for {ticker}: {response.text[:500]}...") # Log raw response
+            data = response.json()
+            self.logger.info(f"Marketaux API parsed JSON data for {ticker}: {data}") # Log parsed JSON data
+
+            if data.get('meta', {}).get('found', 0) > 0:
+                news_data = []
+                for article in data.get('data', [])[:limit]:
+                    if not isinstance(article, dict):
+                        self.logger.warning(f"Marketaux API: Expected dict for article, got {type(article)}: {article}")
+                        continue
+
+                    title = article.get('title', '')
+                    description = article.get('description', '')
+                    full_text = f"{title} {description}"
+
+                    blob = TextBlob(full_text)
+                    sentiment = blob.sentiment.polarity
+
+                    news_data.append({
+                        'ticker': ticker,
+                        'title': title,
+                        'description': description,
+                        'url': article.get('url', ''),
+                        'publishedAt': article.get('published_at', ''),
+                        'source': article.get('source', {}).get('name', 'Unknown'),
+                        'sentiment_label': 'positive' if sentiment > 0.1 else 'negative' if sentiment < -0.1 else 'neutral',
+                        'sentiment_score': abs(sentiment),
+                        'polarity': sentiment,
+                        'text_length': len(full_text)
+                    })
+                return news_data
+        except json.JSONDecodeError as e:
+            self.logger.error(f"Marketaux 뉴스 수집 실패: JSON 디코딩 오류 - {e}. 전체 응답: {response.text}")
+        except Exception as e:
+            self.logger.error(f"Marketaux 뉴스 수집 실패: {e}")
+        return []
+
     def get_news_data_yahoo_rss(self, ticker, limit=10):
         """Yahoo Finance RSS 뉴스 데이터 수집"""
         try:
@@ -56,8 +128,6 @@ class APIManager:
                     'title': title,
                     'description': summary,
                     'url': entry.link,
-                    'publishedAt': entry.published,
-                    'source': 'Yahoo Finance',
                     'sentiment_label': sentiment_label,
                     'sentiment_score': abs(sentiment),
                     'polarity': sentiment,
@@ -209,26 +279,75 @@ class APIManager:
         
     def get_news_data(self, ticker, limit=10):
         """뉴스 데이터 수집 (폴백 방식)"""
-        # 1차: Yahoo RSS
-        news_data = self.get_news_data_yahoo_rss(ticker, limit)
+        # 1차: Marketaux API
+        news_data = self.get_news_data_marketaux(ticker, limit)
+
+        if not news_data:
+            # 2차: Yahoo RSS
+            news_data = self.get_news_data_yahoo_rss(ticker, limit)
         
         if not news_data:
-            # 2차: 무료 API
+            # 3차: 무료 API
             news_data = self.get_news_data_free_api(ticker, limit)
             
         if not news_data:
-            # 3차: 웹 스크래핑
+            # 4차: 웹 스크래핑
             news_data = self.get_news_data_web_scraping(ticker, limit)
             
         return news_data
         
+    def get_market_data_polygon(self, ticker, multiplier=1, timespan="day", from_date=None, to_date=None):
+        """Polygon.io API를 통한 시장 데이터 수집"""
+        try:
+            api_key = self.apis['sp500_data']['POLYGON']['api_key']
+            base_url = self.apis['sp500_data']['POLYGON']['base_url']
+
+            if from_date is None:
+                from_date = (datetime.now() - timedelta(days=30)).strftime('%Y-%m-%d')
+            if to_date is None:
+                to_date = datetime.now().strftime('%Y-%m-%d')
+
+            url = f"{base_url}/v2/aggs/ticker/{ticker}/range/{multiplier}/{timespan}/{from_date}/{to_date}?adjusted=true&sort=asc&limit=50000&apiKey={api_key}"
+            
+            self.logger.info(f"Polygon.io API request URL for {ticker}: {url}") # Log Polygon.io URL
+            response = requests.get(url)
+            if not response.ok:
+                self.logger.error(f"Polygon.io API request failed with status {response.status_code}: {response.text}")
+                return None
+
+            data = response.json()
+            self.logger.info(f"Polygon.io API parsed JSON data for {ticker}: {data}") # Log Polygon.io JSON data
+            
+            if data.get('status') == 'OK' and data.get('resultsCount', 0) > 0:
+                df_data = []
+                for result in data['results']:
+                    df_data.append({
+                        'Date': datetime.fromtimestamp(result['t'] / 1000).strftime('%Y-%m-%d %H:%M:%S'),
+                        'Open': result['o'],
+                        'High': result['h'],
+                        'Low': result['l'],
+                        'Close': result['c'],
+                        'Volume': result['v']
+                    })
+                df = pd.DataFrame(df_data)
+                df['Date'] = pd.to_datetime(df['Date'])
+                df.reset_index(inplace=True) # 인덱스를 컬럼으로 변환
+                return df
+        except Exception as e:
+            self.logger.error(f"Polygon.io 데이터 수집 실패: {e}")
+        return None
+
     def get_market_data(self, ticker, period='1d', interval='1m'):
         """시장 데이터 수집 (폴백 방식)"""
         # 1차: YFinance
         data = self.get_market_data_yfinance(ticker, period, interval)
+
+        if data is None:
+            # 2차: Polygon.io
+            data = self.get_market_data_polygon(ticker)
         
         if data is None:
-            # 2차: Alpha Vantage
+            # 3차: Alpha Vantage
             data = self.get_market_data_alpha_vantage_free(ticker)
             
         return data

@@ -3,26 +3,94 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>프로젝트 대시보드</title>
+    <title>AI 주식 예측 시스템 - 대시보드</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/date-fns@2.29.3/index.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
 </head>
 <body>
+    <button class="mobile-menu-toggle" id="mobile-menu-toggle">☰</button>
     <div class="dashboard-container">
-        <!-- Header -->
-        <header class="header">
-            <h1>AI 주식 예측 시스템 대시보드</h1>
-            <div class="status-indicator">
-                <span id="system-status" class="status-dot online"></span>
-                <span id="last-update">마지막 업데이트: 로딩중...</span>
+        <!-- Navigation Sidebar -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <h2>AI Stock Predictor</h2>
+                <div class="status-indicator">
+                    <span id="system-status" class="status-dot online"></span>
+                    <span class="status-text">온라인</span>
+                </div>
             </div>
-        </header>
+            
+            <ul class="nav-menu">
+                <li><a href="#dashboard" class="nav-link active" data-page="dashboard">
+                    <span class="nav-icon">📊</span> 대시보드
+                </a></li>
+                <li><a href="#models" class="nav-link" data-page="models">
+                    <span class="nav-icon">🤖</span> 모델 성능
+                </a></li>
+                <li><a href="#predictions" class="nav-link" data-page="predictions">
+                    <span class="nav-icon">📈</span> 실시간 예측
+                </a></li>
+                <li><a href="#news" class="nav-link" data-page="news">
+                    <span class="nav-icon">📰</span> 뉴스 분석
+                </a></li>
+                <li><a href="#data" class="nav-link" data-page="data">
+                    <span class="nav-icon">🗂️</span> 데이터 탐색기
+                </a></li>
+                <li><a href="#code" class="nav-link" data-page="code">
+                    <span class="nav-icon">💻</span> 소스 코드
+                </a></li>
+                <li><a href="#logs" class="nav-link" data-page="logs">
+                    <span class="nav-icon">📋</span> 시스템 로그
+                </a></li>
+                <li><a href="#settings" class="nav-link" data-page="settings">
+                    <span class="nav-icon">⚙️</span> 설정
+                </a></li>
+            </ul>
+            
+            <div class="sidebar-footer">
+                <div class="quick-stats">
+                    <div class="quick-stat">
+                        <span class="label">정확도</span>
+                        <span id="quick-accuracy">89.3%</span>
+                    </div>
+                    <div class="quick-stat">
+                        <span class="label">처리속도</span>
+                        <span id="quick-speed">23.5/s</span>
+                    </div>
+                </div>
+                <div id="last-update" class="last-update">마지막 업데이트: 로딩중...</div>
+                <div id="api-status-container" class="api-status-container"></div>
+            </div>
+        </nav>
 
-        <!-- Main Dashboard Grid -->
-        <main class="dashboard-grid">
-            <!-- Real-time System Status -->
-            <section class="widget large-widget">
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="content-header">
+                <h1 id="page-title">대시보드</h1>
+                <div class="header-actions">
+                    <button class="btn btn-refresh" onclick="dashboard.refreshAllData()">
+                        <span>🔄</span> 새로고침
+                    </button>
+                    <button class="btn btn-export" onclick="dashboard.exportData()">
+                        <span>💾</span> 내보내기
+                    </button>
+                    <button class="btn btn-fullscreen" onclick="dashboard.toggleFullscreen()">
+                        <span>🔍</span> 전체화면
+                    </button>
+                </div>
+            </header>
+
+            <!-- Page Content Container -->
+            <div class="page-content">
+                <!-- Dashboard Page -->
+                <div id="page-dashboard" class="page active">
+                            <!-- Real-time System Status -->
+                            <section class="widget large-widget">
                 <h2>실시간 시스템 상태</h2>
                 <div class="system-metrics">
                     <div class="metric-card">
@@ -84,36 +152,10 @@
 
             <!-- Feature Importance -->
             <section class="widget medium-widget">
-                <h2>특성 중요도</h2>
-                <div class="feature-list">
-                    <div class="feature-item">
-                        <span class="feature-name">뉴스 감정 분석</span>
-                        <div class="importance-bar">
-                            <div class="importance-fill" style="width: 92%"></div>
-                        </div>
-                        <span class="importance-value">92%</span>
-                    </div>
-                    <div class="feature-item">
-                        <span class="feature-name">기술적 지표</span>
-                        <div class="importance-bar">
-                            <div class="importance-fill" style="width: 87%"></div>
-                        </div>
-                        <span class="importance-value">87%</span>
-                    </div>
-                    <div class="feature-item">
-                        <span class="feature-name">거래량 패턴</span>
-                        <div class="importance-bar">
-                            <div class="importance-fill" style="width: 74%"></div>
-                        </div>
-                        <span class="importance-value">74%</span>
-                    </div>
-                    <div class="feature-item">
-                        <span class="feature-name">시장 상관관계</span>
-                        <div class="importance-bar">
-                            <div class="importance-fill" style="width: 68%"></div>
-                        </div>
-                        <span class="importance-value">68%</span>
-                    </div>
+                <h2>주식 예측 주요 근거 (XAI)</h2>
+                <div id="xai-explanation">
+                    <!-- XAI 설명이 여기에 동적으로 로드됩니다 -->
+                    <p>XAI 데이터를 로드하는 중...</p>
                 </div>
             </section>
 
@@ -161,11 +203,383 @@
                         <span class="alert-icon">💾</span>
                         <span class="alert-message">백업 완료</span>
                     </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </section>
+
+                <!-- Models Performance Page -->
+                <div id="page-models" class="page">
+                    <div class="models-container">
+                        <div class="models-grid">
+                            <div class="widget large-widget">
+                                <h2>모델 성능 비교</h2>
+                                <div class="model-comparison-table">
+                                    <table class="performance-table">
+                                        <thead>
+                                            <tr>
+                                                <th>모델</th>
+                                                <th>정확도</th>
+                                                <th>정밀도</th>
+                                                <th>재현율</th>
+                                                <th>F1-Score</th>
+                                                <th>처리 시간</th>
+                                                <th>상태</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="model-performance-table">
+                                            <!-- 동적으로 생성됨 -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            
+                            <div class="widget medium-widget">
+                                <h2>모델 아키텍처</h2>
+                                <div class="model-architecture" id="model-architecture">
+                                    <!-- 동적으로 생성됨 -->
+                                </div>
+                            </div>
+                            
+                            <div class="widget medium-widget">
+                                <h2>하이퍼파라미터</h2>
+                                <div class="hyperparameters" id="hyperparameters">
+                                    <!-- 동적으로 생성됨 -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Real-time Predictions Page -->
+                <div id="page-predictions" class="page">
+                    <div class="predictions-container">
+                        <div class="predictions-header">
+                            <h2>실시간 주식 예측</h2>
+                            <div class="prediction-controls">
+                                <select id="stock-selector">
+                                    <option value="all">전체 종목</option>
+                                    <option value="AAPL">Apple (AAPL)</option>
+                                    <option value="GOOGL">Google (GOOGL)</option>
+                                    <option value="MSFT">Microsoft (MSFT)</option>
+                                </select>
+                                <select id="timeframe-selector">
+                                    <option value="1d">1일</option>
+                                    <option value="1w">1주</option>
+                                    <option value="1m">1개월</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="predictions-grid">
+                            <div class="widget large-widget">
+                                <h3>예측 차트</h3>
+                                <canvas id="prediction-chart"></canvas>
+                            </div>
+                            
+                            <div class="widget medium-widget">
+                                <h3>예측 신뢰도</h3>
+                                <div class="confidence-meters" id="confidence-meters">
+                                    <!-- 동적으로 생성됨 -->
+                                </div>
+                            </div>
+                            
+                            <div class="widget large-widget">
+                                <h3>예측 결과 테이블</h3>
+                                <div class="predictions-table-container">
+                                    <table class="predictions-table">
+                                        <thead>
+                                            <tr>
+                                                <th>종목</th>
+                                                <th>현재가</th>
+                                                <th>예측가</th>
+                                                <th>변동률</th>
+                                                <th>신뢰도</th>
+                                                <th>예측 시간</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="predictions-table-body">
+                                            <!-- 동적으로 생성됨 -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- News Analysis Page -->
+                <div id="page-news" class="page">
+                    <div class="news-container">
+                        <div class="news-header">
+                            <h2>실시간 뉴스 분석</h2>
+                            <div class="news-controls">
+                                <select id="news-category">
+                                    <option value="all">전체 카테고리</option>
+                                    <option value="market">시장</option>
+                                    <option value="stock">개별종목</option>
+                                    <option value="economy">경제</option>
+                                </select>
+                                <select id="sentiment-filter">
+                                    <option value="all">전체 감정</option>
+                                    <option value="positive">긍정</option>
+                                    <option value="negative">부정</option>
+                                    <option value="neutral">중립</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="news-grid">
+                            <div class="widget large-widget">
+                                <h3>감정 분석 차트</h3>
+                                <canvas id="sentiment-chart"></canvas>
+                            </div>
+                            
+                            <div class="widget medium-widget">
+                                <h3>뉴스 요약</h3>
+                                <div class="news-summary" id="news-summary">
+                                    <div class="summary-item">
+                                        <h4>주요 트렌드</h4>
+                                        <p>오늘 시장은 전반적으로 긍정적인 분위기를 보이고 있습니다.</p>
+                                    </div>
+                                    <div class="summary-item">
+                                        <h4>영향도 높은 뉴스</h4>
+                                        <p>Fed 금리 인상 관련 발언이 시장에 큰 영향을 미치고 있습니다.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="widget medium-widget">
+                                <h3>LLM 분석 요약</h3>
+                                <div class="llm-analysis-summary" id="llm-analysis-summary">
+                                    <div class="summary-item">
+                                        <h4>시장 감성 (LLM)</h4>
+                                        <p id="llm-market-sentiment">로딩중...</p>
+                                    </div>
+                                    <div class="summary-item">
+                                        <h4>주요 이벤트 카테고리 (LLM)</h4>
+                                        <p id="llm-event-category">로딩중...</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="widget large-widget">
+                                <h3>실시간 뉴스 피드</h3>
+                                <div class="news-feed" id="news-feed">
+                                    <!-- 동적으로 생성됨 -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Data Explorer Page -->
+                <div id="page-data" class="page">
+                    <div class="data-explorer">
+                        <div class="data-header">
+                            <h2>데이터 탐색기</h2>
+                            <div class="data-controls">
+                                <select id="dataset-selector">
+                                    <option value="stock_data">주식 데이터</option>
+                                    <option value="news_data">뉴스 데이터</option>
+                                    <option value="features">특성 데이터</option>
+                                    <option value="predictions">예측 결과</option>
+                                </select>
+                                <button class="btn" onclick="dashboard.exportCurrentData()">내보내기</button>
+                            </div>
+                        </div>
+                        
+                        <div class="data-grid">
+                            <div class="widget large-widget">
+                                <h3>데이터 테이블</h3>
+                                <div class="data-table-container">
+                                    <table class="data-table" id="data-table">
+                                        <!-- 동적으로 생성됨 -->
+                                    </table>
+                                </div>
+                            </div>
+                            
+                            <div class="widget medium-widget">
+                                <h3>데이터 통계</h3>
+                                <div class="data-stats" id="data-stats">
+                                    <!-- 동적으로 생성됨 -->
+                                </div>
+                            </div>
+                            
+                            <div class="widget medium-widget">
+                                <h3>데이터 시각화</h3>
+                                <canvas id="data-visualization"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Source Code Page -->
+                <div id="page-code" class="page">
+                    <div class="code-viewer">
+                        <div class="code-header">
+                            <h2>소스 코드 뷰어</h2>
+                            <div class="code-controls">
+                                <select id="file-selector">
+                                    <option value="">파일 선택...</option>
+                                    <optgroup label="대시보드">
+                                        <option value="dashboard/index.html">index.html</option>
+                                        <option value="dashboard/styles.css">styles.css</option>
+                                        <option value="dashboard/dashboard.js">dashboard.js</option>
+                                    </optgroup>
+                                    <optgroup label="모델">
+                                        <option value="src/models/model_training.py">model_training.py</option>
+                                        <option value="src/models/paper_experiment_master.py">paper_experiment_master.py</option>
+                                    </optgroup>
+                                    <optgroup label="데이터 처리">
+                                        <option value="src/core/data_collection_pipeline.py">data_collection_pipeline.py</option>
+                                        <option value="src/core/advanced_preprocessing.py">advanced_preprocessing.py</option>
+                                    </optgroup>
+                                </select>
+                                <button class="btn" onclick="dashboard.downloadFile()">다운로드</button>
+                                <button class="btn" onclick="dashboard.copyCode()">복사</button>
+                            </div>
+                        </div>
+                        
+                        <div class="code-content">
+                            <div class="file-info">
+                                <span id="file-path">파일을 선택해주세요</span>
+                                <span id="file-size"></span>
+                                <span id="file-modified"></span>
+                            </div>
+                            
+                            <div class="code-container">
+                                <pre><code id="code-display" class="language-python">// 파일을 선택하면 코드가 표시됩니다</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- System Logs Page -->
+                <div id="page-logs" class="page">
+                    <div class="logs-container">
+                        <div class="logs-header">
+                            <h2>시스템 로그</h2>
+                            <div class="logs-controls">
+                                <select id="log-level">
+                                    <option value="all">전체 레벨</option>
+                                    <option value="error">ERROR</option>
+                                    <option value="warning">WARNING</option>
+                                    <option value="info">INFO</option>
+                                    <option value="debug">DEBUG</option>
+                                </select>
+                                <select id="log-source">
+                                    <option value="all">전체 소스</option>
+                                    <option value="model">모델</option>
+                                    <option value="data">데이터</option>
+                                    <option value="api">API</option>
+                                    <option value="system">시스템</option>
+                                </select>
+                                <button class="btn" onclick="dashboard.clearLogs()">로그 지우기</button>
+                                <button class="btn" onclick="dashboard.downloadLogs()">로그 다운로드</button>
+                            </div>
+                        </div>
+                        
+                        <div class="logs-grid">
+                            <div class="widget large-widget">
+                                <h3>실시간 로그</h3>
+                                <div class="log-viewer" id="log-viewer">
+                                    <!-- 동적으로 생성됨 -->
+                                </div>
+                            </div>
+                            
+                            <div class="widget medium-widget">
+                                <h3>로그 통계</h3>
+                                <canvas id="log-stats-chart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Settings Page -->
+                <div id="page-settings" class="page">
+                    <div class="settings-container">
+                        <h2>시스템 설정</h2>
+                        
+                        <div class="settings-grid">
+                            <div class="widget large-widget">
+                                <h3>일반 설정</h3>
+                                <div class="settings-group">
+                                    <label>업데이트 간격 (초)</label>
+                                    <input type="number" id="update-interval" value="5" min="1" max="60">
+                                </div>
+                                <div class="settings-group">
+                                    <label>테마</label>
+                                    <select id="theme-selector">
+                                        <option value="light">라이트</option>
+                                        <option value="dark">다크</option>
+                                        <option value="auto">자동</option>
+                                    </select>
+                                </div>
+                                <div class="settings-group">
+                                    <label>
+                                        <input type="checkbox" id="auto-refresh" checked>
+                                        자동 새로고침
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div class="widget medium-widget">
+                                <h3>알림 설정</h3>
+                                <div class="settings-group">
+                                    <label>
+                                        <input type="checkbox" id="desktop-notifications" checked>
+                                        데스크톱 알림
+                                    </label>
+                                </div>
+                                <div class="settings-group">
+                                    <label>
+                                        <input type="checkbox" id="sound-alerts">
+                                        사운드 알림
+                                    </label>
+                                </div>
+                                <div class="settings-group">
+                                    <label>예측 정확도 임계값 (%)</label>
+                                    <input type="number" id="accuracy-threshold" value="85" min="0" max="100">
+                                </div>
+                            </div>
+                            
+                            <div class="widget medium-widget">
+                                <h3>시스템 정보</h3>
+                                <div class="system-info" id="system-info">
+                                    <div class="info-item">
+                                        <span class="label">버전:</span>
+                                        <span class="value">1.0.0</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="label">빌드:</span>
+                                        <span class="value">2024.03.15</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="label">Python:</span>
+                                        <span class="value">3.11.0</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="label">TensorFlow:</span>
+                                        <span class="value">2.15.0</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="settings-actions">
+                            <button class="btn btn-primary" onclick="dashboard.saveSettings()">설정 저장</button>
+                            <button class="btn" onclick="dashboard.resetSettings()">초기화</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </main>
     </div>
 
     <script src="dashboard.js"></script>
+    <script src="dashboard-extended.js"></script>
+    <script src="news-analyzer.js"></script>
+    <script src="router.js"></script>
 </body>
 </html>

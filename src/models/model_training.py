@@ -48,19 +48,42 @@ class SP500EventDetectionModel:
         # 학습 특성 및 이벤트 라벨 로드
         features_df = pd.read_csv(f'{self.data_dir}/raw/training_features.csv')
         labels_df = pd.read_csv(f'{self.data_dir}/raw/event_labels.csv')
+        
+        # LLM 강화 특징 로드
+        try:
+            llm_features_df = pd.read_csv(f'{self.data_dir}/processed/llm_enhanced_features.csv')
+            llm_features_df = llm_features_df.dropna(subset=['date']) # date 컬럼에 NaN 값이 있는 행 제거
+            llm_features_df['date'] = pd.to_datetime(llm_features_df['date'])
+        except FileNotFoundError:
+            print("LLM enhanced features file not found. Proceeding without LLM features.")
+            llm_features_df = pd.DataFrame()
 
         # 날짜 형식 통일
-        features_df['date'] = pd.to_datetime(features_df['date'])
+        features_df['Date'] = pd.to_datetime(features_df['Date'])
         labels_df['Date'] = pd.to_datetime(labels_df['Date'])
 
         # 'ticker'와 날짜를 기준으로 데이터 병합
         merged_df = pd.merge(
             features_df,
             labels_df,
-            left_on=['ticker', 'date'],
+            left_on=['ticker', 'Date'],
             right_on=['ticker', 'Date'],
             how='inner'
         )
+
+        # LLM 특징 병합 (뉴스 제목과 날짜를 기준으로)
+        if not llm_features_df.empty:
+            merged_df = pd.merge(
+                merged_df,
+                llm_features_df,
+                left_on=['date', 'title'], # news_data.csv의 title과 매핑
+                right_on=['date', 'title'],
+                how='left',
+                suffixes=('', '_llm')
+            )
+            # 병합 후 중복 컬럼 제거 (예: title_llm, date_llm 등)
+            merged_df = merged_df.loc[:,~merged_df.columns.duplicated()].copy()
+
         return merged_df
 
     def prepare_features(self, df):
@@ -75,19 +98,37 @@ class SP500EventDetectionModel:
         """
         # 모델에 사용할 수치형 특성 목록
         numeric_features = [
-            'open', 'high', 'low', 'close', 'volume', 'sma_20', 'sma_50', 'rsi',
+            'Open', 'High', 'Low', 'Close', 'Volume', 'sma_20', 'sma_50', 'rsi',
             'macd', 'bb_upper', 'bb_lower', 'atr', 'volatility', 'obv',
             'price_change', 'volume_change', 'unusual_volume', 'price_spike',
-            'news_sentiment', 'news_polarity', 'news_count'
+            'news_sentiment', 'news_polarity', 'news_count',
+            'llm_sentiment_score', 'uncertainty_score' # LLM 수치형 특징 추가
         ]
         
+        # 범주형 LLM 특징 원-핫 인코딩
+        categorical_llm_features = ['market_sentiment', 'event_category']
+        for col in categorical_llm_features:
+            if col in df.columns:
+                df[col] = df[col].fillna('Unknown') # 결측값 처리
+                df = pd.get_dummies(df, columns=[col], prefix=col)
+
+        # 원-핫 인코딩 후 추가된 컬럼들을 numeric_features에 포함
+        # 기존 numeric_features에 없는 새로운 더미 변수 컬럼들을 찾아서 추가
+        current_features = set(df.columns)
+        new_dummy_features = [col for col in current_features if col.startswith('market_sentiment_') or col.startswith('event_category_')]
+        numeric_features.extend(new_dummy_features)
+
+        # 실제 존재하는 컬럼들만 필터링
+        available_features = [col for col in numeric_features if col in df.columns]
+        print(f"Available features: {available_features}")
+        
         # 특성 데이터 선택 및 결측값 처리 (0으로 채움)
-        X = df[numeric_features].fillna(0)
+        X = df[available_features].fillna(0)
         
         # StandardScaler를 이용한 특성 정규화
         X_scaled = self.scaler.fit_transform(X)
         
-        return X_scaled, numeric_features
+        return X_scaled, available_features
 
     def train_random_forest(self, X_train, y_train, X_test, y_test):
         """

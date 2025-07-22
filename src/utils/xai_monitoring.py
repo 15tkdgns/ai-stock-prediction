@@ -14,7 +14,7 @@ import warnings
 warnings.filterwarnings('ignore')
 
 class XAIMonitoringSystem:
-    def __init__(self, data_dir='raw_data'):
+    def __init__(self, data_dir='/root/workspace/data/raw'):
         self.data_dir = data_dir
         self.models = {}
         self.explainers = {}
@@ -262,6 +262,12 @@ class XAIMonitoringSystem:
         print("\n=== 모니터링 대시보드 생성 ===")
         
         try:
+            # NumPy 배열을 리스트로 변환
+            for model_name, results in importance_results.items():
+                for key, value in results.items():
+                    if isinstance(value, np.ndarray):
+                        results[key] = value.tolist()
+
             # 종합 모니터링 메트릭
             dashboard_data = {
                 'timestamp': datetime.now().isoformat(),
@@ -277,7 +283,7 @@ class XAIMonitoringSystem:
                 'explainability': {
                     'shap_available': len(shap_results) > 0,
                     'lime_available': 'lime' in self.explainers,
-                    'feature_importance_methods': list(importance_results.keys())
+                    'feature_importance_methods': importance_results # 변경: 특성 중요도 결과 전체 저장
                 },
                 'alerts': []
             }
@@ -323,7 +329,7 @@ class XAIMonitoringSystem:
             
             # 특성 이름
             feature_names = [
-                'open', 'high', 'low', 'close', 'volume',
+                'Open', 'High', 'Low', 'Close', 'Volume',
                 'sma_20', 'sma_50', 'rsi', 'macd', 'bb_upper', 'bb_lower',
                 'atr', 'volatility', 'obv', 'price_change', 'volume_change',
                 'unusual_volume', 'price_spike', 'news_sentiment', 'news_polarity', 'news_count'
