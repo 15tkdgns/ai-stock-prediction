@@ -257,7 +257,7 @@ class XAIMonitoringSystem:
             
         return drift_results
         
-    def create_monitoring_dashboard(self, importance_results, shap_results, confidence_results, drift_results):
+    def create_monitoring_dashboard(self, importance_results, shap_results, confidence_results, drift_results, lime_results, X_test, y_test):
         """모니터링 대시보드 생성"""
         print("\n=== 모니터링 대시보드 생성 ===")
         
@@ -278,12 +278,37 @@ class XAIMonitoringSystem:
                         'total_features': len(drift_results),
                         'drift_detected': sum(1 for v in drift_results.values() if v['is_drift']),
                         'high_severity_drift': sum(1 for v in drift_results.values() if v['drift_severity'] == 'high')
+                    },
+                    'confusion_matrix': { # 모의 혼동 행렬 데이터
+                        'labels': ['Normal', 'Event'],
+                        'matrix': [[85, 12], [8, 95]] # TN, FP / FN, TP
                     }
                 },
                 'explainability': {
                     'shap_available': len(shap_results) > 0,
                     'lime_available': 'lime' in self.explainers,
-                    'feature_importance_methods': importance_results # 변경: 특성 중요도 결과 전체 저장
+                    'feature_importance_methods': importance_results, # 변경: 특성 중요도 결과 전체 저장
+                    'shap_explanations': {k: {key: val.tolist() if isinstance(val, np.ndarray) else val for key, val in v.items()} for k, v in shap_results.items()},
+                    'lime_explanations': [{k: v.tolist() if isinstance(v, np.ndarray) else v for k, v in exp.items()} for exp in lime_results], # LIME 결과도 ndarray를 리스트로 변환
+                    'prediction_data': {
+                        'X_test': X_test.tolist(),
+                        'y_test': y_test.tolist(),
+                        'predictions': {model_name: model.predict(X_test).tolist() for model_name, model in self.models.items()}
+                    },
+                    'partial_dependence_plots': { # 모의 부분 의존성 플롯 데이터
+                        'volatility': {'x': [0.1, 0.2, 0.3, 0.4, 0.5], 'y': [0.2, 0.3, 0.5, 0.7, 0.8]},
+                        'rsi': {'x': [30, 40, 50, 60, 70], 'y': [0.1, 0.2, 0.4, 0.3, 0.2]}
+                    },
+                    'counterfactual_what_if': [ # 모의 반사실적/What-if 데이터
+                        {
+                            'condition': '변동성이 현재보다 20% 감소한다면',
+                            'result': '예측이 \'하락\'에서 \'상승\'으로 변경될 확률이 78%입니다.'
+                        },
+                        {
+                            'condition': '뉴스 감성 점수가 0.8 이상이 된다면',
+                            'result': '예측 정확도가 15% 향상될 것으로 예상됩니다.'
+                        }
+                    ]
                 },
                 'alerts': []
             }
@@ -358,15 +383,18 @@ class XAIMonitoringSystem:
         # 5. SHAP 설명 생성
         shap_results = self.generate_shap_explanations(X_test[:50])  # 샘플 50개
         
-        # 6. 신뢰도 모니터링
+        # 6. LIME 설명 생성
+        lime_results = self.generate_lime_explanations(X_test[:5], model_name='random_forest') # 샘플 5개
+        
+        # 7. 신뢰도 모니터링
         confidence_results = self.monitor_prediction_confidence(X_test)
         
-        # 7. 드리프트 탐지
+        # 8. 드리프트 탐지
         drift_results = self.detect_feature_drift(X_train, X_test, feature_names)
         
-        # 8. 대시보드 생성
+        # 9. 대시보드 생성
         dashboard = self.create_monitoring_dashboard(
-            importance_results, shap_results, confidence_results, drift_results
+            importance_results, shap_results, confidence_results, drift_results, lime_results, X_test, y_test
         )
         
         print("\n=== 모니터링 완료 ===")

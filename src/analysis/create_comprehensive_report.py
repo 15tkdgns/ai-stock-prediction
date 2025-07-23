@@ -18,20 +18,20 @@ def load_all_data():
     data = {}
     
     # 학습 성능 데이터
-    with open('raw_data/model_performance.json', 'r') as f:
+    with open('/root/workspace/data/raw/model_performance.json', 'r') as f:
         data['training_performance'] = json.load(f)
     
     # 학습 요약 데이터
-    with open('raw_data/training_summary.json', 'r') as f:
+    with open('/root/workspace/data/raw/training_summary.json', 'r') as f:
         data['training_summary'] = json.load(f)
     
     # 실시간 테스트 결과
-    with open('raw_data/realtime_test_results.json', 'r') as f:
+    with open('/root/workspace/data/raw/realtime_test_results.json', 'r') as f:
         data['realtime_results'] = json.load(f)
     
     # 학습 데이터
-    data['training_features'] = pd.read_csv('raw_data/training_features.csv')
-    data['event_labels'] = pd.read_csv('raw_data/event_labels.csv')
+    data['training_features'] = pd.read_csv('/root/workspace/data/raw/training_features.csv')
+    data['event_labels'] = pd.read_csv('/root/workspace/data/raw/event_labels.csv')
     
     return data
 
@@ -47,9 +47,9 @@ def analyze_model_performance(data):
         analysis = {
             'model_name': model_name,
             'training_results': {
-                'train_accuracy': perf['train_score'],
-                'test_accuracy': perf['test_score'],
-                'overfitting_gap': perf['train_score'] - perf['test_score']
+                'train_accuracy': perf['train_accuracy'],
+                'test_accuracy': perf['test_accuracy'],
+                'overfitting_gap': perf['train_accuracy'] - perf['test_accuracy']
             },
             'realtime_results': {},
             'overall_assessment': {}
@@ -314,10 +314,10 @@ def create_comprehensive_visualizations(model_analysis, data):
     axes[1, 2].set_title(f'훈련 데이터 이벤트 분포\n(총 {dataset_info["total_records"]} 레코드)')
     
     plt.tight_layout()
-    plt.savefig('raw_data/comprehensive_model_analysis.png', dpi=300, bbox_inches='tight')
+    plt.savefig('/root/workspace/data/raw/comprehensive_model_analysis.png', dpi=300, bbox_inches='tight')
     plt.close()
     
-    print("✅ 종합 시각화 생성 완료: raw_data/comprehensive_model_analysis.png")
+    print("✅ 종합 시각화 생성 완료: /root/workspace/data/raw/comprehensive_model_analysis.png")
 
 def create_markdown_report(model_analysis, data):
     """종합 마크다운 리포트 생성"""
@@ -493,15 +493,15 @@ def create_markdown_report(model_analysis, data):
 
 ## 📁 생성 파일
 
-- **종합 분석 시각화**: `comprehensive_model_analysis.png`
-- **이 리포트**: `COMPREHENSIVE_MODEL_REPORT.md`
+- **종합 분석 시각화**: `/root/workspace/data/raw/comprehensive_model_analysis.png`
+- **이 리포트**: `/root/workspace/data/raw/COMPREHENSIVE_MODEL_REPORT.md`
 - **원본 데이터**: `model_performance.json`, `realtime_test_results.json`
 
 ---
 *Generated on {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}*
 """
     
-    with open('raw_data/COMPREHENSIVE_MODEL_REPORT.md', 'w') as f:
+    with open('/root/workspace/data/raw/COMPREHENSIVE_MODEL_REPORT.md', 'w') as f:
         f.write(report)
     
     print("✅ 종합 마크다운 리포트 생성 완료: raw_data/COMPREHENSIVE_MODEL_REPORT.md")

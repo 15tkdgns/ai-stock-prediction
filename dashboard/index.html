@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI 주식 예측 시스템 - 대시보드</title>
+    <title>AI Stock Prediction System - Dashboard</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/date-fns@2.29.3/index.min.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/date-fns@2.29.3/index.min.js"></script> -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
@@ -20,49 +20,55 @@
                 <h2>AI Stock Predictor</h2>
                 <div class="status-indicator">
                     <span id="system-status" class="status-dot online"></span>
-                    <span class="status-text">온라인</span>
+                    <span class="status-text">Online</span>
                 </div>
             </div>
             
             <ul class="nav-menu">
                 <li><a href="#dashboard" class="nav-link active" data-page="dashboard">
-                    <span class="nav-icon">📊</span> 대시보드
+                    <span class="nav-icon">📊</span> Dashboard
                 </a></li>
                 <li><a href="#models" class="nav-link" data-page="models">
-                    <span class="nav-icon">🤖</span> 모델 성능
+                    <span class="nav-icon">🤖</span> Model Performance
                 </a></li>
                 <li><a href="#predictions" class="nav-link" data-page="predictions">
-                    <span class="nav-icon">📈</span> 실시간 예측
+                    <span class="nav-icon">📈</span> Real-time Predictions
                 </a></li>
                 <li><a href="#news" class="nav-link" data-page="news">
-                    <span class="nav-icon">📰</span> 뉴스 분석
+                    <span class="nav-icon">📰</span> News Analysis
+                </a></li>
+                <li><a href="#xai" class="nav-link" data-page="xai">
+                    <span class="nav-icon">🧠</span> XAI Analysis
+                </a></li>
+                <li><a href="#progress" class="nav-link" data-page="progress">
+                    <span class="nav-icon">📈</span> Progress
                 </a></li>
                 <li><a href="#data" class="nav-link" data-page="data">
-                    <span class="nav-icon">🗂️</span> 데이터 탐색기
+                    <span class="nav-icon">🗂️</span> Data Explorer
                 </a></li>
                 <li><a href="#code" class="nav-link" data-page="code">
-                    <span class="nav-icon">💻</span> 소스 코드
+                    <span class="nav-icon">💻</span> Source Code
                 </a></li>
                 <li><a href="#logs" class="nav-link" data-page="logs">
-                    <span class="nav-icon">📋</span> 시스템 로그
+                    <span class="nav-icon">📋</span> System Logs
                 </a></li>
                 <li><a href="#settings" class="nav-link" data-page="settings">
-                    <span class="nav-icon">⚙️</span> 설정
+                    <span class="nav-icon">⚙️</span> Settings
                 </a></li>
             </ul>
             
             <div class="sidebar-footer">
                 <div class="quick-stats">
                     <div class="quick-stat">
-                        <span class="label">정확도</span>
+                        <span class="label">Accuracy</span>
                         <span id="quick-accuracy">89.3%</span>
                     </div>
                     <div class="quick-stat">
-                        <span class="label">처리속도</span>
+                        <span class="label">Speed</span>
                         <span id="quick-speed">23.5/s</span>
                     </div>
                 </div>
-                <div id="last-update" class="last-update">마지막 업데이트: 로딩중...</div>
+                <div id="last-update" class="last-update">Last Updated: Loading...</div>
                 <div id="api-status-container" class="api-status-container"></div>
             </div>
         </nav>
@@ -71,16 +77,34 @@
         <main class="main-content">
             <!-- Header -->
             <header class="content-header">
-                <h1 id="page-title">대시보드</h1>
+                <h1 id="page-title">Dashboard</h1>
                 <div class="header-actions">
-                    <button class="btn btn-refresh" onclick="dashboard.refreshAllData()">
-                        <span>🔄</span> 새로고침
+                    <div class="live-indicator">
+                        <div class="live-dot"></div>
+                        <span>Real-time Updates</span>
+                    </div>
+                    <div class="translate-container">
+                        <button class="btn btn-translate" id="translate-btn">
+                            <span>🌐</span> EN
+                        </button>
+                        <div class="language-dropdown" id="language-dropdown">
+                            <div class="language-option" data-lang="en">🇺🇸 English</div>
+                            <div class="language-option" data-lang="ko">🇰🇷 한국어</div>
+                            <div class="language-option" data-lang="ja">🇯🇵 日본語</div>
+                            <div class="language-option" data-lang="zh">🇨🇳 中文</div>
+                            <div class="language-option" data-lang="es">🇪🇸 Español</div>
+                            <div class="language-option" data-lang="fr">🇫🇷 Français</div>
+                            <div class="language-option" data-lang="de">🇩🇪 Deutsch</div>
+                        </div>
+                    </div>
+                    <button class="btn btn-gradient" onclick="dashboard.refreshAllData()">
+                        <span>🔄</span> Refresh
                     </button>
                     <button class="btn btn-export" onclick="dashboard.exportData()">
-                        <span>💾</span> 내보내기
+                        <span>💾</span> Export
                     </button>
                     <button class="btn btn-fullscreen" onclick="dashboard.toggleFullscreen()">
-                        <span>🔍</span> 전체화면
+                        <span>🔍</span> Fullscreen
                     </button>
                 </div>
             </header>
@@ -91,121 +115,155 @@
                 <div id="page-dashboard" class="page active">
                             <!-- Real-time System Status -->
                             <section class="widget large-widget">
-                <h2>실시간 시스템 상태</h2>
+                <h2>Real-time System Status</h2>
                 <div class="system-metrics">
                     <div class="metric-card">
-                        <h3>모델 성능</h3>
+                        <h3>Model Performance</h3>
                         <div id="model-accuracy" class="metric-value">--</div>
-                        <div class="metric-label">정확도</div>
+                        <div class="metric-label">Accuracy</div>
                     </div>
                     <div class="metric-card">
-                        <h3>처리 속도</h3>
+                        <h3>Processing Speed</h3>
                         <div id="processing-speed" class="metric-value">--</div>
-                        <div class="metric-label">예측/초</div>
+                        <div class="metric-label">Predictions/sec</div>
                     </div>
                     <div class="metric-card">
-                        <h3>활성 모델</h3>
+                        <h3>Active Models</h3>
                         <div id="active-models" class="metric-value">--</div>
-                        <div class="metric-label">개</div>
+                        <div class="metric-label">Count</div>
                     </div>
                     <div class="metric-card">
-                        <h3>데이터 소스</h3>
+                        <h3>Data Sources</h3>
                         <div id="data-sources" class="metric-value">--</div>
-                        <div class="metric-label">연결됨</div>
+                        <div class="metric-label">Connected</div>
                     </div>
                 </div>
             </section>
 
             <!-- Model Performance Chart -->
             <section class="widget medium-widget">
-                <h2>모델 성능 추이</h2>
+                <h2>Model Performance Trend</h2>
+                <div class="model-performance-info">
+                    <strong>Reference Stock:</strong> Current model performance is measured against the <span id="performance-stock-info">S&P 500 overall average</span>.
+                </div>
                 <canvas id="performance-chart"></canvas>
             </section>
 
             <!-- Real-time Predictions -->
             <section class="widget medium-widget">
-                <h2>실시간 예측 결과</h2>
-                <div class="predictions-container">
+                <h2>Real-time Prediction Results</h2>
+                <div class="predictions-container" id="realtime-predictions-dashboard">
                     <div class="prediction-item">
-                        <span class="stock-symbol">AAPL</span>
-                        <span class="prediction-direction up">↗ +2.3%</span>
-                        <span class="confidence">신뢰도: 87%</span>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span class="stock-symbol">AAPL</span>
+                            <span class="prediction-direction up">+2.3%</span>
+                        </div>
+                        <div class="prediction-confidence">
+                            <span class="confidence">Confidence: 87%</span>
+                            <div class="confidence-bar">
+                                <div class="confidence-fill" style="width: 87%"></div>
+                            </div>
+                        </div>
                     </div>
                     <div class="prediction-item">
-                        <span class="stock-symbol">GOOGL</span>
-                        <span class="prediction-direction down">↘ -1.2%</span>
-                        <span class="confidence">신뢰도: 92%</span>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span class="stock-symbol">GOOGL</span>
+                            <span class="prediction-direction down">-1.2%</span>
+                        </div>
+                        <div class="prediction-confidence">
+                            <span class="confidence">Confidence: 92%</span>
+                            <div class="confidence-bar">
+                                <div class="confidence-fill" style="width: 92%"></div>
+                            </div>
+                        </div>
                     </div>
                     <div class="prediction-item">
-                        <span class="stock-symbol">MSFT</span>
-                        <span class="prediction-direction up">↗ +0.8%</span>
-                        <span class="confidence">신뢰도: 79%</span>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span class="stock-symbol">MSFT</span>
+                            <span class="prediction-direction up">+0.8%</span>
+                        </div>
+                        <div class="prediction-confidence">
+                            <span class="confidence">Confidence: 79%</span>
+                            <div class="confidence-bar">
+                                <div class="confidence-fill" style="width: 79%"></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
 
             <!-- Trading Volume Chart -->
             <section class="widget large-widget">
-                <h2>거래량 분석</h2>
-                <canvas id="volume-chart"></canvas>
-            </section>
-
-            <!-- Feature Importance -->
-            <section class="widget medium-widget">
-                <h2>주식 예측 주요 근거 (XAI)</h2>
-                <div id="xai-explanation">
-                    <!-- XAI 설명이 여기에 동적으로 로드됩니다 -->
-                    <p>XAI 데이터를 로드하는 중...</p>
+                <h2>Trading Volume Analysis</h2>
+                <div class="volume-analysis-container">
+                    <div class="volume-summary" id="volume-summary">
+                        <div class="volume-metric">
+                            <span class="label">Total Volume</span>
+                            <span id="total-volume">310.6M</span>
+                        </div>
+                        <div class="volume-metric">
+                            <span class="label">Average Volume</span>
+                            <span id="avg-volume">44.4M</span>
+                        </div>
+                        <div class="volume-metric">
+                            <span class="label">Max Volume</span>
+                            <span id="max-volume">NVDA (89.1M)</span>
+                        </div>
+                        <div class="volume-metric">
+                            <span class="label">Unusual Volume Detected</span>
+                            <span class="metric-value alert" id="volume-alerts">2 cases</span>
+                        </div>
+                    </div>
+                    <canvas id="volume-chart"></canvas>
                 </div>
             </section>
 
             <!-- System Logs -->
             <section class="widget large-widget">
-                <h2>시스템 로그</h2>
+                <h2>System Logs</h2>
                 <div class="log-container" id="system-logs">
                     <div class="log-entry info">
                         <span class="timestamp">14:32:15</span>
                         <span class="log-level">INFO</span>
-                        <span class="log-message">모델 훈련 완료 - 정확도: 89.3%</span>
+                        <span class="log-message">Model training completed - Accuracy: 89.3%</span>
                     </div>
                     <div class="log-entry success">
                         <span class="timestamp">14:31:42</span>
                         <span class="log-level">SUCCESS</span>
-                        <span class="log-message">데이터 수집 파이프라인 정상 작동</span>
+                        <span class="log-message">Data collection pipeline operating normally</span>
                     </div>
                     <div class="log-entry warning">
                         <span class="timestamp">14:30:18</span>
                         <span class="log-level">WARNING</span>
-                        <span class="log-message">API 응답 지연 감지: 평균 1.2초</span>
+                        <span class="log-message">API response delay detected: average 1.2 seconds</span>
                     </div>
                 </div>
             </section>
 
             <!-- Model Comparison -->
             <section class="widget medium-widget">
-                <h2>모델 비교</h2>
+                <h2>Model Comparison</h2>
                 <canvas id="model-comparison-chart"></canvas>
             </section>
 
             <!-- Alert Panel -->
             <section class="widget small-widget">
-                <h2>알림</h2>
+                <h2>Alerts</h2>
                 <div class="alert-list">
                     <div class="alert-item high">
                         <span class="alert-icon">⚠️</span>
-                        <span class="alert-message">높은 변동성 감지</span>
+                        <span class="alert-message">High Volatility Detected</span>
                     </div>
                     <div class="alert-item medium">
                         <span class="alert-icon">📊</span>
-                        <span class="alert-message">모델 재훈련 권장</span>
+                        <span class="alert-message">Model Retraining Recommended</span>
                     </div>
                     <div class="alert-item low">
                         <span class="alert-icon">💾</span>
-                        <span class="alert-message">백업 완료</span>
+                        <span class="alert-message">Backup Completed</span>
                     </div>
-                            </div>
-                        </div>
-                    </div>
+                </div>
+            </section>
                 </div>
 
                 <!-- Models Performance Page -->
@@ -213,38 +271,38 @@
                     <div class="models-container">
                         <div class="models-grid">
                             <div class="widget large-widget">
-                                <h2>모델 성능 비교</h2>
+                                <h2>Model Performance Comparison</h2>
                                 <div class="model-comparison-table">
                                     <table class="performance-table">
                                         <thead>
                                             <tr>
-                                                <th>모델</th>
-                                                <th>정확도</th>
-                                                <th>정밀도</th>
-                                                <th>재현율</th>
+                                                <th>Model</th>
+                                                <th>Accuracy</th>
+                                                <th>Precision</th>
+                                                <th>Recall</th>
                                                 <th>F1-Score</th>
-                                                <th>처리 시간</th>
-                                                <th>상태</th>
+                                                <th>Processing Time</th>
+                                                <th>Status</th>
                                             </tr>
                                         </thead>
                                         <tbody id="model-performance-table">
-                                            <!-- 동적으로 생성됨 -->
+                                            <!-- Dynamically generated -->
                                         </tbody>
                                     </table>
                                 </div>
                             </div>
                             
                             <div class="widget medium-widget">
-                                <h2>모델 아키텍처</h2>
+                                <h2>Model Architecture</h2>
                                 <div class="model-architecture" id="model-architecture">
-                                    <!-- 동적으로 생성됨 -->
+                                    <!-- Dynamically generated -->
                                 </div>
                             </div>
                             
                             <div class="widget medium-widget">
-                                <h2>하이퍼파라미터</h2>
+                                <h2>Hyperparameters</h2>
                                 <div class="hyperparameters" id="hyperparameters">
-                                    <!-- 동적으로 생성됨 -->
+                                    <!-- Dynamically generated -->
                                 </div>
                             </div>
                         </div>
@@ -255,53 +313,115 @@
                 <div id="page-predictions" class="page">
                     <div class="predictions-container">
                         <div class="predictions-header">
-                            <h2>실시간 주식 예측</h2>
+                            <h2>Real-time Stock Predictions</h2>
                             <div class="prediction-controls">
                                 <select id="stock-selector">
-                                    <option value="all">전체 종목</option>
+                                    <option value="all">All Stocks</option>
                                     <option value="AAPL">Apple (AAPL)</option>
                                     <option value="GOOGL">Google (GOOGL)</option>
                                     <option value="MSFT">Microsoft (MSFT)</option>
                                 </select>
                                 <select id="timeframe-selector">
-                                    <option value="1d">1일</option>
-                                    <option value="1w">1주</option>
-                                    <option value="1m">1개월</option>
+                                    <option value="1d">1 Day</option>
+                                    <option value="1w">1 Week</option>
+                                    <option value="1m">1 Month</option>
                                 </select>
                             </div>
                         </div>
                         
                         <div class="predictions-grid">
                             <div class="widget large-widget">
-                                <h3>예측 차트</h3>
-                                <canvas id="prediction-chart"></canvas>
+                                <h3>Prediction Chart</h3>
+                                <div class="stock-selector-container">
+                                    <div class="stock-selector-label">Select Stock for Chart:</div>
+                                    <select class="stock-selector" id="prediction-stock-selector">
+                                        <option value="AAPL">Apple Inc. (AAPL)</option>
+                                        <option value="GOOGL">Alphabet Inc. (GOOGL)</option>
+                                        <option value="MSFT">Microsoft Corp. (MSFT)</option>
+                                        <option value="AMZN">Amazon.com Inc. (AMZN)</option>
+                                        <option value="TSLA">Tesla Inc. (TSLA)</option>
+                                        <option value="META">Meta Platforms Inc. (META)</option>
+                                        <option value="NVDA">NVIDIA Corp. (NVDA)</option>
+                                        <option value="NFLX">Netflix Inc. (NFLX)</option>
+                                        <option value="JPM">JPMorgan Chase & Co. (JPM)</option>
+                                        <option value="UNH">UnitedHealth Group Inc. (UNH)</option>
+                                    </select>
+                                    <div class="chart-description" id="prediction-chart-description">
+                                        Currently displaying real-time price prediction chart for Apple Inc. (AAPL). 
+                                        The blue solid line represents the actual price, and the red dashed line represents the AI model's predicted price.
+                                    </div>
+                                </div>
+                                <div class="chart-wrapper">
+                                    <canvas id="prediction-chart"></canvas>
+                                </div>
                             </div>
                             
                             <div class="widget medium-widget">
-                                <h3>예측 신뢰도</h3>
+                                <h3>Prediction Confidence</h3>
                                 <div class="confidence-meters" id="confidence-meters">
                                     <!-- 동적으로 생성됨 -->
                                 </div>
                             </div>
                             
                             <div class="widget large-widget">
-                                <h3>예측 결과 테이블</h3>
+                                <h3>S&P 500 Prediction Results</h3>
+                                <div class="table-controls">
+                                    <div class="pagination-info">
+                                        <span id="pagination-info">1-20 of 500 Stocks</span>
+                                    </div>
+                                    <div class="table-search">
+                                        <input type="text" id="symbol-search" placeholder="Search Stock (e.g., AAPL)">
+                                        <select id="sector-filter">
+                                            <option value="all">All Sectors</option>
+                                            <option value="Technology">Technology</option>
+                                            <option value="Healthcare">Healthcare</option>
+                                            <option value="Financials">Financials</option>
+                                            <option value="Consumer">Consumer</option>
+                                            <option value="Industrials">Industrials</option>
+                                            <option value="Energy">Energy</option>
+                                            <option value="Utilities">Utilities</option>
+                                            <option value="Materials">Materials</option>
+                                            <option value="Real Estate">Real Estate</option>
+                                            <option value="Communication">Communication</option>
+                                        </select>
+                                    </div>
+                                </div>
                                 <div class="predictions-table-container">
                                     <table class="predictions-table">
                                         <thead>
                                             <tr>
-                                                <th>종목</th>
-                                                <th>현재가</th>
-                                                <th>예측가</th>
-                                                <th>변동률</th>
-                                                <th>신뢰도</th>
-                                                <th>예측 시간</th>
+                                                <th>No.</th>
+                                                <th>Symbol</th>
+                                                <th>Company Name</th>
+                                                <th>Sector</th>
+                                                <th>Current Price</th>
+                                                <th>Predicted Price</th>
+                                                <th>Change %</th>
+                                                <th>Confidence</th>
+                                                <th>Prediction Time</th>
                                             </tr>
                                         </thead>
                                         <tbody id="predictions-table-body">
-                                            <!-- 동적으로 생성됨 -->
+                                            <!-- Dynamically generated -->
                                         </tbody>
                                     </table>
+                                </div>
+                                <div class="pagination-container">
+                                    <div class="pagination-controls">
+                                    <button id="prev-page" class="pagination-btn">◀ Previous</button>
+                                    <div class="page-numbers" id="page-numbers">
+                                        <!-- Dynamically generated -->
+                                    </div>
+                                    <button id="next-page" class="pagination-btn">Next ▶</button>
+                                </div>
+                                <div class="pagination-summary">
+                                    <select id="items-per-page">
+                                        <option value="10">10 items</option>
+                                        <option value="20" selected>20 items</option>
+                                        <option value="50">50 items</option>
+                                        <option value="100">100 items</option>
+                                    </select>
+                                </div>
                                 </div>
                             </div>
                         </div>
@@ -312,62 +432,440 @@
                 <div id="page-news" class="page">
                     <div class="news-container">
                         <div class="news-header">
-                            <h2>실시간 뉴스 분석</h2>
+                            <h2>Real-time News Analysis</h2>
                             <div class="news-controls">
                                 <select id="news-category">
-                                    <option value="all">전체 카테고리</option>
-                                    <option value="market">시장</option>
-                                    <option value="stock">개별종목</option>
-                                    <option value="economy">경제</option>
+                                    <option value="all">All Categories</option>
+                                    <option value="market">Market</option>
+                                    <option value="stock">Individual Stock</option>
+                                    <option value="economy">Economy</option>
                                 </select>
                                 <select id="sentiment-filter">
-                                    <option value="all">전체 감정</option>
-                                    <option value="positive">긍정</option>
-                                    <option value="negative">부정</option>
-                                    <option value="neutral">중립</option>
+                                    <option value="all">All Sentiments</option>
+                                    <option value="positive">Positive</option>
+                                    <option value="negative">Negative</option>
+                                    <option value="neutral">Neutral</option>
                                 </select>
                             </div>
                         </div>
                         
                         <div class="news-grid">
                             <div class="widget large-widget">
-                                <h3>감정 분석 차트</h3>
+                                <h3>Sentiment Analysis Chart</h3>
                                 <canvas id="sentiment-chart"></canvas>
                             </div>
                             
                             <div class="widget medium-widget">
-                                <h3>뉴스 요약</h3>
+                                <h3>News Summary</h3>
                                 <div class="news-summary" id="news-summary">
                                     <div class="summary-item">
-                                        <h4>주요 트렌드</h4>
-                                        <p>오늘 시장은 전반적으로 긍정적인 분위기를 보이고 있습니다.</p>
+                                        <h4>Key Trends</h4>
+                                        <p>The market is generally showing a positive sentiment today.</p>
                                     </div>
                                     <div class="summary-item">
-                                        <h4>영향도 높은 뉴스</h4>
-                                        <p>Fed 금리 인상 관련 발언이 시장에 큰 영향을 미치고 있습니다.</p>
+                                        <h4>High Impact News</h4>
+                                        <p>Fed interest rate hike comments are significantly impacting the market.</p>
                                     </div>
                                 </div>
                             </div>
                             
                             <div class="widget medium-widget">
-                                <h3>LLM 분석 요약</h3>
+                                <h3>LLM Analysis Summary</h3>
                                 <div class="llm-analysis-summary" id="llm-analysis-summary">
                                     <div class="summary-item">
-                                        <h4>시장 감성 (LLM)</h4>
-                                        <p id="llm-market-sentiment">로딩중...</p>
+                                        <h4>Market Sentiment (LLM)</h4>
+                                        <p id="llm-market-sentiment">Loading...</p>
                                     </div>
                                     <div class="summary-item">
-                                        <h4>주요 이벤트 카테고리 (LLM)</h4>
-                                        <p id="llm-event-category">로딩중...</p>
+                                        <h4>Key Event Category (LLM)</h4>
+                                        <p id="llm-event-category">Loading...</p>
                                     </div>
                                 </div>
                             </div>
                             
                             <div class="widget large-widget">
-                                <h3>실시간 뉴스 피드</h3>
-                                <div class="news-feed" id="news-feed">
-                                    <!-- 동적으로 생성됨 -->
+                                <h3>Real-time News Feed</h3>
+                                <div class="news-feed-controls">
+                                    <button id="load-more-news" class="btn btn-gradient">Load More News</button>
+                                    <span id="news-loading-indicator" class="loading-indicator" style="display: none;">
+                                        <div class="live-dot"></div>
+                                        Loading news...
+                                    </span>
                                 </div>
+                                <div class="news-feed" id="news-feed">
+                                    <!-- Dynamically generated -->
+                                </div>
+                                <div id="news-scroll-end" class="scroll-end-message" style="display: none;">
+                                    All news loaded.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Progress Page -->
+                <div id="page-progress" class="page">
+                    <div class="progress-container">
+                        <h2>Project Progress & Completion</h2>
+                        
+                        <div class="progress-grid">
+                            <div class="widget large-widget">
+                                <h3>Overall Completion</h3>
+                                <div class="completion-summary">
+                                    <div class="completion-circle">
+                                        <div class="circle-progress" data-percent="95">
+                                            <span class="percentage">95%</span>
+                                        </div>
+                                        <p>Overall Completion</p>
+                                    </div>
+                                    <div class="completion-stats">
+                                        <div class="stat-item">
+                                            <span class="stat-number">6/6</span>
+                                            <span class="stat-label">Core Components</span>
+                                        </div>
+                                        <div class="stat-item">
+                                            <span class="stat-number">100%</span>
+                                            <span class="stat-label">Data Pipeline</span>
+                                        </div>
+                                        <div class="stat-item">
+                                            <span class="stat-number">100%</span>
+                                            <span class="stat-label">Dashboard</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="widget medium-widget">
+                                <h3>Component-wise Completion</h3>
+                                <div class="component-progress">
+                                    <div class="progress-item">
+                                        <div class="progress-header">
+                                            <span>Data Processing Pipeline</span>
+                                            <span class="progress-percent">100%</span>
+                                        </div>
+                                        <div class="progress-bar">
+                                            <div class="progress-fill" style="width: 100%"></div>
+                                        </div>
+                                        <div class="progress-details">
+                                            ✅ S&P500 Data Collection ✅ News Sentiment Analysis ✅ Feature Extraction
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="progress-item">
+                                        <div class="progress-header">
+                                            <span>Model Training/Evaluation</span>
+                                            <span class="progress-percent">100%</span>
+                                        </div>
+                                        <div class="progress-bar">
+                                            <div class="progress-fill" style="width: 100%"></div>
+                                        </div>
+                                        <div class="progress-details">
+                                            ✅ RF/GB/LSTM Models ✅ Performance Evaluation ✅ Real-time Testing
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="progress-item">
+                                        <div class="progress-header">
+                                            <span>Real-time Dashboard</span>
+                                            <span class="progress-percent">100%</span>
+                                        </div>
+                                        <div class="progress-bar">
+                                            <div class="progress-fill" style="width: 100%"></div>
+                                        </div>
+                                        <div class="progress-details">
+                                            ✅ Web UI ✅ Real-time Monitoring ✅ Charts/Tables
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="progress-item">
+                                        <div class="progress-header">
+                                            <span>XAI Analysis System</span>
+                                            <span class="progress-percent">100%</span>
+                                        </div>
+                                        <div class="progress-bar">
+                                            <div class="progress-fill" style="width: 100%"></div>
+                                        </div>
+                                        <div class="progress-details">
+                                            ✅ SHAP Analysis ✅ LIME Explanation ✅ Visualization
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="progress-item">
+                                        <div class="progress-header">
+                                            <span>System Integration</span>
+                                            <span class="progress-percent">100%</span>
+                                        </div>
+                                        <div class="progress-bar">
+                                            <div class="progress-fill" style="width: 100%"></div>
+                                        </div>
+                                        <div class="progress-details">
+                                            ✅ Orchestrator ✅ Validation System ✅ Logging
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="progress-item">
+                                        <div class="progress-header">
+                                            <span>Documentation</span>
+                                            <span class="progress-percent">95%</span>
+                                        </div>
+                                        <div class="progress-bar">
+                                            <div class="progress-fill" style="width: 95%"></div>
+                                        </div>
+                                        <div class="progress-details">
+                                            ✅ README ✅ Code Comments 🔄 API Documentation (In Progress)
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="widget medium-widget">
+                                <h3>System Status</h3>
+                                <div class="system-status-detail" id="system-status-detail">
+                                    <div class="status-item">
+                                        <span class="status-label">Data Validation</span>
+                                        <span class="status-badge passed">Passed</span>
+                                    </div>
+                                    <div class="status-item">
+                                        <span class="status-label">XAI Monitoring</span>
+                                        <span class="status-badge active">Active</span>
+                                    </div>
+                                    <div class="status-item">
+                                        <span class="status-label">Real-time Test</span>
+                                        <span class="status-badge running">Running</span>
+                                    </div>
+                                    <div class="status-item">
+                                        <span class="status-label">Overall Health</span>
+                                        <span class="status-badge healthy">Healthy</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="widget large-widget">
+                                <h3>Recent Update Log</h3>
+                                <div class="update-log" id="progress-update-log">
+                                    <div class="log-item completed">
+                                        <div class="log-time">2024-12-25 16:30</div>
+                                        <div class="log-content">
+                                            <strong>XAI Data Visualization Improvement</strong>
+                                            <p>Display feature importance and SHAP analysis results using actual monitoring_dashboard.json data</p>
+                                        </div>
+                                    </div>
+                                    <div class="log-item completed">
+                                        <div class="log-time">2024-12-25 15:45</div>
+                                        <div class="log-content">
+                                            <strong>Added Progress Tab</strong>
+                                            <p>Implemented a new tab to visually display project completion and component-wise progress</p>
+                                        </div>
+                                    </div>
+                                    <div class="log-item in-progress">
+                                        <div class="log-time">2024-12-25 17:00</div>
+                                        <div class="log-content">
+                                            <strong>News Article Link Improvement</strong>
+                                            <p>Implementing functionality to navigate to original links when clicking news articles</p>
+                                        </div>
+                                    </div>
+                                    <div class="log-item in-progress">
+                                        <div class="log-time">2024-12-25 17:15</div>
+                                        <div class="log-content">
+                                            <strong>Chart Label Readability Improvement</strong>
+                                            <p>Fixing issues where labels extend outside the chart and improving overall readability</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- XAI Analysis Page -->
+                <div id="page-xai" class="page">
+                    <div class="xai-container">
+                        <div class="xai-header">
+                            <h2>XAI (Explainable AI) Analysis</h2>
+                            <div class="xai-controls">
+                                <select id="xai-model-selector">
+                                    <option value="random_forest">Random Forest</option>
+                                    <option value="gradient_boosting">Gradient Boosting</option>
+                                    <option value="neural_network">Neural Network</option>
+                                </select>
+                                <button class="btn" id="refresh-xai-btn">Refresh Analysis</button>
+                            </div>
+                        </div>
+                        
+                        <div class="widget">
+                            <h3>Overview</h3>
+                            <p class="xai-description">
+                                XAI is a technology that explains the prediction results of AI models in a human-understandable way. It helps to understand the internal workings of AI models, which are often like "black boxes," and transparently shows the basis for predictions. This increases model trustworthiness, helps discover potential biases, and supports better decision-making.
+                            </p>
+                        </div>
+
+                        <div class="widget">
+                            <h3>Global Model Explanation</h3>
+                            <p class="xai-description">
+                                Analyzes the general behavior patterns of the entire model. It helps identify which features have the greatest overall impact on predictions and how changes in specific features tend to affect model predictions.
+                            </p>
+                            <div class="xai-grid">
+                                <div id="feature-importance-chart" class="xai-chart-container">
+                                    <h4>Feature Importance</h4>
+                                    <p>Shows the features that the model considers most important when generating predictions.</p>
+                                    <!-- Chart will be rendered here -->
+                                </div>
+                                <div id="shap-summary-plot" class="xai-chart-container">
+                                    <h4>SHAP Summary Plot</h4>
+                                    <p>Shows the magnitude and direction of each feature's impact on the model output across the entire dataset.</p>
+                                    <!-- Chart will be rendered here -->
+                                </div>
+                                <div id="partial-dependence-plot" class="xai-chart-container">
+                                    <h4>Partial Dependence Plot</h4>
+                                    <p>Shows how the model's predictions change when the value of a specific feature changes.</p>
+                                    <!-- Chart will be rendered here -->
+                                </div>
+                                <div id="confusion-matrix" class="xai-chart-container">
+                                    <h4>Confusion Matrix and Error Analysis</h4>
+                                    <p>Shows how well the model's predictions match actual values and analyzes what types of errors it makes.</p>
+                                    <!-- Chart will be rendered here -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="widget">
+                            <h3>Local Prediction Explanation</h3>
+                            <div class="xai-controls">
+                                <p class="xai-description">
+                                    Analyzes in detail why a specific prediction was made. You can check which factors positively or negatively influenced the recent prediction of a particular stock.
+                                </p>
+                                <select id="xai-stock-selector">
+                                    <option value="AAPL">Apple (AAPL)</option>
+                                    <option value="MSFT">Microsoft (MSFT)</option>
+                                    <option value="GOOGL">Google (GOOGL)</option>
+                                    <option value="AMZN">Amazon (AMZN)</option>
+                                </select>
+                            </div>
+                            <div class="xai-grid">
+                                <div id="shap-force-plot" class="xai-chart-container">
+                                    <h4>SHAP Force Plot</h4>
+                                    <p>Visually shows how much each feature contributed to increasing or decreasing the prediction for a selected individual prediction.</p>
+                                    <!-- Chart will be rendered here -->
+                                </div>
+                                <div id="lime-explanation" class="xai-chart-container">
+                                    <h4>LIME Explanation</h4>
+                                    <p>Approximates a complex model with a locally simple model to explain the main contributing features for a specific prediction.</p>
+                                    <!-- Chart will be rendered here -->
+                                </div>
+                                <div id="counterfactual-what-if" class="xai-chart-container">
+                                    <h4>Counterfactual/What-if Analysis</h4>
+                                    <p>Shows what features need to be minimally changed to alter the prediction result. (e.g., "If the 5-day moving average was 2% higher, the prediction would have been 'up' instead of 'down'.")</p>
+                                    <!-- Content will be rendered here -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ML Model Performance Analysis -->
+                        <div class="widget">
+                            <h3>ML Model Performance Analysis</h3>
+                            <div class="xai-grid">
+                                <div id="model-performance-metrics" class="xai-chart-container">
+                                    <h4>Performance Metrics Dashboard</h4>
+                                    <canvas id="performance-metrics-chart"></canvas>
+                                </div>
+                                <div id="learning-curves" class="xai-chart-container">
+                                    <h4>Learning Curves</h4>
+                                    <canvas id="learning-curves-chart"></canvas>
+                                </div>
+                                <div id="validation-curves" class="xai-chart-container">
+                                    <h4>Validation Curves</h4>
+                                    <canvas id="validation-curves-chart"></canvas>
+                                </div>
+                                <div id="feature-correlation-heatmap" class="xai-chart-container">
+                                    <h4>Feature Correlation Heatmap</h4>
+                                    <div id="correlation-heatmap-chart"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- LLM Analysis Visualizations -->
+                        <div class="widget">
+                            <h3>LLM Analysis & NLP Insights</h3>
+                            <div class="xai-grid">
+                                <div id="sentiment-analysis-chart" class="xai-chart-container">
+                                    <h4>Sentiment Analysis Timeline</h4>
+                                    <canvas id="sentiment-timeline-chart"></canvas>
+                                </div>
+                                <div id="topic-modeling-chart" class="xai-chart-container">
+                                    <h4>Topic Modeling Results</h4>
+                                    <canvas id="topic-modeling-visualization"></canvas>
+                                </div>
+                                <div id="attention-weights-chart" class="xai-chart-container">
+                                    <h4>Attention Weights Visualization</h4>
+                                    <canvas id="attention-weights-chart"></canvas>
+                                </div>
+                                <div id="embedding-space-chart" class="xai-chart-container">
+                                    <h4>Embedding Space (t-SNE)</h4>
+                                    <canvas id="embedding-tsne-chart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Advanced Model Interpretability -->
+                        <div class="widget">
+                            <h3>Advanced Model Interpretability</h3>
+                            <div class="xai-grid">
+                                <div id="decision-tree-viz" class="xai-chart-container">
+                                    <h4>Decision Tree Visualization</h4>
+                                    <div id="decision-tree-container"></div>
+                                </div>
+                                <div id="gradient-analysis" class="xai-chart-container">
+                                    <h4>Gradient-based Attribution</h4>
+                                    <canvas id="gradient-attribution-chart"></canvas>
+                                </div>
+                                <div id="layer-wise-relevance" class="xai-chart-container">
+                                    <h4>Layer-wise Relevance Propagation</h4>
+                                    <canvas id="lrp-chart"></canvas>
+                                </div>
+                                <div id="integrated-gradients" class="xai-chart-container">
+                                    <h4>Integrated Gradients</h4>
+                                    <canvas id="integrated-gradients-chart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Real-time Model Monitoring -->
+                        <div class="widget">
+                            <h3>Real-time Model Monitoring</h3>
+                            <div class="xai-grid">
+                                <div id="prediction-confidence-dist" class="xai-chart-container">
+                                    <h4>Prediction Confidence Distribution</h4>
+                                    <canvas id="confidence-distribution-chart"></canvas>
+                                </div>
+                                <div id="model-drift-detection" class="xai-chart-container">
+                                    <h4>Data Drift Detection</h4>
+                                    <canvas id="drift-detection-chart"></canvas>
+                                </div>
+                                <div id="prediction-vs-actual" class="xai-chart-container">
+                                    <h4>Prediction vs Actual</h4>
+                                    <canvas id="prediction-actual-chart"></canvas>
+                                </div>
+                                <div id="ensemble-voting" class="xai-chart-container">
+                                    <h4>Ensemble Model Voting</h4>
+                                    <canvas id="ensemble-voting-chart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="widget">
+                            <h3>Model Behavior Summary and Recommendations</h3>
+                            <div id="xai-summary-recommendation">
+                                <p><strong>Current Model Behavior Summary:</strong></p>
+                                <ul>
+                                    <li>The current model tends to use <strong>'recent 5-day trading volume change'</strong> and <strong>'news article sentiment score'</strong> as the most important predictors.</li>
+                                    <li>Specifically, when predicting technology stocks, it gives high weight to the <strong>'correlation with the Nasdaq index'</strong> feature.</li>
+                                    <li>The model shows more reliance on long-term moving averages than short-term volatility.</li>
+                                </ul>
+                                <p><strong>Recommendations:</strong></p>
+                                <ul>
+                                    <li>If prediction confidence is below 80%, it is recommended to take a conservative approach as the prediction is likely influenced by volatile market conditions.</li>
+                                    <li>You can refer to 'Counterfactual Analysis' to see what factors can change predictions and use this for your investment strategy.</li>
+                                </ul>
                             </div>
                         </div>
                     </div>
@@ -377,37 +875,37 @@
                 <div id="page-data" class="page">
                     <div class="data-explorer">
                         <div class="data-header">
-                            <h2>데이터 탐색기</h2>
+                            <h2>Data Explorer</h2>
                             <div class="data-controls">
                                 <select id="dataset-selector">
-                                    <option value="stock_data">주식 데이터</option>
-                                    <option value="news_data">뉴스 데이터</option>
-                                    <option value="features">특성 데이터</option>
-                                    <option value="predictions">예측 결과</option>
+                                    <option value="stock_data">Stock Data</option>
+                                    <option value="news_data">News Data</option>
+                                    <option value="features">Feature Data</option>
+                                    <option value="predictions">Prediction Results</option>
                                 </select>
-                                <button class="btn" onclick="dashboard.exportCurrentData()">내보내기</button>
+                                <button class="btn" onclick="dashboard.exportCurrentData()">Export</button>
                             </div>
                         </div>
                         
                         <div class="data-grid">
                             <div class="widget large-widget">
-                                <h3>데이터 테이블</h3>
+                                <h3>Data Table</h3>
                                 <div class="data-table-container">
                                     <table class="data-table" id="data-table">
-                                        <!-- 동적으로 생성됨 -->
+                                        <!-- Dynamically generated -->
                                     </table>
                                 </div>
                             </div>
                             
                             <div class="widget medium-widget">
-                                <h3>데이터 통계</h3>
+                                <h3>Data Statistics</h3>
                                 <div class="data-stats" id="data-stats">
-                                    <!-- 동적으로 생성됨 -->
+                                    <!-- Dynamically generated -->
                                 </div>
                             </div>
                             
                             <div class="widget medium-widget">
-                                <h3>데이터 시각화</h3>
+                                <h3>Data Visualization</h3>
                                 <canvas id="data-visualization"></canvas>
                             </div>
                         </div>
@@ -418,38 +916,38 @@
                 <div id="page-code" class="page">
                     <div class="code-viewer">
                         <div class="code-header">
-                            <h2>소스 코드 뷰어</h2>
+                            <h2>Source Code Viewer</h2>
                             <div class="code-controls">
                                 <select id="file-selector">
-                                    <option value="">파일 선택...</option>
-                                    <optgroup label="대시보드">
+                                    <option value="">Select File...</option>
+                                    <optgroup label="Dashboard">
                                         <option value="dashboard/index.html">index.html</option>
                                         <option value="dashboard/styles.css">styles.css</option>
                                         <option value="dashboard/dashboard.js">dashboard.js</option>
                                     </optgroup>
-                                    <optgroup label="모델">
+                                    <optgroup label="Models">
                                         <option value="src/models/model_training.py">model_training.py</option>
                                         <option value="src/models/paper_experiment_master.py">paper_experiment_master.py</option>
                                     </optgroup>
-                                    <optgroup label="데이터 처리">
+                                    <optgroup label="Data Processing">
                                         <option value="src/core/data_collection_pipeline.py">data_collection_pipeline.py</option>
                                         <option value="src/core/advanced_preprocessing.py">advanced_preprocessing.py</option>
                                     </optgroup>
                                 </select>
-                                <button class="btn" onclick="dashboard.downloadFile()">다운로드</button>
-                                <button class="btn" onclick="dashboard.copyCode()">복사</button>
+                                <button class="btn" onclick="dashboard.downloadFile()">Download</button>
+                                <button class="btn" onclick="dashboard.copyCode()">Copy</button>
                             </div>
                         </div>
                         
                         <div class="code-content">
                             <div class="file-info">
-                                <span id="file-path">파일을 선택해주세요</span>
+                                <span id="file-path">Please select a file</span>
                                 <span id="file-size"></span>
                                 <span id="file-modified"></span>
                             </div>
                             
                             <div class="code-container">
-                                <pre><code id="code-display" class="language-python">// 파일을 선택하면 코드가 표시됩니다</code></pre>
+                                <pre><code id="code-display" class="language-python">// Code will be displayed when a file is selected</code></pre>
                             </div>
                         </div>
                     </div>
@@ -459,37 +957,37 @@
                 <div id="page-logs" class="page">
                     <div class="logs-container">
                         <div class="logs-header">
-                            <h2>시스템 로그</h2>
+                            <h2>System Logs</h2>
                             <div class="logs-controls">
                                 <select id="log-level">
-                                    <option value="all">전체 레벨</option>
+                                    <option value="all">All Levels</option>
                                     <option value="error">ERROR</option>
                                     <option value="warning">WARNING</option>
                                     <option value="info">INFO</option>
                                     <option value="debug">DEBUG</option>
                                 </select>
                                 <select id="log-source">
-                                    <option value="all">전체 소스</option>
-                                    <option value="model">모델</option>
-                                    <option value="data">데이터</option>
+                                    <option value="all">All Sources</option>
+                                    <option value="model">Model</option>
+                                    <option value="data">Data</option>
                                     <option value="api">API</option>
-                                    <option value="system">시스템</option>
+                                    <option value="system">System</option>
                                 </select>
-                                <button class="btn" onclick="dashboard.clearLogs()">로그 지우기</button>
-                                <button class="btn" onclick="dashboard.downloadLogs()">로그 다운로드</button>
+                                <button class="btn" onclick="dashboard.clearLogs()">Clear Logs</button>
+                                <button class="btn" onclick="dashboard.downloadLogs()">Download Logs</button>
                             </div>
                         </div>
                         
                         <div class="logs-grid">
                             <div class="widget large-widget">
-                                <h3>실시간 로그</h3>
+                                <h3>Real-time Logs</h3>
                                 <div class="log-viewer" id="log-viewer">
-                                    <!-- 동적으로 생성됨 -->
+                                    <!-- Dynamically generated -->
                                 </div>
                             </div>
                             
                             <div class="widget medium-widget">
-                                <h3>로그 통계</h3>
+                                <h3>Log Statistics</h3>
                                 <canvas id="log-stats-chart"></canvas>
                             </div>
                         </div>
@@ -499,60 +997,66 @@
                 <!-- Settings Page -->
                 <div id="page-settings" class="page">
                     <div class="settings-container">
-                        <h2>시스템 설정</h2>
+                        <div class="settings-header">
+                            <h2>System Settings</h2>
+                            <div class="settings-actions">
+                                <button class="btn btn-primary" onclick="dashboard.saveSettings()">Save Settings</button>
+                                <button class="btn" onclick="dashboard.resetSettings()">Reset</button>
+                            </div>
+                        </div>
                         
                         <div class="settings-grid">
                             <div class="widget large-widget">
-                                <h3>일반 설정</h3>
+                                <h3>General Settings</h3>
                                 <div class="settings-group">
-                                    <label>업데이트 간격 (초)</label>
+                                    <label>Update Interval (seconds)</label>
                                     <input type="number" id="update-interval" value="5" min="1" max="60">
                                 </div>
                                 <div class="settings-group">
-                                    <label>테마</label>
+                                    <label>Theme</label>
                                     <select id="theme-selector">
-                                        <option value="light">라이트</option>
-                                        <option value="dark">다크</option>
-                                        <option value="auto">자동</option>
+                                        <option value="light">Light</option>
+                                        <option value="dark">Dark</option>
+                                        <option value="auto">Auto</option>
                                     </select>
                                 </div>
                                 <div class="settings-group">
                                     <label>
                                         <input type="checkbox" id="auto-refresh" checked>
-                                        자동 새로고침
+                                        Auto Refresh
                                     </label>
                                 </div>
                             </div>
                             
                             <div class="widget medium-widget">
-                                <h3>알림 설정</h3>
+                                <h3>Notification Settings</h3>
                                 <div class="settings-group">
                                     <label>
                                         <input type="checkbox" id="desktop-notifications" checked>
-                                        데스크톱 알림
+                                        Desktop Notifications
                                     </label>
                                 </div>
                                 <div class="settings-group">
                                     <label>
                                         <input type="checkbox" id="sound-alerts">
-                                        사운드 알림
+                                        Sound Alerts
                                     </label>
                                 </div>
                                 <div class="settings-group">
-                                    <label>예측 정확도 임계값 (%)</label>
+                                    <label>Prediction Accuracy Threshold (%)</label>
                                     <input type="number" id="accuracy-threshold" value="85" min="0" max="100">
                                 </div>
                             </div>
                             
                             <div class="widget medium-widget">
-                                <h3>시스템 정보</h3>
+                                <h3>System Information</h3>
                                 <div class="system-info" id="system-info">
                                     <div class="info-item">
-                                        <span class="label">버전:</span>
+                                        <span class="label">Version:</span>
                                         <span class="value">1.0.0</span>
                                     </div>
                                     <div class="info-item">
-                                        <span class="label">빌드:</span>
+                                        <span class="label">Build:</span>
                                         <span class="value">2024.03.15</span>
                                     </div>
                                     <div class="info-item">
@@ -566,20 +1070,19 @@
                                 </div>
                             </div>
                         </div>
-                        
-                        <div class="settings-actions">
-                            <button class="btn btn-primary" onclick="dashboard.saveSettings()">설정 저장</button>
-                            <button class="btn" onclick="dashboard.resetSettings()">초기화</button>
-                        </div>
                     </div>
                 </div>
             </div>
         </main>
     </div>
 
-    <script src="dashboard.js"></script>
-    <script src="dashboard-extended.js"></script>
-    <script src="news-analyzer.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="translator.js"></script>
     <script src="router.js"></script>
+    <script src="sp500-api-manager.js"></script>
+    <script src="api-config-panel.js"></script>
+    <script src="news-analyzer.js"></script>
+    <script src="dashboard-extended.js"></script>
+    <script src="dashboard.js"></script>
 </body>
 </html>

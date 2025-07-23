@@ -1,0 +1,148 @@
+sp500-api-manager.js:171 S&P 500 데이터 수집 시작...
+news-analyzer.js:67 실시간 뉴스 수집 시작...
+dashboard.js:702 XAI 분석을 위해 선택된 주식: NVDA
+dashboard.js:706 DashboardExtensions 인스턴스가 없거나 renderLocalXaiAnalysis 함수를 찾을 수 없습니다.
+handleXaiStockChange @ dashboard.js:706
+updateXaiStockSelector @ dashboard.js:438
+setupVolumeChart @ dashboard.js:412
+setupCharts @ dashboard.js:313
+init @ dashboard.js:22
+DashboardManager @ dashboard.js:18
+(anonymous) @ dashboard.js:794
+dashboard.js:702 XAI 분석을 위해 선택된 주식: NVDA
+dashboard.js:706 DashboardExtensions 인스턴스가 없거나 renderLocalXaiAnalysis 함수를 찾을 수 없습니다.
+handleXaiStockChange @ dashboard.js:706
+setupEventListeners @ dashboard.js:662
+init @ dashboard.js:25
+DashboardManager @ dashboard.js:18
+(anonymous) @ dashboard.js:794
+news-analyzer.js:41 LLM 강화 특징 100개 로드 완료.
+dashboard.js:258  GET http://localhost:5500/log/localhost-1753236055062.log 404 (Not Found)
+updateSystemLogs @ dashboard.js:258
+loadInitialData @ dashboard.js:160
+await in loadInitialData
+init @ dashboard.js:24
+DashboardManager @ dashboard.js:18
+(anonymous) @ dashboard.js:794
+dashboard.js:264 로그 파일 /log/localhost-1753236055062.log 로드 실패: 404 Not Found
+updateSystemLogs @ dashboard.js:264
+await in updateSystemLogs
+loadInitialData @ dashboard.js:160
+await in loadInitialData
+init @ dashboard.js:24
+DashboardManager @ dashboard.js:18
+(anonymous) @ dashboard.js:794
+news-analyzer.js:99 20개의 뉴스를 수집하고 분석했습니다.
+dashboard.js:596 Uncaught TypeError: Cannot read properties of undefined (reading 'updateLlmAnalysisSummary')
+    at dashboard.js:596:29
+    at RealTimeNewsAnalyzer.notifyDashboard (news-analyzer.js:480:16)
+    at RealTimeNewsAnalyzer.collectNews (news-analyzer.js:102:22)
+(anonymous) @ dashboard.js:596
+notifyDashboard @ news-analyzer.js:480
+collectNews @ news-analyzer.js:102
+await in collectNews
+startRealTimeUpdates @ news-analyzer.js:50
+RealTimeNewsAnalyzer @ news-analyzer.js:21
+(anonymous) @ news-analyzer.js:647
+dashboard/#xai:1 Access to resource at 'https://api.allorigins.win/get?url=https%3A%2F%2Fquery1.finance.yahoo.com%2Fv8%2Ffinance%2Fchart%2FAMZN' from origin 'http://localhost:5500' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource.
+get:1  GET https://api.allorigins.win/get?url=https%3A%2F%2Fquery1.finance.yahoo.com%2Fv8%2Ffinance%2Fchart%2FAMZN net::ERR_FAILED 500 (Internal Server Error)
+dashboard/#xai:1 Access to resource at 'https://api.allorigins.win/get?url=https%3A%2F%2Fquery1.finance.yahoo.com%2Fv8%2Ffinance%2Fchart%2FNVDA' from origin 'http://localhost:5500' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource.
+get:1  GET https://api.allorigins.win/get?url=https%3A%2F%2Fquery1.finance.yahoo.com%2Fv8%2Ffinance%2Fchart%2FNVDA net::ERR_FAILED 500 (Internal Server Error)
+dashboard/#xai:1 Access to fetch at 'https://api.allorigins.win/get?url=https%3A%2F%2Fquery1.finance.yahoo.com%2Fv8%2Ffinance%2Fchart%2FXOM' from origin 'http://localhost:5500' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource.
+sp500-api-manager.js:408  GET https://api.allorigins.win/get?url=https%3A%2F%2Fquery1.finance.yahoo.com%2Fv8%2Ffinance%2Fchart%2FXOM net::ERR_FAILED 429 (Too Many Requests)
+collectFromYahooFinance @ sp500-api-manager.js:408
+await in collectFromYahooFinance
+collectAllData @ sp500-api-manager.js:180
+startDataCollection @ sp500-api-manager.js:161
+init @ sp500-api-manager.js:116
+SP500APIManager @ sp500-api-manager.js:111
+(anonymous) @ sp500-api-manager.js:715
+sp500-api-manager.js:445 Yahoo Finance 데이터 수집 실패: TypeError: Failed to fetch
+    at SP500APIManager.collectFromYahooFinance (sp500-api-manager.js:408:40)
+    at async Promise.allSettled (dashboard/index 5)
+    at async SP500APIManager.collectAllData (sp500-api-manager.js:183:25)
+collectFromYahooFinance @ sp500-api-manager.js:445
+await in collectFromYahooFinance
+collectAllData @ sp500-api-manager.js:180
+startDataCollection @ sp500-api-manager.js:161
+init @ sp500-api-manager.js:116
+SP500APIManager @ sp500-api-manager.js:111
+(anonymous) @ sp500-api-manager.js:715
+dashboard.js:702 XAI 분석을 위해 선택된 주식: TSLA
+dashboard.js:706 DashboardExtensions 인스턴스가 없거나 renderLocalXaiAnalysis 함수를 찾을 수 없습니다.
+handleXaiStockChange @ dashboard.js:706
+(anonymous) @ dashboard.js:659
+handleMouseUp_ @ unknown
+dashboard.js:702 XAI 분석을 위해 선택된 주식: AAPL
+dashboard.js:706 DashboardExtensions 인스턴스가 없거나 renderLocalXaiAnalysis 함수를 찾을 수 없습니다.
+handleXaiStockChange @ dashboard.js:706
+(anonymous) @ dashboard.js:659
+handleMouseUp_ @ unknown
+dashboard.js:702 XAI 분석을 위해 선택된 주식: GOOGL
+dashboard.js:706 DashboardExtensions 인스턴스가 없거나 renderLocalXaiAnalysis 함수를 찾을 수 없습니다.
+handleXaiStockChange @ dashboard.js:706
+(anonymous) @ dashboard.js:659
+handleMouseUp_ @ unknown
+dashboard.js:702 XAI 분석을 위해 선택된 주식: MSFT
+dashboard.js:706 DashboardExtensions 인스턴스가 없거나 renderLocalXaiAnalysis 함수를 찾을 수 없습니다.
+handleXaiStockChange @ dashboard.js:706
+(anonymous) @ dashboard.js:659
+handleMouseUp_ @ unknown
+dashboard.js:258  GET http://localhost:5500/log/localhost-1753236055062.log 404 (Not Found)
+updateSystemLogs @ dashboard.js:258
+(anonymous) @ dashboard.js:520
+setInterval
+startRealTimeUpdates @ dashboard.js:512
+init @ dashboard.js:23
+DashboardManager @ dashboard.js:18
+(anonymous) @ dashboard.js:794
+dashboard.js:264 로그 파일 /log/localhost-1753236055062.log 로드 실패: 404 Not Found
+updateSystemLogs @ dashboard.js:264
+await in updateSystemLogs
+(anonymous) @ dashboard.js:520
+setInterval
+startRealTimeUpdates @ dashboard.js:512
+init @ dashboard.js:23
+DashboardManager @ dashboard.js:18
+(anonymous) @ dashboard.js:794
+dashboard.js:258  GET http://localhost:5500/log/localhost-1753236055062.log 404 (Not Found)
+updateSystemLogs @ dashboard.js:258
+(anonymous) @ dashboard.js:520
+setInterval
+startRealTimeUpdates @ dashboard.js:512
+init @ dashboard.js:23
+DashboardManager @ dashboard.js:18
+(anonymous) @ dashboard.js:794
+dashboard.js:264 로그 파일 /log/localhost-1753236055062.log 로드 실패: 404 Not Found
+updateSystemLogs @ dashboard.js:264
+await in updateSystemLogs
+(anonymous) @ dashboard.js:520
+setInterval
+startRealTimeUpdates @ dashboard.js:512
+init @ dashboard.js:23
+DashboardManager @ dashboard.js:18
+(anonymous) @ dashboard.js:794
+dashboard.js:258  GET http://localhost:5500/log/localhost-1753236055062.log 404 (Not Found)
+updateSystemLogs @ dashboard.js:258
+(anonymous) @ dashboard.js:520
+setInterval
+startRealTimeUpdates @ dashboard.js:512
+init @ dashboard.js:23
+DashboardManager @ dashboard.js:18
+(anonymous) @ dashboard.js:794
+dashboard.js:264 로그 파일 /log/localhost-1753236055062.log 로드 실패: 404 Not Found
+updateSystemLogs @ dashboard.js:264
+await in updateSystemLogs
+(anonymous) @ dashboard.js:520
+setInterval
+startRealTimeUpdates @ dashboard.js:512
+init @ dashboard.js:23
+DashboardManager @ dashboard.js:18
+(anonymous) @ dashboard.js:794
+sp500-api-manager.js:171 S&P 500 데이터 수집 시작...
+sp500-api-manager.js:188 ✅ alphaVantage 데이터 수집 성공: 1 개 종목
+sp500-api-manager.js:188 ✅ financialModelingPrep 데이터 수집 성공: 0 개 종목
+sp500-api-manager.js:188 ✅ twelveData 데이터 수집 성공: 0 개 종목
+sp500-api-manager.js:188 ✅ polygon 데이터 수집 성공: 0 개 종목
+sp500-api-manager.js:188 ✅ iexCloud 데이터 수집 성공: 0 개 종목
+sp500-api-manager.js:188 ✅ yahooFinance 데이터 수집 성공: 9 개 종목

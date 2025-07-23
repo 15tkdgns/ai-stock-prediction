@@ -267,11 +267,11 @@ class APIConfigPanel {
 
             // 성공한 API 개수 알림
             const successCount = Object.values(results).filter(status => status === 'OK').length;
-            this.showNotification(`${successCount}개 API 연결 성공`, 'success');
+            this.showNotification(`${successCount} APIs connected successfully`, 'success');
 
         } catch (error) {
-            console.error('API 테스트 실패:', error);
-            this.showNotification('API 테스트 중 오류 발생', 'error');
+            console.error('API test failed:', error);
+            this.showNotification('Error occurred during API testing', 'error');
         } finally {
             if (testButton) {
                 testButton.disabled = false;
@@ -301,17 +301,17 @@ class APIConfigPanel {
         });
 
         if (savedCount > 0) {
-            this.showNotification(`${savedCount}개 API 키가 저장되었습니다`, 'success');
+            this.showNotification(`${savedCount} API keys saved successfully`, 'success');
             // 자동으로 API 테스트 실행
             setTimeout(() => this.testAllAPIs(), 1000);
         } else {
-            this.showNotification('저장할 API 키가 없습니다', 'warning');
+            this.showNotification('No API keys to save', 'warning');
         }
     }
 
     // API 키 초기화
     clearAPIKeys() {
-        if (confirm('모든 API 키를 삭제하시겠습니까?')) {
+        if (confirm('Are you sure you want to delete all API keys?')) {
             const inputs = ['alpha-vantage-key', 'fmp-key', 'twelve-data-key', 'polygon-key', 'iex-key'];
             const storageKeys = ['alpha_vantage_key', 'fmp_key', 'twelve_data_key', 'polygon_key', 'iex_key'];
 
@@ -324,7 +324,7 @@ class APIConfigPanel {
                 localStorage.removeItem(key);
             });
 
-            this.showNotification('API 키가 초기화되었습니다', 'info');
+            this.showNotification('API keys have been reset', 'info');
             
             // 상태 초기화
             setTimeout(() => this.testAllAPIs(), 500);
@@ -335,7 +335,7 @@ class APIConfigPanel {
     refreshMarketData() {
         if (this.apiManager) {
             this.apiManager.collectAllData();
-            this.showNotification('시장 데이터를 새로고침합니다', 'info');
+            this.showNotification('Refreshing market data', 'info');
         }
     }
 
@@ -343,7 +343,7 @@ class APIConfigPanel {
     updateDataInterval(intervalMs) {
         if (this.apiManager) {
             this.apiManager.setUpdateInterval(intervalMs);
-            this.showNotification(`업데이트 주기가 ${intervalMs/1000}초로 변경되었습니다`, 'success');
+            this.showNotification(`Update interval changed to ${intervalMs/1000} seconds`, 'success');
         }
     }
 
@@ -381,7 +381,7 @@ class APIConfigPanel {
                     </div>
                     <div class="summary-item">
                         <div class="summary-label">마지막 업데이트</div>
-                        <div class="summary-value">${new Date(analysis.lastUpdate).toLocaleTimeString('ko-KR')}</div>
+                        <div class="summary-value">${new Date(analysis.lastUpdate).toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' })}</div>
                     </div>
                 </div>
 
@@ -433,7 +433,7 @@ class APIConfigPanel {
                 </div>
                 <div class="usage-item">
                     <span class="usage-label">마지막 업데이트</span>
-                    <span class="usage-value">${new Date(usage.lastUpdate).toLocaleTimeString('ko-KR')}</span>
+                    <span class="usage-value">${new Date(usage.lastUpdate).toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' })}</span>
                 </div>
             `;
         }
