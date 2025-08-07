@@ -1,0 +1,415 @@
+router.js:52 Navigating to page: settings
+router.js:57 Removed active class from: page-dashboard
+router.js:64 Added active class to: page-settings
+router.js:108 Initializing page: settings
+router.js:1019 initializeSettingsPage called
+router.js:1030  Uncaught TypeError: Cannot set properties of null (setting 'value')
+    at Router.loadCurrentSettings (router.js:1030:58)
+    at Router.initializeSettingsPage (router.js:1020:14)
+    at Router.initializePage (router.js:134:22)
+    at Router.navigateTo (router.js:80:14)
+    at Router.init (router.js:37:14)
+    at new Router (router.js:6:14)
+    at router.js:1434:17
+loadCurrentSettings @ router.js:1030
+initializeSettingsPage @ router.js:1020
+initializePage @ router.js:134
+navigateTo @ router.js:80
+init @ router.js:37
+Router @ router.js:6
+(anonymous) @ router.js:1434
+[NEW] Explain Console errors by using Copilot in Edge: click
+         
+         to explain an error. 
+        Learn more
+        Don't show again
+sp500-api-manager.js:171 S&P 500 데이터 수집 시작...
+sp500-api-manager.js:410 [API DEBUG] Fetching data for AAPL via proxy...
+news-analyzer.js:68 Starting real-time news collection...
+:8080/#settings:1  Access to fetch at 'https://api.allorigins.win/get?url=https%3A%2F%2Fquery1.finance.yahoo.com%2Fv8%2Ffinance%2Fchart%2FAAPL' from origin 'http://localhost:8080' has been blocked by CORS policy: The 'Access-Control-Allow-Origin' header has a value 'http://localhost:5500' that is not equal to the supplied origin. Have the server send the header with a valid value.
+sp500-api-manager.js:411   GET https://api.allorigins.win/get?url=https%3A%2F%2Fquery1.finance.yahoo.com%2Fv8%2Ffinance%2Fchart%2FAAPL net::ERR_FAILED
+collectFromYahooFinance @ sp500-api-manager.js:411
+collectAllData @ sp500-api-manager.js:180
+startDataCollection @ sp500-api-manager.js:161
+init @ sp500-api-manager.js:116
+SP500APIManager @ sp500-api-manager.js:111
+(anonymous) @ sp500-api-manager.js:762
+sp500-api-manager.js:421  [API DEBUG] CORS/Network error for AAPL: Failed to fetch
+collectFromYahooFinance @ sp500-api-manager.js:421
+await in collectFromYahooFinance
+collectAllData @ sp500-api-manager.js:180
+startDataCollection @ sp500-api-manager.js:161
+init @ sp500-api-manager.js:116
+SP500APIManager @ sp500-api-manager.js:111
+(anonymous) @ sp500-api-manager.js:762
+sp500-api-manager.js:422  [API DEBUG] Skipping AAPL due to fetch error, will use mock data if needed
+collectFromYahooFinance @ sp500-api-manager.js:422
+await in collectFromYahooFinance
+collectAllData @ sp500-api-manager.js:180
+startDataCollection @ sp500-api-manager.js:161
+init @ sp500-api-manager.js:116
+SP500APIManager @ sp500-api-manager.js:111
+(anonymous) @ sp500-api-manager.js:762
+sp500-api-manager.js:410 [API DEBUG] Fetching data for MSFT via proxy...
+:8080/#settings:1  Access to fetch at 'https://api.allorigins.win/get?url=https%3A%2F%2Fquery1.finance.yahoo.com%2Fv8%2Ffinance%2Fchart%2FMSFT' from origin 'http://localhost:8080' has been blocked by CORS policy: The 'Access-Control-Allow-Origin' header has a value 'http://localhost:5500' that is not equal to the supplied origin. Have the server send the header with a valid value.
+sp500-api-manager.js:411   GET https://api.allorigins.win/get?url=https%3A%2F%2Fquery1.finance.yahoo.com%2Fv8%2Ffinance%2Fchart%2FMSFT net::ERR_FAILED
+collectFromYahooFinance @ sp500-api-manager.js:411
+await in collectFromYahooFinance
+collectAllData @ sp500-api-manager.js:180
+startDataCollection @ sp500-api-manager.js:161
+init @ sp500-api-manager.js:116
+SP500APIManager @ sp500-api-manager.js:111
+(anonymous) @ sp500-api-manager.js:762
+sp500-api-manager.js:421  [API DEBUG] CORS/Network error for MSFT: Failed to fetch
+collectFromYahooFinance @ sp500-api-manager.js:421
+await in collectFromYahooFinance
+collectAllData @ sp500-api-manager.js:180
+startDataCollection @ sp500-api-manager.js:161
+init @ sp500-api-manager.js:116
+SP500APIManager @ sp500-api-manager.js:111
+(anonymous) @ sp500-api-manager.js:762
+sp500-api-manager.js:422  [API DEBUG] Skipping MSFT due to fetch error, will use mock data if needed
+collectFromYahooFinance @ sp500-api-manager.js:422
+await in collectFromYahooFinance
+collectAllData @ sp500-api-manager.js:180
+startDataCollection @ sp500-api-manager.js:161
+init @ sp500-api-manager.js:116
+SP500APIManager @ sp500-api-manager.js:111
+(anonymous) @ sp500-api-manager.js:762
+sp500-api-manager.js:410 [API DEBUG] Fetching data for AMZN via proxy...
+:8080/#settings:1  Access to fetch at 'https://api.allorigins.win/get?url=https%3A%2F%2Ffeeds.bloomberg.com%2Fmarkets%2Fnews.rss' from origin 'http://localhost:8080' has been blocked by CORS policy: The 'Access-Control-Allow-Origin' header has a value 'http://localhost:5500' that is not equal to the supplied origin. Have the server send the header with a valid value.
+news-analyzer.js:167   GET https://api.allorigins.win/get?url=https%3A%2F%2Ffeeds.bloomberg.com%2Fmarkets%2Fnews.rss net::ERR_FAILED
+collectFromRSSFeeds @ news-analyzer.js:167
+await in collectFromRSSFeeds
+collectNews @ news-analyzer.js:76
+startRealTimeUpdates @ news-analyzer.js:51
+RealTimeNewsAnalyzer @ news-analyzer.js:21
+(anonymous) @ news-analyzer.js:648
+news-analyzer.js:188  RSS feed https://feeds.bloomberg.com/markets/news.rss collection failed: TypeError: Failed to fetch
+    at RealTimeNewsAnalyzer.collectFromRSSFeeds (news-analyzer.js:167:40)
+    at async Promise.allSettled (:8080/index 1)
+    at async RealTimeNewsAnalyzer.collectNews (news-analyzer.js:80:29)
+collectFromRSSFeeds @ news-analyzer.js:188
+await in collectFromRSSFeeds
+collectNews @ news-analyzer.js:76
+startRealTimeUpdates @ news-analyzer.js:51
+RealTimeNewsAnalyzer @ news-analyzer.js:21
+(anonymous) @ news-analyzer.js:648
+:8080/#settings:1  Access to fetch at 'https://api.allorigins.win/get?url=https%3A%2F%2Fwww.cnbc.com%2Fid%2F100003114%2Fdevice%2Frss%2Frss.html' from origin 'http://localhost:8080' has been blocked by CORS policy: The 'Access-Control-Allow-Origin' header has a value 'http://localhost:5500' that is not equal to the supplied origin. Have the server send the header with a valid value.
+news-analyzer.js:167   GET https://api.allorigins.win/get?url=https%3A%2F%2Fwww.cnbc.com%2Fid%2F100003114%2Fdevice%2Frss%2Frss.html net::ERR_FAILED
+collectFromRSSFeeds @ news-analyzer.js:167
+await in collectFromRSSFeeds
+collectNews @ news-analyzer.js:76
+startRealTimeUpdates @ news-analyzer.js:51
+RealTimeNewsAnalyzer @ news-analyzer.js:21
+(anonymous) @ news-analyzer.js:648
+news-analyzer.js:188  RSS feed https://www.cnbc.com/id/100003114/device/rss/rss.html collection failed: TypeError: Failed to fetch
+    at RealTimeNewsAnalyzer.collectFromRSSFeeds (news-analyzer.js:167:40)
+    at async Promise.allSettled (:8080/index 1)
+    at async RealTimeNewsAnalyzer.collectNews (news-analyzer.js:80:29)
+collectFromRSSFeeds @ news-analyzer.js:188
+await in collectFromRSSFeeds
+collectNews @ news-analyzer.js:76
+startRealTimeUpdates @ news-analyzer.js:51
+RealTimeNewsAnalyzer @ news-analyzer.js:21
+(anonymous) @ news-analyzer.js:648
+dashboard.js:743 [XAI DEBUG] Selected stock for XAI analysis: NVDA
+dashboard.js:744 [XAI DEBUG] Extensions object: undefined
+dashboard.js:745 [XAI DEBUG] Extensions type: undefined
+dashboard.js:758  [XAI DEBUG] Extensions not available. This indicates the DashboardExtensions class was not loaded or instantiated properly.
+handleXaiStockChange @ dashboard.js:758
+updateXaiStockSelector @ dashboard.js:466
+setupVolumeChart @ dashboard.js:440
+setupCharts @ dashboard.js:341
+init @ dashboard.js:22
+DashboardManager @ dashboard.js:18
+(anonymous) @ dashboard.js:900
+dashboard.js:759  [XAI DEBUG] Make sure dashboard-extended.js is loaded before dashboard.js
+handleXaiStockChange @ dashboard.js:759
+updateXaiStockSelector @ dashboard.js:466
+setupVolumeChart @ dashboard.js:440
+setupCharts @ dashboard.js:341
+init @ dashboard.js:22
+DashboardManager @ dashboard.js:18
+(anonymous) @ dashboard.js:900
+dashboard.js:743 [XAI DEBUG] Selected stock for XAI analysis: NVDA
+dashboard.js:744 [XAI DEBUG] Extensions object: undefined
+dashboard.js:745 [XAI DEBUG] Extensions type: undefined
+dashboard.js:758  [XAI DEBUG] Extensions not available. This indicates the DashboardExtensions class was not loaded or instantiated properly.
+handleXaiStockChange @ dashboard.js:758
+setupEventListeners @ dashboard.js:703
+init @ dashboard.js:25
+DashboardManager @ dashboard.js:18
+(anonymous) @ dashboard.js:900
+dashboard.js:759  [XAI DEBUG] Make sure dashboard-extended.js is loaded before dashboard.js
+handleXaiStockChange @ dashboard.js:759
+setupEventListeners @ dashboard.js:703
+init @ dashboard.js:25
+DashboardManager @ dashboard.js:18
+(anonymous) @ dashboard.js:900
+dashboard.js:34 [DASHBOARD DEBUG] Initializing extensions...
+dashboard.js:35 [DASHBOARD DEBUG] DashboardExtensions available: true
+dashboard.js:39 [DASHBOARD DEBUG] Creating DashboardExtensions instance...
+dashboard.js:41 [DASHBOARD DEBUG] DashboardExtensions instance created: DashboardExtensions {dashboard: DashboardManager, newsCache: Array(0), displayedNewsCount: 0, newsPerPage: 10, maxNewsItems: 100, …}
+dashboard.js:45 [DASHBOARD DEBUG] window.dashboard set to: DashboardManager {charts: {…}, updateInterval: 5000, newsUpdateInterval: 30000, dataEndpoints: {…}, newsCache: Array(0), …}
+dashboard-extended.js:26 [DASHBOARD EXTENSIONS DEBUG] DashboardExtensions init() started
+dashboard-extended.js:27 [DASHBOARD EXTENSIONS DEBUG] Instance created successfully: DashboardExtensions {dashboard: DashboardManager, newsCache: Array(0), displayedNewsCount: 0, newsPerPage: 10, maxNewsItems: 100, …}
+dashboard-extended.js:28 [DASHBOARD EXTENSIONS DEBUG] Dashboard reference: DashboardManager {charts: {…}, updateInterval: 5000, newsUpdateInterval: 30000, dataEndpoints: {…}, newsCache: Array(0), …}
+dashboard-extended.js:370 [XAI DEBUG] Attempting to load XAI data from monitoring_dashboard.json...
+dashboard.js:48 [DASHBOARD DEBUG] DashboardExtensions initialized successfully
+news-analyzer.js:26   GET http://localhost:8080/data/processed/llm_enhanced_features.csv 404 (File not found)
+loadLlmEnhancedFeatures @ news-analyzer.js:26
+RealTimeNewsAnalyzer @ news-analyzer.js:20
+(anonymous) @ news-analyzer.js:648
+news-analyzer.js:42 LLM enhanced features loaded: 12 items.
+news-analyzer.js:100 10 news articles collected and analyzed.
+dashboard.js:192   GET http://localhost:8080/data/raw/system_status.json 404 (File not found)
+updateSystemStatus @ dashboard.js:192
+loadInitialData @ dashboard.js:178
+init @ dashboard.js:24
+DashboardManager @ dashboard.js:18
+(anonymous) @ dashboard.js:900
+dashboard-extended.js:1432   GET http://localhost:8080/data/raw/news_data.csv 404 (File not found)
+loadNewsData @ dashboard-extended.js:1432
+init @ dashboard-extended.js:31
+initializeExtensions @ dashboard.js:47
+init @ dashboard.js:28
+DashboardManager @ dashboard.js:18
+(anonymous) @ dashboard.js:900
+dashboard-extended.js:32 News data loaded
+dashboard-extended.js:371   GET http://localhost:8080/data/raw/monitoring_dashboard.json 404 (File not found)
+loadXAIData @ dashboard-extended.js:371
+init @ dashboard-extended.js:39
+initializeExtensions @ dashboard.js:47
+init @ dashboard.js:28
+DashboardManager @ dashboard.js:18
+(anonymous) @ dashboard.js:900
+dashboard-extended.js:372 [XAI DEBUG] Fetch response status: 404 File not found
+dashboard-extended.js:397  [XAI DEBUG] XAI data load failed: Error: HTTP error! status: 404
+    at DashboardExtensions.loadXAIData (dashboard-extended.js:375:23)
+loadXAIData @ dashboard-extended.js:397
+await in loadXAIData
+init @ dashboard-extended.js:39
+initializeExtensions @ dashboard.js:47
+init @ dashboard.js:28
+DashboardManager @ dashboard.js:18
+(anonymous) @ dashboard.js:900
+dashboard-extended.js:398  [XAI DEBUG] Error details: HTTP error! status: 404 Error: HTTP error! status: 404
+    at DashboardExtensions.loadXAIData (http://localhost:8080/dashboard-extended.js:375:23)
+loadXAIData @ dashboard-extended.js:398
+await in loadXAIData
+init @ dashboard-extended.js:39
+initializeExtensions @ dashboard.js:47
+init @ dashboard.js:28
+DashboardManager @ dashboard.js:18
+(anonymous) @ dashboard.js:900
+dashboard-extended.js:399 [XAI DEBUG] Falling back to mock XAI data.
+dashboard-extended.js:446 Generating mock XAI data
+dashboard-extended.js:401 [XAI DEBUG] XAI data (mock) generated and assigned after error. {explainability: {…}, model_performance: {…}}
+dashboard-extended.js:514 XAI 데이터 확인: Available
+dashboard-extended.js:515 XAI 데이터 내용: {explainability: {…}, model_performance: {…}}
+dashboard-extended.js:518 Rendering Feature Importance. Data available: true
+dashboard-extended.js:545 [XAI DEBUG] Rendering: Feature Importance
+dashboard-extended.js:552 [XAI DEBUG] XAI data structure: {explainability: {…}, model_performance: {…}}
+dashboard-extended.js:554 [XAI DEBUG] Feature importance methods: {random_forest_builtin: {…}, gradient_boosting_builtin: {…}}
+dashboard-extended.js:563 [XAI DEBUG] Random forest builtin data: {features: Array(10), importance: Array(10)}
+dashboard-extended.js:566 [XAI DEBUG] Rendering feature importance with real data
+dashboard-extended.js:609 Feature importance rendering complete
+dashboard-extended.js:521 Rendering SHAP Summary Plot. Data available: true
+dashboard-extended.js:649 [XAI DEBUG] Rendering: SHAP Summary Plot
+dashboard-extended.js:657 [XAI DEBUG] SHAP explanations: {random_forest_shap: {…}}
+dashboard-extended.js:700 [XAI DEBUG] SHAP Summary Plot rendering complete
+dashboard-extended.js:524 Rendering SHAP Dependence Plot. Data available: true
+dashboard-extended.js:770 Rendering: SHAP Dependence Plot (skipped - redundant with partial dependence plot)
+dashboard-extended.js:527 Rendering SHAP Force Plot. Data available: true
+dashboard-extended.js:820 Rendering: SHAP Force Plot
+dashboard-extended.js:530 Rendering LIME Explanation. Data available: true
+dashboard-extended.js:868 Rendering: LIME Explanation
+dashboard-extended.js:533 Rendering Confusion Matrix. Data available: true
+dashboard-extended.js:905 Rendering: Confusion Matrix
+dashboard-extended.js:962 Confusion Matrix rendering complete
+dashboard-extended.js:536 Rendering Partial Dependence Plot. Data available: true
+dashboard-extended.js:966 Rendering: Partial Dependence Plot
+dashboard-extended.js:999 Partial Dependence Plot rendering complete
+dashboard-extended.js:539 Rendering Counterfactual What-if. Data available: true
+dashboard-extended.js:1003 Rendering: What-if Analysis
+dashboard-extended.js:1031 What-if Analysis rendering complete
+dashboard-extended.js:541 All XAI components rendered
+dashboard-extended.js:40 XAI data loaded, starting chart rendering
+dashboard-extended.js:514 XAI 데이터 확인: Available
+dashboard-extended.js:515 XAI 데이터 내용: {explainability: {…}, model_performance: {…}}
+dashboard-extended.js:518 Rendering Feature Importance. Data available: true
+dashboard-extended.js:545 [XAI DEBUG] Rendering: Feature Importance
+dashboard-extended.js:552 [XAI DEBUG] XAI data structure: {explainability: {…}, model_performance: {…}}
+dashboard-extended.js:554 [XAI DEBUG] Feature importance methods: {random_forest_builtin: {…}, gradient_boosting_builtin: {…}}
+dashboard-extended.js:563 [XAI DEBUG] Random forest builtin data: {features: Array(10), importance: Array(10)}
+dashboard-extended.js:566 [XAI DEBUG] Rendering feature importance with real data
+dashboard-extended.js:609 Feature importance rendering complete
+dashboard-extended.js:521 Rendering SHAP Summary Plot. Data available: true
+dashboard-extended.js:649 [XAI DEBUG] Rendering: SHAP Summary Plot
+dashboard-extended.js:657 [XAI DEBUG] SHAP explanations: {random_forest_shap: {…}}
+dashboard-extended.js:700 [XAI DEBUG] SHAP Summary Plot rendering complete
+dashboard-extended.js:524 Rendering SHAP Dependence Plot. Data available: true
+dashboard-extended.js:770 Rendering: SHAP Dependence Plot (skipped - redundant with partial dependence plot)
+dashboard-extended.js:527 Rendering SHAP Force Plot. Data available: true
+dashboard-extended.js:820 Rendering: SHAP Force Plot
+dashboard-extended.js:530 Rendering LIME Explanation. Data available: true
+dashboard-extended.js:868 Rendering: LIME Explanation
+dashboard-extended.js:533 Rendering Confusion Matrix. Data available: true
+dashboard-extended.js:905 Rendering: Confusion Matrix
+dashboard-extended.js:962 Confusion Matrix rendering complete
+dashboard-extended.js:536 Rendering Partial Dependence Plot. Data available: true
+dashboard-extended.js:966 Rendering: Partial Dependence Plot
+dashboard-extended.js:999 Partial Dependence Plot rendering complete
+dashboard-extended.js:539 Rendering Counterfactual What-if. Data available: true
+dashboard-extended.js:1003 Rendering: What-if Analysis
+dashboard-extended.js:1031 What-if Analysis rendering complete
+dashboard-extended.js:541 All XAI components rendered
+chart.js:13  Failed to create chart: can't acquire context from the given item
+Tn @ chart.js:13
+renderAttentionWeightsChart @ dashboard-extended.js:2713
+renderLLMAnalysisVisualizations @ dashboard-extended.js:2575
+(anonymous) @ dashboard-extended.js:45
+Promise.then
+init @ dashboard-extended.js:39
+initializeExtensions @ dashboard.js:47
+init @ dashboard.js:28
+DashboardManager @ dashboard.js:18
+(anonymous) @ dashboard.js:900
+dashboard-extended.js:1853   GET http://localhost:8080/data/raw/training_features.csv 404 (File not found)
+loadAndDisplayDataset @ dashboard-extended.js:1853
+init @ dashboard-extended.js:60
+initializeExtensions @ dashboard.js:47
+init @ dashboard.js:28
+DashboardManager @ dashboard.js:18
+(anonymous) @ dashboard.js:900
+dashboard-extended.js:1878  Data load failed (stock_data): Error: HTTP error! status: 404
+    at DashboardExtensions.loadAndDisplayDataset (dashboard-extended.js:1855:23)
+loadAndDisplayDataset @ dashboard-extended.js:1878
+await in loadAndDisplayDataset
+init @ dashboard-extended.js:60
+initializeExtensions @ dashboard.js:47
+init @ dashboard.js:28
+DashboardManager @ dashboard.js:18
+(anonymous) @ dashboard.js:900
+dashboard.js:236   GET http://localhost:8080/data/raw/realtime_results.json 404 (File not found)
+updateRealtimePredictions @ dashboard.js:236
+loadInitialData @ dashboard.js:179
+await in loadInitialData
+init @ dashboard.js:24
+DashboardManager @ dashboard.js:18
+(anonymous) @ dashboard.js:900
+dashboard.js:279   GET http://localhost:8080/dashboard/log/localhost-1753240572250.log 404 (File not found)
+updateSystemLogs @ dashboard.js:279
+loadInitialData @ dashboard.js:180
+await in loadInitialData
+init @ dashboard.js:24
+DashboardManager @ dashboard.js:18
+(anonymous) @ dashboard.js:900
+dashboard.js:285  [DEBUG] Log file /dashboard/log/localhost-1753240572250.log not found or failed to load (404 File not found). Using mock data.
+updateSystemLogs @ dashboard.js:285
+await in updateSystemLogs
+loadInitialData @ dashboard.js:180
+await in loadInitialData
+init @ dashboard.js:24
+DashboardManager @ dashboard.js:18
+(anonymous) @ dashboard.js:900
+dashboard.js:192   GET http://localhost:8080/data/raw/system_status.json 404 (File not found)
+updateSystemStatus @ dashboard.js:192
+(anonymous) @ dashboard.js:551
+setInterval
+startRealTimeUpdates @ dashboard.js:550
+init @ dashboard.js:23
+DashboardManager @ dashboard.js:18
+(anonymous) @ dashboard.js:900
+dashboard.js:236   GET http://localhost:8080/data/raw/realtime_results.json 404 (File not found)
+updateRealtimePredictions @ dashboard.js:236
+(anonymous) @ dashboard.js:552
+setInterval
+startRealTimeUpdates @ dashboard.js:550
+init @ dashboard.js:23
+DashboardManager @ dashboard.js:18
+(anonymous) @ dashboard.js:900
+dashboard.js:279   GET http://localhost:8080/dashboard/log/localhost-1753240572250.log 404 (File not found)
+updateSystemLogs @ dashboard.js:279
+(anonymous) @ dashboard.js:558
+setInterval
+startRealTimeUpdates @ dashboard.js:550
+init @ dashboard.js:23
+DashboardManager @ dashboard.js:18
+(anonymous) @ dashboard.js:900
+dashboard.js:285  [DEBUG] Log file /dashboard/log/localhost-1753240572250.log not found or failed to load (404 File not found). Using mock data.
+updateSystemLogs @ dashboard.js:285
+await in updateSystemLogs
+(anonymous) @ dashboard.js:558
+setInterval
+startRealTimeUpdates @ dashboard.js:550
+init @ dashboard.js:23
+DashboardManager @ dashboard.js:18
+(anonymous) @ dashboard.js:900
+   GET http://localhost:8080/data/raw/system_status.json 404 (File not found)
+updateSystemStatus @ dashboard.js:192
+(anonymous) @ dashboard.js:551
+setInterval
+startRealTimeUpdates @ dashboard.js:550
+init @ dashboard.js:23
+DashboardManager @ dashboard.js:18
+(anonymous) @ dashboard.js:900
+   GET http://localhost:8080/data/raw/realtime_results.json 404 (File not found)
+updateRealtimePredictions @ dashboard.js:236
+(anonymous) @ dashboard.js:552
+setInterval
+startRealTimeUpdates @ dashboard.js:550
+init @ dashboard.js:23
+DashboardManager @ dashboard.js:18
+(anonymous) @ dashboard.js:900
+   GET http://localhost:8080/dashboard/log/localhost-1753240572250.log 404 (File not found)
+updateSystemLogs @ dashboard.js:279
+(anonymous) @ dashboard.js:558
+setInterval
+startRealTimeUpdates @ dashboard.js:550
+init @ dashboard.js:23
+DashboardManager @ dashboard.js:18
+(anonymous) @ dashboard.js:900
+  [DEBUG] Log file /dashboard/log/localhost-1753240572250.log not found or failed to load (404 File not found). Using mock data.
+updateSystemLogs @ dashboard.js:285
+await in updateSystemLogs
+(anonymous) @ dashboard.js:558
+setInterval
+startRealTimeUpdates @ dashboard.js:550
+init @ dashboard.js:23
+DashboardManager @ dashboard.js:18
+(anonymous) @ dashboard.js:900
+   GET http://localhost:8080/data/raw/system_status.json 404 (File not found)
+updateSystemStatus @ dashboard.js:192
+(anonymous) @ dashboard.js:551
+setInterval
+startRealTimeUpdates @ dashboard.js:550
+init @ dashboard.js:23
+DashboardManager @ dashboard.js:18
+(anonymous) @ dashboard.js:900
+   GET http://localhost:8080/data/raw/realtime_results.json 404 (File not found)
+updateRealtimePredictions @ dashboard.js:236
+(anonymous) @ dashboard.js:552
+setInterval
+startRealTimeUpdates @ dashboard.js:550
+init @ dashboard.js:23
+DashboardManager @ dashboard.js:18
+(anonymous) @ dashboard.js:900
+   GET http://localhost:8080/dashboard/log/localhost-1753240572250.log 404 (File not found)
+updateSystemLogs @ dashboard.js:279
+(anonymous) @ dashboard.js:558
+setInterval
+startRealTimeUpdates @ dashboard.js:550
+init @ dashboard.js:23
+DashboardManager @ dashboard.js:18
+(anonymous) @ dashboard.js:900
+  [DEBUG] Log file /dashboard/log/localhost-1753240572250.log not found or failed to load (404 File not found). Using mock data.
+updateSystemLogs @ dashboard.js:285
+await in updateSystemLogs
+(anonymous) @ dashboard.js:558
+setInterval
+startRealTimeUpdates @ dashboard.js:550
+init @ dashboard.js:23
+DashboardManager @ dashboard.js:18
+(anonymous) @ dashboard.js:900

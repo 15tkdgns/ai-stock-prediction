@@ -403,11 +403,8 @@ class SP500APIManager {
         try {
             for (const symbol of symbols) {
                 const chartUrl = `${this.apis.yahooFinance.baseUrl}/${symbol}`;
-                const proxyUrl = `${this.apis.yahooFinance.proxyUrl}${encodeURIComponent(chartUrl)}`;
-                
-                let data;
-                try {
-                    console.log(`[API DEBUG] Fetching data for ${symbol} via proxy...`);
+                const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(apiUrl)}&_=${new Date().getTime()}`;
+        console.log(`[API DEBUG] Fetching data for ${symbol} via proxy...`);
                     const response = await fetch(proxyUrl);
                     
                     if (!response.ok) {

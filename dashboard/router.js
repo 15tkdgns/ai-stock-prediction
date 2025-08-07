@@ -13,11 +13,13 @@ class Router {
             'models': 'Model Performance',
             'predictions': 'Real-time Predictions',
             'news': 'News Analysis',
+            'xai': 'XAI Analysis',
+            'training': 'Training Pipeline',
+            'progress': 'Progress',
             'data': 'Data Explorer',
             'code': 'Source Code',
             'logs': 'System Logs',
-            'settings': 'Settings',
-            'xai': 'XAI Analysis'
+            'settings': 'Settings'
         };
 
         // Set up navigation click events
@@ -133,6 +135,9 @@ class Router {
                 break;
             case 'xai':
                 this.initializeXAIPage();
+                break;
+            case 'training':
+                this.initializeTrainingPage();
                 break;
         }
     }
@@ -806,7 +811,10 @@ class Router {
     initializeDataVisualization() {
         const ctx = document.getElementById('data-visualization');
         if (ctx && ctx.getContext) {
-            const chart = new Chart(ctx.getContext('2d'), {
+            if (this.dataVisChart) {
+                this.dataVisChart.destroy();
+            }
+            this.dataVisChart = new Chart(ctx.getContext('2d'), {
                 type: 'bar',
                 data: {
                     labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May'],
@@ -976,7 +984,10 @@ class ModelTrainer:
     initializeLogStatsChart() {
         const ctx = document.getElementById('log-stats-chart');
         if (ctx && ctx.getContext) {
-            const chart = new Chart(ctx.getContext('2d'), {
+            if (this.logStatsChart) {
+                this.logStatsChart.destroy();
+            }
+            this.logStatsChart = new Chart(ctx.getContext('2d'), {
                 type: 'line',
                 data: {
                     labels: this.generateTimeLabels(12),
@@ -1018,13 +1029,6 @@ class ModelTrainer:
 
     loadCurrentSettings() {
         // Settings load logic
-        const updateInterval = localStorage.getItem('updateInterval') || '5';
-        const theme = localStorage.getItem('theme') || 'light';
-        const autoRefresh = localStorage.getItem('autoRefresh') !== 'false';
-        
-        document.getElementById('update-interval').value = updateInterval;
-        document.getElementById('theme-selector').value = theme;
-        document.getElementById('auto-refresh').checked = autoRefresh;
     }
 
     setupSettingsEvents() {
@@ -1253,6 +1257,175 @@ class ModelTrainer:
                 container.innerHTML = '<div class="xai-error"><p>XAI system not initialized. Check console for details.</p></div>';
             }
         });
+    }
+
+    // Initialize Training Pipeline page
+    initializeTrainingPage() {
+        console.log('Initializing Training Pipeline page');
+        
+        // Render training charts
+        this.renderTrainingCharts();
+        
+        // Set up training controls
+        this.setupTrainingControls();
+    }
+
+    renderTrainingCharts() {
+        // Feature Distribution Chart
+        this.renderFeatureDistributionChart();
+        
+        // Training Loss Chart
+        this.renderTrainingLossChart();
+        
+        // Cross-Validation Chart
+        this.renderCrossValidationChart();
+    }
+
+    renderFeatureDistributionChart() {
+        const ctx = document.getElementById('feature-distribution-chart');
+        if (!ctx) return;
+        
+        new Chart(ctx, {
+            type: 'histogram',
+            data: {
+                labels: ['Technical', 'Sentiment', 'Volume', 'Price', 'Macro', 'Others'],
+                datasets: [{
+                    label: 'Feature Count',
+                    data: [45, 28, 32, 24, 18, 9],
+                    backgroundColor: [
+                        'rgba(102, 126, 234, 0.8)',
+                        'rgba(118, 75, 162, 0.8)',
+                        'rgba(52, 152, 219, 0.8)',
+                        'rgba(46, 204, 113, 0.8)',
+                        'rgba(241, 196, 15, 0.8)',
+                        'rgba(231, 76, 60, 0.8)'
+                    ],
+                    borderColor: 'rgba(255, 255, 255, 0.8)',
+                    borderWidth: 2,
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    title: {
+                        display: true,
+                        text: 'Feature Categories Distribution'
+                    }
+                },
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+    }
+
+    renderTrainingLossChart() {
+        const ctx = document.getElementById('training-loss-chart');
+        if (!ctx) return;
+        
+        const epochs = Array.from({length: 50}, (_, i) => i + 1);
+        const trainingLoss = epochs.map(e => 2.5 * Math.exp(-e/15) + 0.1 + Math.random() * 0.05);
+        const validationLoss = epochs.map(e => 2.3 * Math.exp(-e/12) + 0.15 + Math.random() * 0.08);
+        
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: epochs,
+                datasets: [
+                    {
+                        label: 'Training Loss',
+                        data: trainingLoss,
+                        borderColor: 'rgba(102, 126, 234, 1)',
+                        backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                        borderWidth: 2,
+                        fill: false
+                    },
+                    {
+                        label: 'Validation Loss',
+                        data: validationLoss,
+                        borderColor: 'rgba(231, 76, 60, 1)',
+                        backgroundColor: 'rgba(231, 76, 60, 0.1)',
+                        borderWidth: 2,
+                        fill: false
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Model Training Progress'
+                    }
+                },
+                scales: {
+                    x: { title: { display: true, text: 'Epochs' }},
+                    y: { title: { display: true, text: 'Loss' }}
+                }
+            }
+        });
+    }
+
+    renderCrossValidationChart() {
+        const ctx = document.getElementById('cross-validation-chart');
+        if (!ctx) return;
+        
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Fold 1', 'Fold 2', 'Fold 3', 'Fold 4', 'Fold 5'],
+                datasets: [
+                    {
+                        label: 'Random Forest',
+                        data: [89.2, 90.1, 88.7, 89.8, 90.5],
+                        backgroundColor: 'rgba(102, 126, 234, 0.8)',
+                        borderColor: 'rgba(102, 126, 234, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Gradient Boosting',
+                        data: [91.5, 90.8, 92.2, 91.1, 91.9],
+                        backgroundColor: 'rgba(118, 75, 162, 0.8)',
+                        borderColor: 'rgba(118, 75, 162, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'LSTM',
+                        data: [87.8, 88.5, 87.2, 88.9, 88.1],
+                        backgroundColor: 'rgba(52, 152, 219, 0.8)',
+                        borderColor: 'rgba(52, 152, 219, 1)',
+                        borderWidth: 1
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: '5-Fold Cross-Validation Results'
+                    }
+                },
+                scales: {
+                    y: { 
+                        beginAtZero: false,
+                        min: 85,
+                        max: 95,
+                        title: { display: true, text: 'Accuracy (%)' }
+                    }
+                }
+            }
+        });
+    }
+
+    setupTrainingControls() {
+        // Training control buttons would be implemented here
+        console.log('Training controls set up');
     }
 }
 

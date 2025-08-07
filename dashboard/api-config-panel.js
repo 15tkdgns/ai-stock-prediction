@@ -19,47 +19,47 @@ class APIConfigPanel {
         const section = document.createElement('div');
         section.className = 'api-config-section';
         section.innerHTML = `
-            <h2>📡 S&P 500 API 설정</h2>
+            <h2>📡 S&P 500 API Settings</h2>
             
             <div class="api-status-panel">
-                <h3>API 연결 상태</h3>
+                <h3>API Connection Status</h3>
                 <div id="api-status-grid" class="api-status-grid">
                     <div class="api-status-item">
                         <span class="api-name">Alpha Vantage</span>
-                        <span class="api-status" id="status-alphaVantage">테스트 중...</span>
+                        <span class="api-status" id="status-alphaVantage">Testing...</span>
                         <span class="api-limit">5 calls/min (Free)</span>
                     </div>
                     <div class="api-status-item">
                         <span class="api-name">Financial Modeling Prep</span>
-                        <span class="api-status" id="status-financialModelingPrep">테스트 중...</span>
+                        <span class="api-status" id="status-financialModelingPrep">Testing...</span>
                         <span class="api-limit">250 calls/day (Free)</span>
                     </div>
                     <div class="api-status-item">
                         <span class="api-name">Twelve Data</span>
-                        <span class="api-status" id="status-twelveData">테스트 중...</span>
+                        <span class="api-status" id="status-twelveData">Testing...</span>
                         <span class="api-limit">800 calls/day (Free)</span>
                     </div>
                     <div class="api-status-item">
                         <span class="api-name">Polygon.io</span>
-                        <span class="api-status" id="status-polygon">테스트 중...</span>
+                        <span class="api-status" id="status-polygon">Testing...</span>
                         <span class="api-limit">5 calls/min (Free)</span>
                     </div>
                     <div class="api-status-item">
                         <span class="api-name">IEX Cloud</span>
-                        <span class="api-status" id="status-iexCloud">테스트 중...</span>
+                        <span class="api-status" id="status-iexCloud">Testing...</span>
                         <span class="api-limit">100 calls/month (Free)</span>
                     </div>
                     <div class="api-status-item">
                         <span class="api-name">Yahoo Finance</span>
-                        <span class="api-status" id="status-yahooFinance">테스트 중...</span>
-                        <span class="api-limit">무료 (비공식)</span>
+                        <span class="api-status" id="status-yahooFinance">Testing...</span>
+                        <span class="api-limit">Free (Unofficial)</span>
                     </div>
                 </div>
-                <button class="btn btn-primary" id="test-apis">🔄 API 연결 테스트</button>
+                <button class="btn btn-primary" id="test-apis">🔄 Test API Connections</button>
             </div>
 
             <div class="api-keys-panel">
-                <h3>🔑 API 키 관리</h3>
+                <h3>🔑 API Key Management</h3>
                 <div class="api-keys-grid">
                     <div class="api-key-item">
                         <label>Alpha Vantage API Key</label>
@@ -67,7 +67,7 @@ class APIConfigPanel {
                             <input type="password" id="alpha-vantage-key" placeholder="Your Alpha Vantage API key">
                             <button class="btn btn-small" onclick="this.previousElementSibling.type = this.previousElementSibling.type === 'password' ? 'text' : 'password'">👁️</button>
                         </div>
-                        <small>무료: <a href="https://www.alphavantage.co/support/#api-key" target="_blank">API 키 받기</a></small>
+                        <small>Free: <a href="https://www.alphavantage.co/support/#api-key" target="_blank">Get API Key</a></small>
                     </div>
                     
                     <div class="api-key-item">
@@ -76,7 +76,7 @@ class APIConfigPanel {
                             <input type="password" id="fmp-key" placeholder="Your FMP API key">
                             <button class="btn btn-small" onclick="this.previousElementSibling.type = this.previousElementSibling.type === 'password' ? 'text' : 'password'">👁️</button>
                         </div>
-                        <small>무료: <a href="https://financialmodelingprep.com/developer/docs" target="_blank">API 키 받기</a></small>
+                        <small>Free: <a href="https://financialmodelingprep.com/developer/docs" target="_blank">Get API Key</a></small>
                     </div>
                     
                     <div class="api-key-item">
@@ -85,7 +85,7 @@ class APIConfigPanel {
                             <input type="password" id="twelve-data-key" placeholder="Your Twelve Data API key">
                             <button class="btn btn-small" onclick="this.previousElementSibling.type = this.previousElementSibling.type === 'password' ? 'text' : 'password'">👁️</button>
                         </div>
-                        <small>무료: <a href="https://twelvedata.com/pricing" target="_blank">API 키 받기</a></small>
+                        <small>Free: <a href="https://twelvedata.com/pricing" target="_blank">Get API Key</a></small>
                     </div>
                     
                     <div class="api-key-item">
@@ -94,7 +94,7 @@ class APIConfigPanel {
                             <input type="password" id="polygon-key" placeholder="Your Polygon API key">
                             <button class="btn btn-small" onclick="this.previousElementSibling.type = this.previousElementSibling.type === 'password' ? 'text' : 'password'">👁️</button>
                         </div>
-                        <small>무료: <a href="https://polygon.io/pricing" target="_blank">API 키 받기</a></small>
+                        <small>Free: <a href="https://polygon.io/pricing" target="_blank">Get API Key</a></small>
                     </div>
                     
                     <div class="api-key-item">
@@ -103,66 +103,66 @@ class APIConfigPanel {
                             <input type="password" id="iex-key" placeholder="Your IEX Cloud API key">
                             <button class="btn btn-small" onclick="this.previousElementSibling.type = this.previousElementSibling.type === 'password' ? 'text' : 'password'">👁️</button>
                         </div>
-                        <small>무료: <a href="https://iexcloud.io/pricing" target="_blank">API 키 받기</a></small>
+                        <small>Free: <a href="https://iexcloud.io/pricing" target="_blank">Get API Key</a></small>
                     </div>
                 </div>
                 
                 <div class="api-actions">
-                    <button class="btn btn-success" id="save-api-keys">💾 API 키 저장</button>
-                    <button class="btn btn-warning" id="clear-api-keys">🗑️ 키 초기화</button>
+                    <button class="btn btn-success" id="save-api-keys">💾 Save API Keys</button>
+                    <button class="btn btn-warning" id="clear-api-keys">🗑️ Clear Keys</button>
                 </div>
             </div>
 
             <div class="api-usage-panel">
-                <h3>📊 API 사용량 현황</h3>
+                <h3>📊 API Usage Status</h3>
                 <div id="api-usage-stats" class="usage-stats">
-                    <!-- 동적으로 생성됨 -->
+                    <!-- Dynamically generated -->
                 </div>
             </div>
 
             <div class="market-data-panel">
-                <h3>📈 실시간 S&P 500 데이터</h3>
+                <h3>📈 Real-time S&P 500 Data</h3>
                 <div class="data-controls">
-                    <button class="btn" id="refresh-market-data">🔄 데이터 새로고침</button>
+                    <button class="btn" id="refresh-market-data">🔄 Refresh Data</button>
                     <select id="data-update-interval">
-                        <option value="30000">30초마다</option>
-                        <option value="60000" selected>1분마다</option>
-                        <option value="300000">5분마다</option>
-                        <option value="600000">10분마다</option>
+                        <option value="30000">Every 30 seconds</option>
+                        <option value="60000" selected>Every 1 minute</option>
+                        <option value="300000">Every 5 minutes</option>
+                        <option value="600000">Every 10 minutes</option>
                     </select>
                 </div>
                 <div id="market-summary" class="market-summary">
-                    <!-- 시장 요약 정보 -->
+                    <!-- Market summary information -->
                 </div>
             </div>
 
             <div class="api-guide-panel">
-                <h3>📖 API 설정 가이드</h3>
+                <h3>📖 API Configuration Guide</h3>
                 <div class="guide-content">
                     <div class="guide-section">
-                        <h4>🚀 빠른 시작 가이드</h4>
+                        <h4>🚀 Quick Start Guide</h4>
                         <ol>
-                            <li><strong>Alpha Vantage</strong>: 가장 쉬운 시작점. 무료 등록 후 즉시 사용 가능</li>
-                            <li><strong>Financial Modeling Prep</strong>: 종합적인 재무 데이터 제공</li>
-                            <li><strong>Yahoo Finance</strong>: API 키 없이 즉시 사용 가능 (제한적)</li>
+                            <li><strong>Alpha Vantage</strong>: Easiest starting point. Available immediately after free registration.</li>
+                            <li><strong>Financial Modeling Prep</strong>: Provides comprehensive financial data.</li>
+                            <li><strong>Yahoo Finance</strong>: Usable immediately without an API key (limited).</li>
                         </ol>
                     </div>
                     
                     <div class="guide-section">
-                        <h4>💡 권장 설정</h4>
+                        <h4>💡 Recommended Settings</h4>
                         <ul>
-                            <li>최소 2-3개의 API를 설정하여 데이터 안정성 확보</li>
-                            <li>무료 요금제 한도를 고려하여 업데이트 주기 조절</li>
-                            <li>중요한 거래 시간에는 짧은 주기로 업데이트</li>
+                            <li>Set up at least 2-3 APIs to ensure data stability.</li>
+                            <li>Adjust the update interval considering free plan limits.</li>
+                            <li>Update more frequently during important trading hours.</li>
                         </ul>
                     </div>
 
                     <div class="guide-section">
-                        <h4>🔐 보안 권장사항</h4>
+                        <h4>🔐 Security Recommendations</h4>
                         <ul>
-                            <li>API 키는 로컬 스토리지에만 저장 (서버 전송 안함)</li>
-                            <li>정기적으로 API 키 재생성</li>
-                            <li>공유 컴퓨터에서는 사용 후 키 삭제</li>
+                            <li>API keys are stored only in local storage (not sent to the server).</li>
+                            <li>Regenerate API keys periodically.</li>
+                            <li>Delete keys after use on shared computers.</li>
                         </ul>
                     </div>
                 </div>
@@ -248,7 +248,7 @@ class APIConfigPanel {
         const testButton = document.getElementById('test-apis');
         if (testButton) {
             testButton.disabled = true;
-            testButton.textContent = '테스트 중...';
+            testButton.textContent = 'Testing...';
         }
 
         try {
@@ -259,9 +259,9 @@ class APIConfigPanel {
                 const statusElement = document.getElementById(`status-${api}`);
                 if (statusElement) {
                     statusElement.className = `api-status ${status === 'OK' ? 'success' : status === 'NO_KEY' ? 'warning' : 'error'}`;
-                    statusElement.textContent = status === 'OK' ? '✅ 연결됨' : 
-                                              status === 'NO_KEY' ? '⚠️ 키 없음' : 
-                                              '❌ 오류';
+                    statusElement.textContent = status === 'OK' ? '✅ Connected' : 
+                                              status === 'NO_KEY' ? '⚠️ No Key' : 
+                                              '❌ Error';
                 }
             });
 
@@ -275,7 +275,7 @@ class APIConfigPanel {
         } finally {
             if (testButton) {
                 testButton.disabled = false;
-                testButton.textContent = '🔄 API 연결 테스트';
+                testButton.textContent = '🔄 Test API Connections';
             }
         }
     }
@@ -356,38 +356,38 @@ class APIConfigPanel {
             summaryContainer.innerHTML = `
                 <div class="summary-grid">
                     <div class="summary-item">
-                        <div class="summary-label">분석 종목수</div>
+                        <div class="summary-label">Analyzed Stocks</div>
                         <div class="summary-value">${analysis.totalStocks}</div>
                     </div>
                     <div class="summary-item">
-                        <div class="summary-label">상승 종목</div>
+                        <div class="summary-label">Gainers</div>
                         <div class="summary-value success">${analysis.gainers}</div>
                     </div>
                     <div class="summary-item">
-                        <div class="summary-label">하락 종목</div>
+                        <div class="summary-label">Losers</div>
                         <div class="summary-value danger">${analysis.losers}</div>
                     </div>
                     <div class="summary-item">
-                        <div class="summary-label">평균 변동률</div>
+                        <div class="summary-label">Avg. Change</div>
                         <div class="summary-value ${parseFloat(analysis.avgChange) >= 0 ? 'success' : 'danger'}">
                             ${parseFloat(analysis.avgChange) >= 0 ? '+' : ''}${analysis.avgChange}%
                         </div>
                     </div>
                     <div class="summary-item">
-                        <div class="summary-label">시장 분위기</div>
+                        <div class="summary-label">Market Sentiment</div>
                         <div class="summary-value ${analysis.marketSentiment === 'bullish' ? 'success' : analysis.marketSentiment === 'bearish' ? 'danger' : 'info'}">
-                            ${analysis.marketSentiment === 'bullish' ? '🐂 강세' : analysis.marketSentiment === 'bearish' ? '🐻 약세' : '😐 중립'}
+                            ${analysis.marketSentiment === 'bullish' ? '🐂 Bullish' : analysis.marketSentiment === 'bearish' ? '🐻 Bearish' : '😐 Neutral'}
                         </div>
                     </div>
                     <div class="summary-item">
-                        <div class="summary-label">마지막 업데이트</div>
+                        <div class="summary-label">Last Update</div>
                         <div class="summary-value">${new Date(analysis.lastUpdate).toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' })}</div>
                     </div>
                 </div>
 
                 ${analysis.topGainers && analysis.topGainers.length > 0 ? `
                     <div class="top-movers">
-                        <h4>📈 상위 상승주</h4>
+                        <h4>📈 Top Gainers</h4>
                         <div class="movers-list">
                             ${analysis.topGainers.slice(0, 3).map(stock => `
                                 <div class="mover-item">
@@ -401,7 +401,7 @@ class APIConfigPanel {
 
                 ${analysis.topLosers && analysis.topLosers.length > 0 ? `
                     <div class="top-movers">
-                        <h4>📉 상위 하락주</h4>
+                        <h4>📉 Top Losers</h4>
                         <div class="movers-list">
                             ${analysis.topLosers.slice(0, 3).map(stock => `
                                 <div class="mover-item">
@@ -424,15 +424,15 @@ class APIConfigPanel {
             
             statsContainer.innerHTML = `
                 <div class="usage-item">
-                    <span class="usage-label">총 API 요청</span>
+                    <span class="usage-label">Total API Requests</span>
                     <span class="usage-value">${usage.totalRequests}</span>
                 </div>
                 <div class="usage-item">
-                    <span class="usage-label">활성 API</span>
+                    <span class="usage-label">Active APIs</span>
                     <span class="usage-value">${usage.activeAPIs}/6</span>
                 </div>
                 <div class="usage-item">
-                    <span class="usage-label">마지막 업데이트</span>
+                    <span class="usage-label">Last Updated</span>
                     <span class="usage-value">${new Date(usage.lastUpdate).toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' })}</span>
                 </div>
             `;

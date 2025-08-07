@@ -168,9 +168,9 @@ class DashboardExtensions {
 
         chart.data.labels = labels;
         chart.data.datasets[0].data = actualPriceData;
-        chart.data.datasets[0].label = `${stockSymbol} 실제 가격`;
+        chart.data.datasets[0].label = `${stockSymbol} Actual Price`;
         chart.data.datasets[1].data = predictedPriceData;
-        chart.data.datasets[1].label = `${stockSymbol} 예측 가격`;
+        chart.data.datasets[1].label = `${stockSymbol} Predicted Price`;
         chart.update();
     }
 
@@ -190,7 +190,10 @@ class DashboardExtensions {
         // 1. Feature Importance Chart
         const fiCtx = document.getElementById('feature-importance-chart').getContext('2d');
         if (fiCtx) {
-            new Chart(fiCtx, {
+            if (this.fiChart) {
+                this.fiChart.destroy();
+            }
+            this.fiChart = new Chart(fiCtx, {
                 type: 'bar',
                 data: {
                     labels: ['5-day Volume Change', 'News Sentiment Score', '20-day Moving Average', 'RSI', 'Nasdaq Correlation', 'Oil Price Volatility'],
@@ -215,14 +218,17 @@ class DashboardExtensions {
         // 2. SHAP Summary Plot - Simplified with Chart.js
         const shapCtx = document.getElementById('shap-summary-plot').getContext('2d');
         if (shapCtx) {
-            new Chart(shapCtx, {
+            if (this.shapChart) {
+                this.shapChart.destroy();
+            }
+            this.shapChart = new Chart(shapCtx, {
                 type: 'bubble',
                 data: {
                     datasets: [
-                        { label: 'High Feature Value (Positive Contribution)', data: [{x: 0.2, y: 5, r: 15}, {x: 0.15, y: 4, r: 10}], backgroundColor: 'rgba(231, 76, 60, 0.7)' },
-                        { label: 'Low Feature Value (Positive Contribution)', data: [{x: 0.1, y: 3, r: 5}], backgroundColor: 'rgba(231, 76, 60, 0.4)' },
-                        { label: 'High Feature Value (Negative Contribution)', data: [{x: -0.18, y: 2, r: 12}], backgroundColor: 'rgba(52, 152, 219, 0.7)' },
-                        { label: 'Low Feature Value (Negative Contribution)', data: [{x: -0.12, y: 1, r: 8}], backgroundColor: 'rgba(52, 152, 219, 0.4)' },
+                        { label: 'High Feature Value (Positive Contribution)', data: [{x: 0.2, y: 5, r: 15}, {x: 0.15, y: 4, r: 10}], backgroundColor: 'rgba(102, 126, 234, 0.7)' },
+                        { label: 'Low Feature Value (Positive Contribution)', data: [{x: 0.1, y: 3, r: 5}], backgroundColor: 'rgba(102, 126, 234, 0.4)' },
+                        { label: 'High Feature Value (Negative Contribution)', data: [{x: -0.18, y: 2, r: 12}], backgroundColor: 'rgba(118, 75, 162, 0.7)' },
+                        { label: 'Low Feature Value (Negative Contribution)', data: [{x: -0.12, y: 1, r: 8}], backgroundColor: 'rgba(118, 75, 162, 0.4)' },
                     ]
                 },
                 options: {
@@ -453,7 +459,8 @@ class DashboardExtensions {
                 shap_explanations: {
                     random_forest_shap: {
                         feature_names: ['volatility', 'volume', 'price_change', 'rsi', 'macd'],
-                        shap_values: [[0.15, -0.08, 0.12, -0.05, 0.09]]
+                        shap_values: [[0.15, -0.08, 0.12, -0.05, 0.09]],
+                        base_value: 0.5
                     }
                 },
                 lime_explanations: [
@@ -756,7 +763,7 @@ class DashboardExtensions {
             'news_polarity': 'News Polarity - Intensity of news sentiment',
             'news_count': 'News Count - Number of related news articles'
         };
-        return descriptions[featureName] || '정보 없음';
+        return descriptions[featureName] || 'No information available.';
     }
 
     renderSHAPDependencePlot() {
@@ -1791,7 +1798,7 @@ class DashboardExtensions {
     }
 
     extractHotTopics(newsData) {
-        const keywords = ['AI', '인공지능', 'iPhone', 'Tesla', '테슬라', 'Fed', '금리', '인플레이션'];
+        const keywords = ['AI', 'Artificial Intelligence', 'iPhone', 'Tesla', 'Fed', 'Interest Rate', 'Inflation'];
         const topicCounts = {};
         
         newsData.forEach(news => {
@@ -1963,7 +1970,10 @@ class DashboardExtensions {
             'src/core/data_collection_pipeline.py': `# Data Collection Pipeline\nimport yfinance as yf\nimport pandas as pd\nfrom datetime import datetime, timedelta\nimport requests\n\nclass DataCollectionPipeline:\n    def __init__(self):\n        self.symbols = ['AAPL', 'GOOGL', 'MSFT', 'AMZN', 'TSLA']\n        self.data_dir = '../data/raw/'\n        \n    def collect_stock_data(self, symbol, period='1y'):\n        """Collect stock data"""\n        try:\n            stock = yf.Ticker(symbol)\n            data = stock.history(period=period)\n            \n            # Add technical indicators\n            data['SMA_20'] = data['Close'].rolling(window=20).mean()\n            data['SMA_50'] = data['Close'].rolling(window=50).mean()\n            data['RSI'] = self.calculate_rsi(data['Close'])\n            \n            # Save file\n            data.to_csv(f"{self.data_dir}stock_{symbol}.csv")\n            \n            return data\n        except Exception as e:\n            print(f"Data collection failed {symbol}: {e}")\n            return None\n            \n    def calculate_rsi(self, prices, window=14):\n        """Calculate RSI"""\n        delta = prices.diff()\n        gain = (delta.where(delta > 0, 0)).rolling(window=window).mean()\n        loss = (-delta.where(delta < 0, 0)).rolling(window=window).mean()\n        rs = gain / loss\n        rsi = 100 - (100 / (1 + rs))\n        return rsi\n        \n    def collect_news_data(self, api_key):\n        """Collect news data"""\n        url = "https://newsapi.org/v2/everything"\n        params = {\n            'q': 'stock market finance',\n            'sortBy': 'publishedAt',\n            'pageSize': 100,\n            'apiKey': api_key\n        }\n        \n        try:\n            response = requests.get(url, params=params)\n            news_data = response.json()\n            \n            # Process and save data\n            articles = []\n            for article in news_data.get('articles', []):\n                articles.push({\n                    'title': article['title'],\n                    'description': article['description'],\n                    'source': article['source']['name'],\n                    'publishedAt': article['publishedAt'],\n                    'url': article['url']\n                })\n            \n            df = pd.DataFrame(articles)\n            df.to_csv(f"{self.data_dir}news_data.csv", index=False)\n            \n            return df\n        except Exception as e:\n            print(f"뉴스 데이터 수집 실패: {e}")\n            return None`
         };
         
-        return mockCodes[filePath] || `// ${filePath} 파일의 내용입니다.\n// 실제 프로젝트에서는 이 파일의 실제 내용이 표시됩니다.\n\nconsole.log('Hello from ${filePath}');`;
+        return mockCodes[filePath] || `// Contents of ${filePath}
+// In a real project, the actual contents of this file would be displayed.
+
+console.log('Hello from ${filePath}');`;
     }
 
     // 데이터 내보내기 기능

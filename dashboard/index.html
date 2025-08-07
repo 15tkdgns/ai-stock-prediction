@@ -40,6 +40,9 @@
                 <li><a href="#xai" class="nav-link" data-page="xai">
                     <span class="nav-icon">🧠</span> XAI Analysis
                 </a></li>
+                <li><a href="#training" class="nav-link" data-page="training">
+                    <span class="nav-icon">⚙️</span> Training Pipeline
+                </a></li>
                 <li><a href="#progress" class="nav-link" data-page="progress">
                     <span class="nav-icon">📈</span> Progress
                 </a></li>
@@ -69,7 +72,6 @@
                     </div>
                 </div>
                 <div id="last-update" class="last-update">Last Updated: Loading...</div>
-                <div id="api-status-container" class="api-status-container"></div>
             </div>
         </nav>
 
@@ -97,14 +99,8 @@
                             <div class="language-option" data-lang="de">🇩🇪 Deutsch</div>
                         </div>
                     </div>
-                    <button class="btn btn-gradient" onclick="dashboard.refreshAllData()">
-                        <span>🔄</span> Refresh
-                    </button>
                     <button class="btn btn-export" onclick="dashboard.exportData()">
                         <span>💾</span> Export
-                    </button>
-                    <button class="btn btn-fullscreen" onclick="dashboard.toggleFullscreen()">
-                        <span>🔍</span> Fullscreen
                     </button>
                 </div>
             </header>
@@ -432,71 +428,652 @@
                 <div id="page-news" class="page">
                     <div class="news-container">
                         <div class="news-header">
-                            <h2>Real-time News Analysis</h2>
+                            <h2>🧠 AI-Powered News Analysis Pipeline</h2>
                             <div class="news-controls">
-                                <select id="news-category">
-                                    <option value="all">All Categories</option>
-                                    <option value="market">Market</option>
-                                    <option value="stock">Individual Stock</option>
-                                    <option value="economy">Economy</option>
-                                </select>
-                                <select id="sentiment-filter">
-                                    <option value="all">All Sentiments</option>
-                                    <option value="positive">Positive</option>
-                                    <option value="negative">Negative</option>
-                                    <option value="neutral">Neutral</option>
-                                </select>
+                                <div class="pipeline-status">
+                                    <span class="status-indicator processing">🔄</span>
+                                    <span class="status-text">Processing 47 articles...</span>
+                                </div>
+                                <button class="btn btn-gradient" onclick="processNewBatch()">
+                                    <span>⚡</span> Process New Batch
+                                </button>
                             </div>
                         </div>
                         
                         <div class="news-grid">
+                            <!-- LLM Processing Pipeline -->
                             <div class="widget large-widget">
-                                <h3>Sentiment Analysis Chart</h3>
-                                <canvas id="sentiment-chart"></canvas>
-                            </div>
-                            
-                            <div class="widget medium-widget">
-                                <h3>News Summary</h3>
-                                <div class="news-summary" id="news-summary">
-                                    <div class="summary-item">
-                                        <h4>Key Trends</h4>
-                                        <p>The market is generally showing a positive sentiment today.</p>
-                                    </div>
-                                    <div class="summary-item">
-                                        <h4>High Impact News</h4>
-                                        <p>Fed interest rate hike comments are significantly impacting the market.</p>
+                                <h3>🔄 Real-time LLM Processing Pipeline</h3>
+                                <div class="llm-pipeline">
+                                    <div class="pipeline-flow">
+                                        <div class="process-step active" id="step-ingestion">
+                                            <div class="step-icon">📥</div>
+                                            <div class="step-info">
+                                                <h4>News Ingestion</h4>
+                                                <p>RSS feeds, APIs, web scraping</p>
+                                                <div class="step-stats">
+                                                    <span class="stat">47 articles/min</span>
+                                                    <span class="status processing">Processing</span>
+                                                </div>
+                                            </div>
+                                            <div class="step-arrow">→</div>
+                                        </div>
+
+                                        <div class="process-step active" id="step-preprocessing">
+                                            <div class="step-icon">🧹</div>
+                                            <div class="step-info">
+                                                <h4>Text Preprocessing</h4>
+                                                <p>Cleaning, tokenization, normalization</p>
+                                                <div class="step-stats">
+                                                    <span class="stat">0.2s avg</span>
+                                                    <span class="status completed">Ready</span>
+                                                </div>
+                                            </div>
+                                            <div class="step-arrow">→</div>
+                                        </div>
+
+                                        <div class="process-step active" id="step-llm-analysis">
+                                            <div class="step-icon">🤖</div>
+                                            <div class="step-info">
+                                                <h4>LLM Analysis</h4>
+                                                <p>GPT-4 sentiment & impact scoring</p>
+                                                <div class="step-stats">
+                                                    <span class="stat">1.8s avg</span>
+                                                    <span class="status processing">Analyzing</span>
+                                                </div>
+                                            </div>
+                                            <div class="step-arrow">→</div>
+                                        </div>
+
+                                        <div class="process-step" id="step-integration">
+                                            <div class="step-icon">⚡</div>
+                                            <div class="step-info">
+                                                <h4>Market Integration</h4>
+                                                <p>Prediction model input</p>
+                                                <div class="step-stats">
+                                                    <span class="stat">0.1s avg</span>
+                                                    <span class="status pending">Waiting</span>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            
+
+                            <!-- Current Article Being Processed -->
                             <div class="widget medium-widget">
-                                <h3>LLM Analysis Summary</h3>
-                                <div class="llm-analysis-summary" id="llm-analysis-summary">
-                                    <div class="summary-item">
-                                        <h4>Market Sentiment (LLM)</h4>
-                                        <p id="llm-market-sentiment">Loading...</p>
+                                <h3>🔍 Currently Processing</h3>
+                                <div class="current-article">
+                                    <div class="article-header">
+                                        <div class="source-info">
+                                            <span class="news-source">Reuters</span>
+                                            <span class="processing-time">2.1s elapsed</span>
+                                        </div>
+                                        <div class="processing-indicator">
+                                            <div class="pulse-dot"></div>
+                                            <span>Analyzing...</span>
+                                        </div>
                                     </div>
-                                    <div class="summary-item">
-                                        <h4>Key Event Category (LLM)</h4>
-                                        <p id="llm-event-category">Loading...</p>
+                                    <div class="article-content">
+                                        <h4 class="article-title">Fed Officials Signal Potential Rate Cut in December Meeting</h4>
+                                        <div class="processing-stages">
+                                            <div class="stage completed">
+                                                <span class="stage-icon">✅</span>
+                                                <span class="stage-name">Text Extraction</span>
+                                            </div>
+                                            <div class="stage completed">
+                                                <span class="stage-icon">✅</span>
+                                                <span class="stage-name">Entity Recognition</span>
+                                            </div>
+                                            <div class="stage processing">
+                                                <span class="stage-icon">🔄</span>
+                                                <span class="stage-name">Sentiment Analysis</span>
+                                            </div>
+                                            <div class="stage pending">
+                                                <span class="stage-icon">⏳</span>
+                                                <span class="stage-name">Impact Scoring</span>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            
+
+                            <!-- LLM Analysis Results -->
                             <div class="widget large-widget">
-                                <h3>Real-time News Feed</h3>
-                                <div class="news-feed-controls">
-                                    <button id="load-more-news" class="btn btn-gradient">Load More News</button>
-                                    <span id="news-loading-indicator" class="loading-indicator" style="display: none;">
-                                        <div class="live-dot"></div>
-                                        Loading news...
-                                    </span>
+                                <h3>🧠 LLM Analysis Results</h3>
+                                <div class="analysis-results">
+                                    <div class="result-item">
+                                        <div class="result-header">
+                                            <h4>📊 Market Sentiment Analysis</h4>
+                                            <span class="confidence-score">Confidence: 94%</span>
+                                        </div>
+                                        <div class="sentiment-breakdown">
+                                            <div class="sentiment-item positive">
+                                                <div class="sentiment-bar">
+                                                    <div class="bar-fill" style="width: 65%"></div>
+                                                </div>
+                                                <span class="sentiment-label">Positive: 65%</span>
+                                            </div>
+                                            <div class="sentiment-item neutral">
+                                                <div class="sentiment-bar">
+                                                    <div class="bar-fill" style="width: 25%"></div>
+                                                </div>
+                                                <span class="sentiment-label">Neutral: 25%</span>
+                                            </div>
+                                            <div class="sentiment-item negative">
+                                                <div class="sentiment-bar">
+                                                    <div class="bar-fill" style="width: 10%"></div>
+                                                </div>
+                                                <span class="sentiment-label">Negative: 10%</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="result-item">
+                                        <div class="result-header">
+                                            <h4>🎯 Key Entities & Impact</h4>
+                                            <span class="processing-time">Processed in 1.8s</span>
+                                        </div>
+                                        <div class="entities-grid">
+                                            <div class="entity-item high-impact">
+                                                <span class="entity-name">Federal Reserve</span>
+                                                <span class="impact-score">Impact: 9.2/10</span>
+                                            </div>
+                                            <div class="entity-item medium-impact">
+                                                <span class="entity-name">Interest Rates</span>
+                                                <span class="impact-score">Impact: 8.1/10</span>
+                                            </div>
+                                            <div class="entity-item medium-impact">
+                                                <span class="entity-name">Tech Stocks</span>
+                                                <span class="impact-score">Impact: 6.8/10</span>
+                                            </div>
+                                            <div class="entity-item low-impact">
+                                                <span class="entity-name">Employment</span>
+                                                <span class="impact-score">Impact: 4.2/10</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="result-item">
+                                        <div class="result-header">
+                                            <h4>💡 LLM Generated Insights</h4>
+                                            <span class="model-info">GPT-4 Analysis</span>
+                                        </div>
+                                        <div class="insights-content">
+                                            <div class="insight-box">
+                                                <div class="insight-type">📈 Market Prediction</div>
+                                                <p>"The dovish tone from Fed officials suggests a high probability of rate cuts, likely benefiting growth stocks and technology sectors in the near term."</p>
+                                            </div>
+                                            <div class="insight-box">
+                                                <div class="insight-type">⚠️ Risk Assessment</div>
+                                                <p>"Moderate volatility expected in financial sector as markets digest policy implications. Banking stocks may face pressure."</p>
+                                            </div>
+                                            <div class="insight-box">
+                                                <div class="insight-type">🎯 Trading Signals</div>
+                                                <p>"Strong bullish signal for NASDAQ-heavy portfolios. Consider increasing exposure to tech and growth equities."</p>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="news-feed" id="news-feed">
-                                    <!-- Dynamically generated -->
+                            </div>
+
+                            <!-- Processing Queue -->
+                            <div class="widget medium-widget">
+                                <h3>📋 Processing Queue</h3>
+                                <div class="processing-queue">
+                                    <div class="queue-stats">
+                                        <div class="stat-item">
+                                            <span class="stat-number">23</span>
+                                            <span class="stat-label">In Queue</span>
+                                        </div>
+                                        <div class="stat-item">
+                                            <span class="stat-number">156</span>
+                                            <span class="stat-label">Processed Today</span>
+                                        </div>
+                                        <div class="stat-item">
+                                            <span class="stat-number">1.9s</span>
+                                            <span class="stat-label">Avg Processing</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="queue-items">
+                                        <div class="queue-item processing">
+                                            <div class="item-info">
+                                                <span class="item-title">Tesla Q4 Earnings Beat Expectations</span>
+                                                <span class="item-source">Bloomberg</span>
+                                            </div>
+                                            <div class="item-status">
+                                                <div class="status-indicator processing"></div>
+                                                <span>Processing</span>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="queue-item waiting">
+                                            <div class="item-info">
+                                                <span class="item-title">Apple Announces New AI Chip Partnership</span>
+                                                <span class="item-source">TechCrunch</span>
+                                            </div>
+                                            <div class="item-status">
+                                                <div class="status-indicator waiting"></div>
+                                                <span>Waiting</span>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="queue-item waiting">
+                                            <div class="item-info">
+                                                <span class="item-title">Global Supply Chain Disruptions Continue</span>
+                                                <span class="item-source">WSJ</span>
+                                            </div>
+                                            <div class="item-status">
+                                                <div class="status-indicator waiting"></div>
+                                                <span>Waiting</span>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div id="news-scroll-end" class="scroll-end-message" style="display: none;">
-                                    All news loaded.
+                            </div>
+
+                            <!-- LLM Performance Metrics -->
+                            <div class="widget medium-widget">
+                                <h3>⚡ LLM Performance</h3>
+                                <div class="performance-metrics">
+                                    <div class="metric-chart">
+                                        <div class="metric-item">
+                                            <div class="metric-label">Processing Speed</div>
+                                            <div class="metric-bar">
+                                                <div class="bar-fill" style="width: 85%"></div>
+                                            </div>
+                                            <div class="metric-value">1.9s avg</div>
+                                        </div>
+                                        
+                                        <div class="metric-item">
+                                            <div class="metric-label">Accuracy Score</div>
+                                            <div class="metric-bar">
+                                                <div class="bar-fill" style="width: 94%"></div>
+                                            </div>
+                                            <div class="metric-value">94%</div>
+                                        </div>
+                                        
+                                        <div class="metric-item">
+                                            <div class="metric-label">API Uptime</div>
+                                            <div class="metric-bar">
+                                                <div class="bar-fill" style="width: 99%"></div>
+                                            </div>
+                                            <div class="metric-value">99.8%</div>
+                                        </div>
+                                        
+                                        <div class="metric-item">
+                                            <div class="metric-label">Queue Efficiency</div>
+                                            <div class="metric-bar">
+                                                <div class="bar-fill" style="width: 88%"></div>
+                                            </div>
+                                            <div class="metric-value">88%</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- API & Model Transparency -->
+                            <div class="widget large-widget">
+                                <h3>🔍 API & Model Transparency</h3>
+                                <div class="transparency-info">
+                                    <div class="transparency-section">
+                                        <h4>🤖 Language Models</h4>
+                                        <div class="model-grid">
+                                            <div class="model-card primary">
+                                                <div class="model-header">
+                                                    <span class="model-name">OpenAI GPT-4</span>
+                                                    <span class="model-status active">Active</span>
+                                                </div>
+                                                <div class="model-details">
+                                                    <div class="detail-row">
+                                                        <span class="detail-label">Version:</span>
+                                                        <span class="detail-value">gpt-4-turbo-preview</span>
+                                                    </div>
+                                                    <div class="detail-row">
+                                                        <span class="detail-label">Usage:</span>
+                                                        <span class="detail-value">Sentiment Analysis, Entity Recognition</span>
+                                                    </div>
+                                                    <div class="detail-row">
+                                                        <span class="detail-label">Cost:</span>
+                                                        <span class="detail-value">$0.01/1K tokens input, $0.03/1K tokens output</span>
+                                                    </div>
+                                                    <div class="detail-row">
+                                                        <span class="detail-label">Tokens Today:</span>
+                                                        <span class="detail-value">247,832 input / 89,451 output</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="model-card secondary">
+                                                <div class="model-header">
+                                                    <span class="model-name">Claude 3.5 Sonnet</span>
+                                                    <span class="model-status backup">Backup</span>
+                                                </div>
+                                                <div class="model-details">
+                                                    <div class="detail-row">
+                                                        <span class="detail-label">Version:</span>
+                                                        <span class="detail-value">claude-3-5-sonnet-20241022</span>
+                                                    </div>
+                                                    <div class="detail-row">
+                                                        <span class="detail-label">Usage:</span>
+                                                        <span class="detail-value">Fallback & Complex Analysis</span>
+                                                    </div>
+                                                    <div class="detail-row">
+                                                        <span class="detail-label">Cost:</span>
+                                                        <span class="detail-value">$3.00/1M tokens input, $15.00/1M tokens output</span>
+                                                    </div>
+                                                    <div class="detail-row">
+                                                        <span class="detail-label">Tokens Today:</span>
+                                                        <span class="detail-value">45,231 input / 12,087 output</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="transparency-section">
+                                        <h4>📡 Data Source APIs</h4>
+                                        <div class="api-grid">
+                                            <div class="api-card">
+                                                <div class="api-header">
+                                                    <span class="api-name">Alpha Vantage</span>
+                                                    <span class="api-status online">Online</span>
+                                                </div>
+                                                <div class="api-details">
+                                                    <div class="detail-row">
+                                                        <span class="detail-label">Purpose:</span>
+                                                        <span class="detail-value">Stock Prices, Financial Data</span>
+                                                    </div>
+                                                    <div class="detail-row">
+                                                        <span class="detail-label">Rate Limit:</span>
+                                                        <span class="detail-value">500 calls/day</span>
+                                                    </div>
+                                                    <div class="detail-row">
+                                                        <span class="detail-label">Usage Today:</span>
+                                                        <span class="detail-value">347 / 500 calls</span>
+                                                    </div>
+                                                    <div class="detail-row">
+                                                        <span class="detail-label">Cost:</span>
+                                                        <span class="detail-value">Free Tier</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="api-card">
+                                                <div class="api-header">
+                                                    <span class="api-name">NewsAPI</span>
+                                                    <span class="api-status online">Online</span>
+                                                </div>
+                                                <div class="api-details">
+                                                    <div class="detail-row">
+                                                        <span class="detail-label">Purpose:</span>
+                                                        <span class="detail-value">Financial News, Headlines</span>
+                                                    </div>
+                                                    <div class="detail-row">
+                                                        <span class="detail-label">Rate Limit:</span>
+                                                        <span class="detail-value">1,000 requests/day</span>
+                                                    </div>
+                                                    <div class="detail-row">
+                                                        <span class="detail-label">Usage Today:</span>
+                                                        <span class="detail-value">234 / 1,000 requests</span>
+                                                    </div>
+                                                    <div class="detail-row">
+                                                        <span class="detail-label">Cost:</span>
+                                                        <span class="detail-value">$29/month</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="api-card">
+                                                <div class="api-header">
+                                                    <span class="api-name">Financial Modeling Prep</span>
+                                                    <span class="api-status online">Online</span>
+                                                </div>
+                                                <div class="api-details">
+                                                    <div class="detail-row">
+                                                        <span class="detail-label">Purpose:</span>
+                                                        <span class="detail-value">Company Financials, Ratios</span>
+                                                    </div>
+                                                    <div class="detail-row">
+                                                        <span class="detail-label">Rate Limit:</span>
+                                                        <span class="detail-value">250 calls/day</span>
+                                                    </div>
+                                                    <div class="detail-row">
+                                                        <span class="detail-label">Usage Today:</span>
+                                                        <span class="detail-value">89 / 250 calls</span>
+                                                    </div>
+                                                    <div class="detail-row">
+                                                        <span class="detail-label">Cost:</span>
+                                                        <span class="detail-value">$15/month</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="api-card">
+                                                <div class="api-header">
+                                                    <span class="api-name">Reddit API</span>
+                                                    <span class="api-status limited">Limited</span>
+                                                </div>
+                                                <div class="api-details">
+                                                    <div class="detail-row">
+                                                        <span class="detail-label">Purpose:</span>
+                                                        <span class="detail-value">Social Sentiment, r/investing</span>
+                                                    </div>
+                                                    <div class="detail-row">
+                                                        <span class="detail-label">Rate Limit:</span>
+                                                        <span class="detail-value">100 requests/minute</span>
+                                                    </div>
+                                                    <div class="detail-row">
+                                                        <span class="detail-label">Usage Today:</span>
+                                                        <span class="detail-value">1,247 / 144,000 requests</span>
+                                                    </div>
+                                                    <div class="detail-row">
+                                                        <span class="detail-label">Cost:</span>
+                                                        <span class="detail-value">Free (OAuth)</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="transparency-section">
+                                        <h4>🧮 ML Models & Algorithms</h4>
+                                        <div class="ml-models-grid">
+                                            <div class="ml-model-card">
+                                                <div class="ml-model-header">
+                                                    <span class="ml-model-name">Random Forest</span>
+                                                    <span class="ml-model-lib">scikit-learn 1.3.0</span>
+                                                </div>
+                                                <div class="ml-model-details">
+                                                    <div class="detail-row">
+                                                        <span class="detail-label">Purpose:</span>
+                                                        <span class="detail-value">Stock Price Direction Prediction</span>
+                                                    </div>
+                                                    <div class="detail-row">
+                                                        <span class="detail-label">Features:</span>
+                                                        <span class="detail-value">156 technical indicators + sentiment scores</span>
+                                                    </div>
+                                                    <div class="detail-row">
+                                                        <span class="detail-label">Hyperparameters:</span>
+                                                        <span class="detail-value">n_estimators=100, max_depth=10</span>
+                                                    </div>
+                                                    <div class="detail-row">
+                                                        <span class="detail-label">Training Data:</span>
+                                                        <span class="detail-value">500K samples, 2020-2024</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="ml-model-card">
+                                                <div class="ml-model-header">
+                                                    <span class="ml-model-name">LSTM Network</span>
+                                                    <span class="ml-model-lib">TensorFlow 2.15.0</span>
+                                                </div>
+                                                <div class="ml-model-details">
+                                                    <div class="detail-row">
+                                                        <span class="detail-label">Purpose:</span>
+                                                        <span class="detail-value">Time Series Price Prediction</span>
+                                                    </div>
+                                                    <div class="detail-row">
+                                                        <span class="detail-label">Architecture:</span>
+                                                        <span class="detail-value">2 LSTM layers (128, 64 units) + Dense</span>
+                                                    </div>
+                                                    <div class="detail-row">
+                                                        <span class="detail-label">Sequence Length:</span>
+                                                        <span class="detail-value">60 days lookback</span>
+                                                    </div>
+                                                    <div class="detail-row">
+                                                        <span class="detail-label">Optimizer:</span>
+                                                        <span class="detail-value">Adam (lr=0.001)</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="ml-model-card">
+                                                <div class="ml-model-header">
+                                                    <span class="ml-model-name">Gradient Boosting</span>
+                                                    <span class="ml-model-lib">XGBoost 1.7.6</span>
+                                                </div>
+                                                <div class="ml-model-details">
+                                                    <div class="detail-row">
+                                                        <span class="detail-label">Purpose:</span>
+                                                        <span class="detail-value">Feature Importance & Classification</span>
+                                                    </div>
+                                                    <div class="detail-row">
+                                                        <span class="detail-label">Parameters:</span>
+                                                        <span class="detail-value">n_estimators=200, learning_rate=0.1</span>
+                                                    </div>
+                                                    <div class="detail-row">
+                                                        <span class="detail-label">Regularization:</span>
+                                                        <span class="detail-value">L1=0.1, L2=0.1</span>
+                                                    </div>
+                                                    <div class="detail-row">
+                                                        <span class="detail-label">Cross-validation:</span>
+                                                        <span class="detail-value">5-fold TimeSeriesSplit</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="transparency-section">
+                                        <h4>💰 Cost Breakdown (Daily)</h4>
+                                        <div class="cost-breakdown">
+                                            <div class="cost-category">
+                                                <div class="cost-header">
+                                                    <span class="cost-name">LLM API Costs</span>
+                                                    <span class="cost-amount">$8.45</span>
+                                                </div>
+                                                <div class="cost-details">
+                                                    <div class="cost-item">
+                                                        <span>OpenAI GPT-4:</span>
+                                                        <span>$6.21</span>
+                                                    </div>
+                                                    <div class="cost-item">
+                                                        <span>Claude 3.5 Sonnet:</span>
+                                                        <span>$2.24</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="cost-category">
+                                                <div class="cost-header">
+                                                    <span class="cost-name">Data APIs</span>
+                                                    <span class="cost-amount">$1.47</span>
+                                                </div>
+                                                <div class="cost-details">
+                                                    <div class="cost-item">
+                                                        <span>NewsAPI (monthly/30):</span>
+                                                        <span>$0.97</span>
+                                                    </div>
+                                                    <div class="cost-item">
+                                                        <span>Financial Modeling Prep:</span>
+                                                        <span>$0.50</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="cost-category">
+                                                <div class="cost-header">
+                                                    <span class="cost-name">Compute & Storage</span>
+                                                    <span class="cost-amount">$2.18</span>
+                                                </div>
+                                                <div class="cost-details">
+                                                    <div class="cost-item">
+                                                        <span>AWS EC2 (t3.medium):</span>
+                                                        <span>$1.35</span>
+                                                    </div>
+                                                    <div class="cost-item">
+                                                        <span>AWS S3 Storage:</span>
+                                                        <span>$0.83</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="cost-total">
+                                                <div class="total-row">
+                                                    <span class="total-label">Total Daily Cost:</span>
+                                                    <span class="total-amount">$12.10</span>
+                                                </div>
+                                                <div class="total-row monthly">
+                                                    <span class="total-label">Monthly Estimate:</span>
+                                                    <span class="total-amount">$363.00</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Recent Analysis History -->
+                            <div class="widget large-widget">
+                                <h3>📜 Recent Analysis History</h3>
+                                <div class="analysis-history">
+                                    <div class="history-item">
+                                        <div class="history-time">14:32</div>
+                                        <div class="history-content">
+                                            <div class="history-title">Fed Rate Decision Analysis Complete</div>
+                                            <div class="history-details">
+                                                <span class="detail-item">Model: GPT-4</span>
+                                                <span class="detail-item">Sentiment: Positive (78%)</span>
+                                                <span class="detail-item">Impact: High (8.9/10)</span>
+                                                <span class="detail-item">Processing: 2.1s</span>
+                                                <span class="detail-item">Cost: $0.034</span>
+                                            </div>
+                                        </div>
+                                        <div class="history-result positive">Bullish Signal</div>
+                                    </div>
+                                    
+                                    <div class="history-item">
+                                        <div class="history-time">14:28</div>
+                                        <div class="history-content">
+                                            <div class="history-title">Tech Earnings Report Processed</div>
+                                            <div class="history-details">
+                                                <span class="detail-item">Model: GPT-4</span>
+                                                <span class="detail-item">Sentiment: Mixed (55%)</span>
+                                                <span class="detail-item">Impact: Medium (6.2/10)</span>
+                                                <span class="detail-item">Processing: 1.8s</span>
+                                                <span class="detail-item">Cost: $0.027</span>
+                                            </div>
+                                        </div>
+                                        <div class="history-result neutral">Hold</div>
+                                    </div>
+                                    
+                                    <div class="history-item">
+                                        <div class="history-time">14:25</div>
+                                        <div class="history-content">
+                                            <div class="history-title">Supply Chain Warning Analyzed</div>
+                                            <div class="history-details">
+                                                <span class="detail-item">Model: Claude 3.5</span>
+                                                <span class="detail-item">Sentiment: Negative (82%)</span>
+                                                <span class="detail-item">Impact: High (7.8/10)</span>
+                                                <span class="detail-item">Processing: 2.3s</span>
+                                                <span class="detail-item">Cost: $0.089</span>
+                                            </div>
+                                        </div>
+                                        <div class="history-result negative">Bearish Signal</div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -871,6 +1448,268 @@
                     </div>
                 </div>
 
+                <!-- Training Pipeline Page -->
+                <div id="page-training" class="page">
+                    <div class="training-container">
+                        <!-- Real-time Training Dashboard -->
+                        <div class="training-dashboard">
+                            <!-- Current Training Status -->
+                            <div class="widget large-widget training-status-widget">
+                                <div class="training-header">
+                                    <div class="status-info">
+                                        <h2>🤖 AI Model Training Center</h2>
+                                        <div class="current-status">
+                                            <span class="status-indicator" id="training-indicator">🟢</span>
+                                            <span class="status-text" id="training-status-text">Ready to Train</span>
+                                            <span class="last-trained" id="last-trained">Last trained: 2 hours ago</span>
+                                        </div>
+                                    </div>
+                                    <div class="training-actions">
+                                        <button class="btn-training btn-start" id="start-training-btn" onclick="startTraining()">
+                                            <span class="btn-icon">🚀</span>
+                                            <span class="btn-text">Start Training</span>
+                                        </button>
+                                        <button class="btn-training btn-stop" id="stop-training-btn" onclick="stopTraining()" disabled>
+                                            <span class="btn-icon">⏹️</span>
+                                            <span class="btn-text">Stop</span>
+                                        </button>
+                                        <button class="btn-training btn-retrain" onclick="retrainModels()">
+                                            <span class="btn-icon">🔄</span>
+                                            <span class="btn-text">Retrain All</span>
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <!-- Training Progress Overview -->
+                                <div class="training-overview" id="training-overview">
+                                    <div class="overview-item">
+                                        <div class="overview-label">Total Progress</div>
+                                        <div class="progress-circle" data-progress="0">
+                                            <div class="progress-value">0%</div>
+                                        </div>
+                                    </div>
+                                    <div class="overview-item">
+                                        <div class="overview-label">Current Step</div>
+                                        <div class="current-step">Waiting...</div>
+                                    </div>
+                                    <div class="overview-item">
+                                        <div class="overview-label">Estimated Time</div>
+                                        <div class="estimated-time">--:--</div>
+                                    </div>
+                                    <div class="overview-item">
+                                        <div class="overview-label">Best Accuracy</div>
+                                        <div class="best-accuracy">91.5%</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Model Selection & Configuration -->
+                            <div class="widget medium-widget">
+                                <h3>🎯 Training Configuration</h3>
+                                <div class="config-section">
+                                    <div class="config-group">
+                                        <label>Target Models</label>
+                                        <div class="model-checkboxes">
+                                            <label class="checkbox-item">
+                                                <input type="checkbox" id="model-rf" checked>
+                                                <span class="checkmark"></span>
+                                                Random Forest
+                                            </label>
+                                            <label class="checkbox-item">
+                                                <input type="checkbox" id="model-gb" checked>
+                                                <span class="checkmark"></span>
+                                                Gradient Boosting
+                                            </label>
+                                            <label class="checkbox-item">
+                                                <input type="checkbox" id="model-lstm" checked>
+                                                <span class="checkmark"></span>
+                                                LSTM Network
+                                            </label>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="config-group">
+                                        <label>Training Mode</label>
+                                        <select id="training-mode" class="config-select">
+                                            <option value="full">Full Training</option>
+                                            <option value="incremental">Incremental Learning</option>
+                                            <option value="fine-tune">Fine Tuning</option>
+                                            <option value="quick">Quick Test</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="config-group">
+                                        <label>Data Range</label>
+                                        <div class="date-range">
+                                            <input type="date" id="start-date" value="2024-01-01">
+                                            <span>to</span>
+                                            <input type="date" id="end-date" value="2024-12-31">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Live Training Progress -->
+                            <div class="widget large-widget">
+                                <h3>📈 Real-time Training Progress</h3>
+                                <div class="live-progress">
+                                    <div class="progress-models">
+                                        <div class="model-progress" id="rf-progress">
+                                            <div class="model-header">
+                                                <div class="model-info">
+                                                    <span class="model-name">🌳 Random Forest</span>
+                                                    <span class="model-status" id="rf-status">Pending</span>
+                                                </div>
+                                                <div class="model-metrics">
+                                                    <span class="accuracy" id="rf-accuracy">--</span>
+                                                    <span class="time" id="rf-time">--</span>
+                                                </div>
+                                            </div>
+                                            <div class="progress-bar-container">
+                                                <div class="progress-bar">
+                                                    <div class="progress-fill" id="rf-progress-fill" style="width: 0%"></div>
+                                                </div>
+                                                <span class="progress-text" id="rf-progress-text">0/100 estimators</span>
+                                            </div>
+                                        </div>
+
+                                        <div class="model-progress" id="gb-progress">
+                                            <div class="model-header">
+                                                <div class="model-info">
+                                                    <span class="model-name">⚡ Gradient Boosting</span>
+                                                    <span class="model-status" id="gb-status">Pending</span>
+                                                </div>
+                                                <div class="model-metrics">
+                                                    <span class="accuracy" id="gb-accuracy">--</span>
+                                                    <span class="time" id="gb-time">--</span>
+                                                </div>
+                                            </div>
+                                            <div class="progress-bar-container">
+                                                <div class="progress-bar">
+                                                    <div class="progress-fill" id="gb-progress-fill" style="width: 0%"></div>
+                                                </div>
+                                                <span class="progress-text" id="gb-progress-text">0/200 iterations</span>
+                                            </div>
+                                        </div>
+
+                                        <div class="model-progress" id="lstm-progress">
+                                            <div class="model-header">
+                                                <div class="model-info">
+                                                    <span class="model-name">🧠 LSTM Network</span>
+                                                    <span class="model-status" id="lstm-status">Pending</span>
+                                                </div>
+                                                <div class="model-metrics">
+                                                    <span class="accuracy" id="lstm-accuracy">--</span>
+                                                    <span class="time" id="lstm-time">--</span>
+                                                </div>
+                                            </div>
+                                            <div class="progress-bar-container">
+                                                <div class="progress-bar">
+                                                    <div class="progress-fill" id="lstm-progress-fill" style="width: 0%"></div>
+                                                </div>
+                                                <span class="progress-text" id="lstm-progress-text">0/50 epochs</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Training Metrics Dashboard -->
+                            <div class="widget medium-widget">
+                                <h3>📊 Training Metrics</h3>
+                                <div class="metrics-grid">
+                                    <div class="metric-card">
+                                        <div class="metric-icon">🎯</div>
+                                        <div class="metric-info">
+                                            <div class="metric-value" id="current-accuracy">--</div>
+                                            <div class="metric-label">Current Accuracy</div>
+                                        </div>
+                                    </div>
+                                    <div class="metric-card">
+                                        <div class="metric-icon">⚡</div>
+                                        <div class="metric-info">
+                                            <div class="metric-value" id="training-speed">--</div>
+                                            <div class="metric-label">Training Speed</div>
+                                        </div>
+                                    </div>
+                                    <div class="metric-card">
+                                        <div class="metric-icon">💾</div>
+                                        <div class="metric-info">
+                                            <div class="metric-value" id="data-processed">--</div>
+                                            <div class="metric-label">Data Processed</div>
+                                        </div>
+                                    </div>
+                                    <div class="metric-card">
+                                        <div class="metric-icon">🔄</div>
+                                        <div class="metric-info">
+                                            <div class="metric-value" id="iterations-completed">--</div>
+                                            <div class="metric-label">Iterations</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Real-time Loss Chart -->
+                            <div class="widget large-widget">
+                                <h3>📉 Live Training Loss</h3>
+                                <div class="chart-controls">
+                                    <div class="chart-toggles">
+                                        <label class="toggle-item">
+                                            <input type="checkbox" id="show-training-loss" checked>
+                                            <span class="toggle-label">Training Loss</span>
+                                        </label>
+                                        <label class="toggle-item">
+                                            <input type="checkbox" id="show-validation-loss" checked>
+                                            <span class="toggle-label">Validation Loss</span>
+                                        </label>
+                                        <label class="toggle-item">
+                                            <input type="checkbox" id="show-accuracy" checked>
+                                            <span class="toggle-label">Accuracy</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="chart-container">
+                                    <canvas id="live-training-chart"></canvas>
+                                </div>
+                            </div>
+
+                            <!-- Training Log -->
+                            <div class="widget large-widget">
+                                <h3>📝 Training Log</h3>
+                                <div class="log-controls">
+                                    <button class="btn-small" onclick="clearTrainingLog()">Clear Log</button>
+                                    <button class="btn-small" onclick="exportTrainingLog()">Export Log</button>
+                                    <div class="log-filter">
+                                        <select id="log-level-filter">
+                                            <option value="all">All Levels</option>
+                                            <option value="info">Info</option>
+                                            <option value="warning">Warning</option>
+                                            <option value="error">Error</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="training-log" id="training-log">
+                                    <div class="log-entry info">
+                                        <span class="log-time">14:32:15</span>
+                                        <span class="log-level">INFO</span>
+                                        <span class="log-message">Training system initialized and ready</span>
+                                    </div>
+                                    <div class="log-entry info">
+                                        <span class="log-time">14:32:10</span>
+                                        <span class="log-level">INFO</span>
+                                        <span class="log-message">Data validation completed - 500,000 samples loaded</span>
+                                    </div>
+                                    <div class="log-entry info">
+                                        <span class="log-time">14:32:05</span>
+                                        <span class="log-level">INFO</span>
+                                        <span class="log-message">Feature engineering pipeline ready - 156 features extracted</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Data Explorer Page -->
                 <div id="page-data" class="page">
                     <div class="data-explorer">
@@ -1006,27 +1845,7 @@
                         </div>
                         
                         <div class="settings-grid">
-                            <div class="widget large-widget">
-                                <h3>General Settings</h3>
-                                <div class="settings-group">
-                                    <label>Update Interval (seconds)</label>
-                                    <input type="number" id="update-interval" value="5" min="1" max="60">
-                                </div>
-                                <div class="settings-group">
-                                    <label>Theme</label>
-                                    <select id="theme-selector">
-                                        <option value="light">Light</option>
-                                        <option value="dark">Dark</option>
-                                        <option value="auto">Auto</option>
-                                    </select>
-                                </div>
-                                <div class="settings-group">
-                                    <label>
-                                        <input type="checkbox" id="auto-refresh" checked>
-                                        Auto Refresh
-                                    </label>
-                                </div>
-                            </div>
+                            
                             
                             <div class="widget medium-widget">
                                 <h3>Notification Settings</h3>
@@ -1068,6 +1887,11 @@
                                         <span class="value">2.15.0</span>
                                     </div>
                                 </div>
+                            </div>
+                            
+                            <div class="widget large-widget">
+                                <h3>API Status</h3>
+                                <div id="api-status-container" class="api-status-container"></div>
                             </div>
                         </div>
                     </div>

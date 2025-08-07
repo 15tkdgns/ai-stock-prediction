@@ -201,7 +201,7 @@ class SimpleTranslator {
         // Update button text
         const langNames = {
             'en': 'EN',
-            'ko': '한국어',
+            'ko': 'Korean',
             'ja': '日本語', 
             'zh': '中文',
             'es': 'ES',
