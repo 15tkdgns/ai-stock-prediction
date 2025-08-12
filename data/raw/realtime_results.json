@@ -1,1 +1,58 @@
-{}
+{
+  "timestamp": "2025-08-12T00:00:00Z",
+  "predictions": [
+    {
+      "symbol": "AAPL",
+      "current_price": 225.45,
+      "predicted_direction": "up",
+      "confidence": 0.78,
+      "event_probability": 0.23,
+      "risk_level": "low",
+      "features": {
+        "volatility": 0.045,
+        "volume_change": 0.12,
+        "sentiment_score": 0.65
+      }
+    },
+    {
+      "symbol": "MSFT",
+      "current_price": 412.30,
+      "predicted_direction": "stable",
+      "confidence": 0.85,
+      "event_probability": 0.15,
+      "risk_level": "low",
+      "features": {
+        "volatility": 0.032,
+        "volume_change": -0.05,
+        "sentiment_score": 0.72
+      }
+    },
+    {
+      "symbol": "GOOGL",
+      "current_price": 165.80,
+      "predicted_direction": "down",
+      "confidence": 0.72,
+      "event_probability": 0.31,
+      "risk_level": "medium",
+      "features": {
+        "volatility": 0.058,
+        "volume_change": 0.25,
+        "sentiment_score": 0.45
+      }
+    }
+  ],
+  "market_summary": {
+    "total_analyzed": 500,
+    "high_risk_events": 12,
+    "medium_risk_events": 45,
+    "low_risk_events": 156,
+    "overall_market_sentiment": 0.62,
+    "volatility_index": 0.041
+  },
+  "model_performance": {
+    "accuracy": 0.783,
+    "precision": 0.756,
+    "recall": 0.821,
+    "f1_score": 0.787
+  }
+}

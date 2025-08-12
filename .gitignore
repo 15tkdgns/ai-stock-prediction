@@ -65,8 +65,10 @@ ehthumbs.db
 Thumbs.db
 
 # Logs
-# *.log
-# logs/
+*.log
+logs/
+dashboard/server.log
+dashboard/log/
 
 # Temporary files
 *.tmp
@@ -115,6 +117,13 @@ lerna-debug.log*
 *.tgz
 .yarn-integrity
 .parcel-cache
+
+# Generated dashboard directories
+dashboard/data/
+dashboard/src/
+
+# Virtual environment
+new_venv/
 
 # System files
 *.pid

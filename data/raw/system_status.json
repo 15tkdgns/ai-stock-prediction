@@ -1,1 +1,33 @@
-{}
+{
+  "status": "online",
+  "last_updated": "2025-08-12T00:00:00Z",
+  "system_health": {
+    "cpu_usage": 45.2,
+    "memory_usage": 67.8,
+    "disk_usage": 23.1,
+    "network_status": "healthy"
+  },
+  "services": {
+    "data_collector": {
+      "status": "running",
+      "last_run": "2025-08-12T00:00:00Z",
+      "success_rate": 98.5
+    },
+    "model_trainer": {
+      "status": "idle",
+      "last_run": "2025-08-11T22:30:00Z",
+      "success_rate": 95.2
+    },
+    "prediction_engine": {
+      "status": "running",
+      "last_run": "2025-08-12T00:00:00Z",
+      "success_rate": 97.8
+    }
+  },
+  "alerts": [],
+  "performance_metrics": {
+    "total_predictions": 15847,
+    "accuracy_rate": 78.3,
+    "avg_response_time": 0.245
+  }
+}

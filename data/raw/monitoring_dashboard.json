@@ -1,1 +1,96 @@
-{}
+{
+  "dashboard_config": {
+    "refresh_interval": 5000,
+    "max_data_points": 100,
+    "theme": "dark",
+    "timezone": "UTC"
+  },
+  "charts": {
+    "system_performance": {
+      "type": "line",
+      "data": [
+        {"timestamp": "2025-08-12T00:00:00Z", "cpu": 45.2, "memory": 67.8, "disk": 23.1},
+        {"timestamp": "2025-08-11T23:55:00Z", "cpu": 42.1, "memory": 65.3, "disk": 23.0},
+        {"timestamp": "2025-08-11T23:50:00Z", "cpu": 48.7, "memory": 69.1, "disk": 22.9}
+      ]
+    },
+    "prediction_accuracy": {
+      "type": "gauge",
+      "current_value": 78.3,
+      "target": 80.0,
+      "history": [
+        {"date": "2025-08-11", "accuracy": 77.8},
+        {"date": "2025-08-10", "accuracy": 79.2},
+        {"date": "2025-08-09", "accuracy": 76.5}
+      ]
+    },
+    "market_events": {
+      "type": "bar",
+      "categories": ["High Risk", "Medium Risk", "Low Risk"],
+      "data": [12, 45, 156],
+      "colors": ["#ff4444", "#ffaa00", "#44ff44"]
+    },
+    "portfolio_performance": {
+      "type": "pie",
+      "segments": [
+        {"label": "Technology", "value": 35.2, "color": "#4285f4"},
+        {"label": "Healthcare", "value": 22.8, "color": "#34a853"},
+        {"label": "Finance", "value": 18.5, "color": "#fbbc05"},
+        {"label": "Consumer", "value": 15.1, "color": "#ea4335"},
+        {"label": "Others", "value": 8.4, "color": "#9aa0a6"}
+      ]
+    }
+  },
+  "alerts": {
+    "active": [],
+    "recent": [
+      {
+        "id": "alert_001",
+        "type": "warning",
+        "message": "Model accuracy below target (78.3% < 80%)",
+        "timestamp": "2025-08-11T22:15:00Z",
+        "resolved": false
+      }
+    ]
+  },
+  "model_status": {
+    "random_forest": {
+      "status": "active",
+      "accuracy": 0.785,
+      "last_trained": "2025-08-11T20:00:00Z",
+      "training_duration": 45.2
+    },
+    "gradient_boosting": {
+      "status": "active", 
+      "accuracy": 0.792,
+      "last_trained": "2025-08-11T20:15:00Z",
+      "training_duration": 52.7
+    },
+    "xgboost": {
+      "status": "active",
+      "accuracy": 0.798,
+      "last_trained": "2025-08-11T20:30:00Z",
+      "training_duration": 38.9
+    },
+    "lstm": {
+      "status": "training",
+      "accuracy": 0.773,
+      "last_trained": "2025-08-11T19:45:00Z",
+      "training_duration": 120.5
+    }
+  },
+  "data_pipeline": {
+    "last_update": "2025-08-12T00:00:00Z",
+    "sources": {
+      "yahoo_finance": {"status": "connected", "lag": 1.2},
+      "news_api": {"status": "connected", "lag": 5.8},
+      "market_data": {"status": "connected", "lag": 0.8}
+    },
+    "processing_queue": {
+      "pending": 3,
+      "processing": 1,
+      "completed": 2847,
+      "failed": 12
+    }
+  }
+}

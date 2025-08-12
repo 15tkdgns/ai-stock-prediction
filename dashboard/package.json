@@ -1,0 +1,32 @@
+{
+  "name": "ai-stock-dashboard",
+  "version": "1.0.0",
+  "type": "module",
+  "sideEffects": [
+    "*.css",
+    "src/lib/polyfills.js"
+  ],
+  "scripts": {
+    "dev": "python3 server.py",
+    "start": "python3 server.py",
+    "test": "echo \"No tests configured\" && exit 0",
+    "lint": "eslint .",
+    "format": "prettier --write ."
+  },
+  "description": "AI Stock Prediction Dashboard with Modern Architecture",
+  "keywords": [
+    "ai",
+    "stock",
+    "dashboard",
+    "prediction",
+    "finance"
+  ],
+  "author": "Dashboard Team",
+  "license": "MIT",
+  "devDependencies": {
+    "eslint": "^8.0.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-prettier": "^5.5.4",
+    "prettier": "^3.0.0"
+  }
+}
