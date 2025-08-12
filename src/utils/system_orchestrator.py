@@ -10,7 +10,7 @@ import pandas as pd  # pandas import 추가
 
 
 from src.testing.validation_checker import DataValidationChecker
-from src.analysis.xai_monitoring import XAIMonitoringSystem
+from src.utils.xai_monitoring import XAIMonitoringSystem
 from src.testing.realtime_testing_system import RealTimeTestingSystem
 from src.features.llm_feature_extractor import extract_llm_features
 
