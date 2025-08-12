@@ -177,13 +177,32 @@ class RealTimeNewsAnalyzer {
 
     for (const feed of rssFeeds) {
       try {
-        // Proxy server needed in real environment due to CORS issues
-        const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(feed)}`;
+        // Use local proxy server instead of external service to avoid rate limits
+        const proxyUrl = `http://localhost:8090/proxy/rss?url=${encodeURIComponent(feed)}`;
         const response = await fetch(proxyUrl);
-        const data = await response.json();
+        
+        // Check if we're getting XML directly or JSON from fallback
+        const contentType = response.headers.get('content-type');
+        let xmlContent;
+        
+        if (contentType && contentType.includes('application/xml')) {
+          // Direct XML response from local proxy
+          xmlContent = await response.text();
+        } else {
+          // Fallback to external proxy if local proxy fails
+          try {
+            const fallbackProxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(feed)}`;
+            const fallbackResponse = await fetch(fallbackProxyUrl);
+            const fallbackData = await fallbackResponse.json();
+            xmlContent = fallbackData.contents;
+          } catch (fallbackError) {
+            console.warn(`Fallback proxy also failed for ${feed}:`, fallbackError);
+            continue;
+          }
+        }
 
         const parser = new DOMParser();
-        const xmlDoc = parser.parseFromString(data.contents, 'text/xml');
+        const xmlDoc = parser.parseFromString(xmlContent, 'text/xml');
 
         const items = Array.from(xmlDoc.querySelectorAll('item'));
 

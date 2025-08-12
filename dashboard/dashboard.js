@@ -19,6 +19,9 @@ class DashboardManager {
   }
 
   async init() {
+    // Wait for Chart.js to be available
+    await this.waitForChartJS();
+    
     this.setupCharts();
     this.startRealTimeUpdates();
     this.loadInitialData();
@@ -27,6 +30,25 @@ class DashboardManager {
     // Initialize extended features
     this.initializeExtensions();
     this.updateAPIStatusDisplay(); // Add API status display
+  }
+
+  // Wait for Chart.js library to be available
+  async waitForChartJS() {
+    let attempts = 0;
+    const maxAttempts = 50; // 5 seconds max
+    
+    while (typeof Chart === 'undefined' && attempts < maxAttempts) {
+      await new Promise(resolve => setTimeout(resolve, 100));
+      attempts++;
+    }
+    
+    if (typeof Chart === 'undefined') {
+      console.error('Chart.js library failed to load');
+      return false;
+    }
+    
+    console.log('[DASHBOARD DEBUG] Chart.js is available');
+    return true;
   }
 
   // Initialize extensions
@@ -148,9 +170,7 @@ class DashboardManager {
     const apiStatus = window.sp500APIManager.getAPIStatus();
     const container = document.getElementById('api-status-container');
     if (!container) {
-      console.warn(
-        'Could not find HTML element #api-status-container to display API status.'
-      );
+      // Silently return if element doesn't exist (removed from sidebar)
       return;
     }
 
@@ -204,28 +224,18 @@ class DashboardManager {
     }
   }
 
-  // Update system status
+  // Update system status (using common functions)
   async updateSystemStatus() {
     try {
-      // Attempt to load data from actual file
-      const response = await fetch(this.dataEndpoints.systemStatus);
-      let data;
-
-      if (response.ok) {
-        data = await response.json();
-      } else {
-        // Use mock data if file not found
-        data = this.generateMockSystemStatus();
-      }
-
+      const data = await window.commonFunctions.loadData(
+        this.dataEndpoints.systemStatus,
+        this.generateMockSystemStatus(),
+        { timeout: 3000, retries: 1 }
+      );
       this.updateSystemMetrics(data);
     } catch (error) {
-      console.warn(
-        'Failed to load system status file, using mock data:',
-        error
-      );
-      const mockData = this.generateMockSystemStatus();
-      this.updateSystemMetrics(mockData);
+      console.error('System status update failed:', error);
+      this.updateSystemMetrics(this.generateMockSystemStatus());
     }
   }
 
@@ -255,26 +265,18 @@ class DashboardManager {
     }
   }
 
-  // Update real-time prediction results
+  // Update real-time prediction results (using common functions)
   async updateRealtimePredictions() {
     try {
-      const response = await fetch(this.dataEndpoints.realtimeResults);
-      let data;
-
-      if (response.ok) {
-        data = await response.json();
-      } else {
-        data = this.generateMockPredictions();
-      }
-
+      const data = await window.commonFunctions.loadData(
+        this.dataEndpoints.realtimeResults,
+        this.generateMockPredictions(),
+        { timeout: 3000, retries: 1 }
+      );
       this.updatePredictionsDisplay(data);
     } catch (error) {
-      console.warn(
-        'Failed to load real-time results file, using mock data:',
-        error
-      );
-      const mockData = this.generateMockPredictions();
-      this.updatePredictionsDisplay(mockData);
+      console.error('Real-time predictions update failed:', error);
+      this.updatePredictionsDisplay(this.generateMockPredictions());
     }
   }
 
@@ -300,108 +302,137 @@ class DashboardManager {
 
   // Chart setup
   setupCharts() {
+    console.log('[DASHBOARD DEBUG] Starting chart setup...');
+    console.log('[DASHBOARD DEBUG] Chart.js available:', typeof Chart !== 'undefined');
+    
     this.setupPerformanceChart();
     this.setupVolumeChart();
     this.setupModelComparisonChart();
+    
+    console.log('[DASHBOARD DEBUG] Chart setup completed. Charts:', Object.keys(this.charts));
   }
 
-  // Performance trend chart
+  // Performance trend chart (using common functions)
   setupPerformanceChart() {
-    const ctx = document.getElementById('performance-chart').getContext('2d');
-    this.charts.performance = new Chart(ctx, {
-      type: 'line',
-      data: {
-        labels: this.generateTimeLabels(24),
+    console.log('[DASHBOARD DEBUG] Setting up performance chart...');
+    
+    try {
+      const timeLabels = window.commonFunctions.generateTimeLabels(24, 'hours', 'HH:mm');
+      const performanceData = window.commonFunctions.generateMockData('performance', 24, {
+        min: 75, max: 100, variation: 0.05
+      });
+      
+      const chartData = {
+        labels: timeLabels,
         datasets: [
           {
-            label: 'Model Accuracy',
-            data: this.generatePerformanceData(24),
+            label: 'Model Accuracy (%)',
+            data: performanceData,
             borderColor: '#667eea',
             backgroundColor: 'rgba(102, 126, 234, 0.1)',
             borderWidth: 3,
             fill: true,
             tension: 0.4,
+            pointRadius: 4,
+            pointBackgroundColor: '#667eea',
+            pointBorderColor: '#ffffff',
+            pointBorderWidth: 2,
           },
         ],
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: {
-            display: false,
-          },
-        },
+      };
+
+      const customOptions = {
         scales: {
           y: {
             beginAtZero: false,
-            min: 80,
+            min: 75,
             max: 100,
             ticks: {
               callback: function (value) {
                 return value + '%';
               },
             },
+            grid: {
+              color: 'rgba(255, 255, 255, 0.1)',
+            },
           },
           x: {
             display: true,
+            grid: {
+              color: 'rgba(255, 255, 255, 0.1)',
+            },
           },
         },
-      },
-    });
+        interaction: {
+          intersect: false,
+        },
+        plugins: {
+          tooltip: {
+            mode: 'index',
+            intersect: false,
+          },
+        },
+      };
+
+      this.charts.performance = window.commonFunctions.createChart(
+        'performance-chart', 'line', chartData, customOptions
+      );
+      
+      console.log('[DASHBOARD DEBUG] Performance chart created successfully');
+    } catch (error) {
+      console.error('[DASHBOARD DEBUG] Error creating performance chart:', error);
+    }
   }
 
-  // Trading volume chart
+  // Trading volume chart (using common functions)
   setupVolumeChart() {
-    const ctx = document.getElementById('volume-chart').getContext('2d');
+    const volumeDataArray = window.commonFunctions.generateMockData('volume', 7);
     const volumeData = {
-      labels: ['NVDA', 'TSLA', 'AAPL', 'GOOGL', 'MSFT', 'AMZN', 'META'],
-      data: [89.1, 67.8, 45.2, 32.1, 28.7, 25.3, 22.4],
+      labels: volumeDataArray.map(item => item.symbol),
+      data: volumeDataArray.map(item => parseFloat(item.volume)),
     };
 
-    this.charts.volume = new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: volumeData.labels,
-        datasets: [
-          {
-            label: 'Volume (Millions)',
-            data: volumeData.data,
-            backgroundColor: [
-              'rgba(102, 126, 234, 0.8)',
-              'rgba(118, 75, 162, 0.8)',
-              'rgba(52, 152, 219, 0.8)',
-              'rgba(46, 204, 113, 0.8)',
-              'rgba(241, 196, 15, 0.8)',
-              'rgba(231, 76, 60, 0.8)',
-              'rgba(155, 89, 182, 0.8)',
-            ],
-            borderColor: 'rgba(255, 255, 255, 0.8)',
-            borderWidth: 2,
-            borderRadius: 8,
-          },
-        ],
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: {
-            display: false,
-          },
+    const chartData = {
+      labels: volumeData.labels,
+      datasets: [
+        {
+          label: 'Volume (Millions)',
+          data: volumeData.data,
+          backgroundColor: [
+            'rgba(102, 126, 234, 0.8)',
+            'rgba(118, 75, 162, 0.8)',
+            'rgba(52, 152, 219, 0.8)',
+            'rgba(46, 204, 113, 0.8)',
+            'rgba(241, 196, 15, 0.8)',
+            'rgba(231, 76, 60, 0.8)',
+            'rgba(155, 89, 182, 0.8)',
+          ],
+          borderColor: 'rgba(255, 255, 255, 0.8)',
+          borderWidth: 2,
+          borderRadius: 8,
         },
-        scales: {
-          y: {
-            beginAtZero: true,
-            ticks: {
-              callback: function (value) {
-                return value + 'M';
-              },
+      ],
+    };
+
+    const customOptions = {
+      plugins: {
+        legend: { display: false },
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: {
+            callback: function (value) {
+              return value + 'M';
             },
           },
         },
       },
-    });
+    };
+
+    this.charts.volume = window.commonFunctions.createChart(
+      'volume-chart', 'bar', chartData, customOptions
+    );
 
     // Updates XAI selection menu based on volume data.
     this.updateXaiStockSelector(volumeData);
@@ -475,9 +506,12 @@ class DashboardManager {
 
   // Model comparison chart
   setupModelComparisonChart() {
-    const ctx = document
-      .getElementById('model-comparison-chart')
-      .getContext('2d');
+    const element = document.getElementById('model-comparison-chart');
+    if (!element) {
+      console.warn('Model comparison chart element not found');
+      return;
+    }
+    const ctx = element.getContext('2d');
     this.charts.modelComparison = new Chart(ctx, {
       type: 'radar',
       data: {
@@ -539,59 +573,75 @@ class DashboardManager {
 
   // Update chart data
   updateCharts() {
+    console.log('[DASHBOARD DEBUG] Updating all charts...');
+    
     // Update performance chart
     if (this.charts.performance) {
-      const newData = 85 + Math.random() * 10;
-      this.charts.performance.data.datasets[0].data.push(newData);
-      this.charts.performance.data.datasets[0].data.shift();
-      this.charts.performance.update('none');
+      try {
+        const currentTime = new Date().toLocaleTimeString('ko-KR', {
+          hour: '2-digit',
+          minute: '2-digit',
+          hourCycle: 'h23',
+        });
+        
+        const newAccuracy = 87 + Math.sin(Date.now() / 100000) * 3 + (Math.random() - 0.5) * 2;
+        const boundedAccuracy = Math.max(82, Math.min(96, newAccuracy));
+        
+        // Shift data and add new point
+        this.charts.performance.data.labels.push(currentTime);
+        this.charts.performance.data.labels.shift();
+        
+        this.charts.performance.data.datasets[0].data.push(parseFloat(boundedAccuracy.toFixed(2)));
+        this.charts.performance.data.datasets[0].data.shift();
+        
+        this.charts.performance.update('none');
+        console.log('[DASHBOARD DEBUG] Performance chart updated with new accuracy:', boundedAccuracy.toFixed(2));
+      } catch (error) {
+        console.error('[DASHBOARD DEBUG] Error updating performance chart:', error);
+      }
+    } else {
+      console.warn('[DASHBOARD DEBUG] Performance chart not available for update');
     }
 
     // Update volume chart (occasionally)
     if (this.charts.volume && Math.random() > 0.8) {
-      this.charts.volume.data.datasets[0].data =
-        this.charts.volume.data.datasets[0].data.map(
-          (val) => val + (Math.random() - 0.5) * 5
-        );
-      this.charts.volume.update('none');
+      try {
+        this.charts.volume.data.datasets[0].data =
+          this.charts.volume.data.datasets[0].data.map(
+            (val) => Math.max(10, val + (Math.random() - 0.5) * 8)
+          );
+        this.charts.volume.update('none');
+        console.log('[DASHBOARD DEBUG] Volume chart updated');
+      } catch (error) {
+        console.error('[DASHBOARD DEBUG] Error updating volume chart:', error);
+      }
     }
+    
+    console.log('[DASHBOARD DEBUG] Chart update completed');
   }
 
-  // Generate time labels
+  // Generate time labels (deprecated - use commonFunctions.generateTimeLabels)
   generateTimeLabels(hours) {
-    const labels = [];
-    const now = new Date();
-    for (let i = hours; i >= 0; i--) {
-      const time = new Date(now.getTime() - i * 60 * 60 * 1000);
-      labels.push(
-        time.toLocaleTimeString('ko-KR', {
-          hour: '2-digit',
-          minute: '2-digit',
-          hourCycle: 'h23',
-        })
-      );
-    }
-    return labels;
+    console.warn('[DASHBOARD] generateTimeLabels is deprecated, use commonFunctions.generateTimeLabels');
+    return window.commonFunctions.generateTimeLabels(hours, 'hours', 'HH:mm');
   }
 
-  // Generate performance data
+  // Generate performance data (deprecated - use commonFunctions.generateMockData)
   generatePerformanceData(points) {
-    const data = [];
-    let baseAccuracy = 87;
-    for (let i = 0; i < points; i++) {
-      baseAccuracy += (Math.random() - 0.5) * 2;
-      baseAccuracy = Math.max(80, Math.min(95, baseAccuracy));
-      data.push(parseFloat(baseAccuracy.toFixed(1)));
-    }
-    return data;
+    console.warn('[DASHBOARD] generatePerformanceData is deprecated, use commonFunctions.generateMockData');
+    return window.commonFunctions.generateMockData('performance', points, {
+      min: 82, max: 96, variation: 0.1
+    });
   }
 
   // Display last update time
   updateLastUpdateTime() {
     const now = new Date();
     const timeString = now.toLocaleString('ko-KR', { hour12: false });
-    document.getElementById('last-update').textContent =
-      `Last Updated: ${timeString} KST`;
+    const lastUpdateElement = document.getElementById('last-update');
+    if (lastUpdateElement) {
+      lastUpdateElement.textContent = `Last Updated: ${timeString} KST`;
+    }
   }
 
   // Set up event listeners
@@ -665,10 +715,10 @@ class DashboardManager {
         }
       });
 
-      // Close sidebar by swiping from sidebar
+      // Close sidebar by swiping from sidebar (optimized with passive listeners)
       sidebar.addEventListener('touchstart', (e) => {
         touchStartX = e.touches[0].clientX;
-      });
+      }, { passive: true });
 
       sidebar.addEventListener('touchend', (e) => {
         const touchEndX = e.changedTouches[0].clientX;
@@ -676,7 +726,7 @@ class DashboardManager {
           // Swipe more than 50px to the left
           closeSidebar();
         }
-      });
+      }, { passive: true });
     }
 
     // XAI page stock selection event listener
@@ -774,14 +824,28 @@ class DashboardManager {
 
   // Display error state
   showErrorState() {
-    document.getElementById('system-status').className = 'status-dot offline';
-    document.getElementById('last-update').textContent = 'Update Failed';
+    const systemStatusElement = document.getElementById('system-status');
+    if (systemStatusElement) {
+      systemStatusElement.className = 'status-dot offline';
+    }
+    
+    const lastUpdateElement = document.getElementById('last-update');
+    if (lastUpdateElement) {
+      lastUpdateElement.textContent = 'Update Failed';
+    }
 
     // Display default metrics
-    document.getElementById('model-accuracy').textContent = '--';
-    document.getElementById('processing-speed').textContent = '--';
-    document.getElementById('active-models').textContent = '--';
-    document.getElementById('data-sources').textContent = '--';
+    const modelAccuracy = document.getElementById('model-accuracy');
+    if (modelAccuracy) modelAccuracy.textContent = '--';
+    
+    const processingSpeed = document.getElementById('processing-speed');
+    if (processingSpeed) processingSpeed.textContent = '--';
+    
+    const activeModels = document.getElementById('active-models');
+    if (activeModels) activeModels.textContent = '--';
+    
+    const dataSources = document.getElementById('data-sources');
+    if (dataSources) dataSources.textContent = '--';
   }
 
   // Mock data generation functions
@@ -886,8 +950,33 @@ class DashboardManager {
 
 // 페이지 로드 시 대시보드 초기화
 document.addEventListener('DOMContentLoaded', () => {
+  console.log('[DASHBOARD DEBUG] DOM Content Loaded event fired');
   const dashboard = new DashboardManager();
   window.dashboard = dashboard; // 디버깅용
+  
+  // 수동 차트 테스트 함수 추가
+  window.testPerformanceChart = () => {
+    console.log('[DASHBOARD DEBUG] Manual test - checking performance chart element...');
+    const element = document.getElementById('performance-chart');
+    console.log('[DASHBOARD DEBUG] Element found:', !!element);
+    if (element) {
+      console.log('[DASHBOARD DEBUG] Element dimensions:', {
+        offsetWidth: element.offsetWidth,
+        offsetHeight: element.offsetHeight,
+        clientWidth: element.clientWidth,
+        clientHeight: element.clientHeight,
+        computedStyle: window.getComputedStyle(element).display
+      });
+    }
+  };
+  
+  // 5초 후 자동으로 테스트 실행
+  setTimeout(() => {
+    console.log('[DASHBOARD DEBUG] Auto-testing chart after 5 seconds...');
+    if (window.testPerformanceChart) {
+      window.testPerformanceChart();
+    }
+  }, 5000);
 });
 
 // 웹소켓이나 Server-Sent Events 지원 (선택사항)

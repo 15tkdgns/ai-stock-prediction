@@ -1,14 +1,18 @@
 #!/usr/bin/env python3
 """
 Simple HTTP server for local development to avoid CORS issues
+Enhanced with RSS feed proxy support
 """
 import http.server
 import socketserver
 import os
 import sys
+import urllib.request
+import urllib.parse
+import json
 from pathlib import Path
 
-PORT = 8080
+PORT = 8090
 
 class CORSHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
     def end_headers(self):
@@ -20,6 +24,36 @@ class CORSHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
     def do_OPTIONS(self):
         self.send_response(200)
         self.end_headers()
+
+    def do_GET(self):
+        # Handle RSS proxy requests
+        if self.path.startswith('/proxy/rss?'):
+            try:
+                # Parse the query parameters
+                query_string = self.path.split('?', 1)[1]
+                params = urllib.parse.parse_qs(query_string)
+                url = params.get('url', [''])[0]
+                
+                if not url:
+                    self.send_error(400, "Missing URL parameter")
+                    return
+                
+                # Fetch the RSS feed
+                with urllib.request.urlopen(url) as response:
+                    content = response.read().decode('utf-8')
+                
+                # Send the response
+                self.send_response(200)
+                self.send_header('Content-type', 'application/xml')
+                self.end_headers()
+                self.wfile.write(content.encode('utf-8'))
+                
+            except Exception as e:
+                print(f"RSS Proxy Error: {e}")
+                self.send_error(500, f"Proxy error: {str(e)}")
+        else:
+            # Handle regular file serving
+            super().do_GET()
 
 def main():
     # Change to dashboard directory

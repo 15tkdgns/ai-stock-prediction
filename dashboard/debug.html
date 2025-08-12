@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Debug Dashboard Issues</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        background: #f5f5f5;
+      }
+      .debug-section {
+        background: white;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 20px 0;
+      }
+      .status {
+        display: inline-block;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-weight: bold;
+      }
+      .success { background: #d4edda; color: #155724; }
+      .error { background: #f8d7da; color: #721c24; }
+      .warning { background: #fff3cd; color: #856404; }
+      pre {
+        background: #f8f9fa;
+        padding: 10px;
+        border-radius: 4px;
+        overflow-x: auto;
+      }
+      button {
+        background: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 4px;
+        cursor: pointer;
+        margin: 5px;
+      }
+      button:hover {
+        background: #0056b3;
+      }
+      #log {
+        height: 200px;
+        overflow-y: auto;
+        border: 1px solid #ddd;
+        padding: 10px;
+        background: #f8f9fa;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>🔧 Dashboard Debug Tool</h1>
+    
+    <div class="debug-section">
+      <h2>📊 Data Files Status</h2>
+      <div id="data-status">Checking...</div>
+    </div>
+
+    <div class="debug-section">
+      <h2>🌐 Network Tests</h2>
+      <button onclick="testEndpoints()">Test All Endpoints</button>
+      <button onclick="testNavigation()">Test Navigation</button>
+      <div id="network-results"></div>
+    </div>
+
+    <div class="debug-section">
+      <h2>📋 Console Log</h2>
+      <div id="log"></div>
+      <button onclick="clearLog()">Clear Log</button>
+    </div>
+
+    <div class="debug-section">
+      <h2>🔗 Quick Actions</h2>
+      <button onclick="window.location.href='index.html'">Go to Main Dashboard</button>
+      <button onclick="checkChartJS()">Check Chart.js</button>
+      <button onclick="generateMockData()">Generate Mock Data</button>
+    </div>
+
+    <script>
+      // Logging utility
+      const log = (message, type = 'info') => {
+        const logDiv = document.getElementById('log');
+        const timestamp = new Date().toLocaleTimeString();
+        const logEntry = document.createElement('div');
+        logEntry.innerHTML = `<span style="color: #666">${timestamp}</span> <span style="color: ${
+          type === 'error' ? '#dc3545' : type === 'success' ? '#28a745' : '#007bff'
+        }">[${type.toUpperCase()}]</span> ${message}`;
+        logDiv.appendChild(logEntry);
+        logDiv.scrollTop = logDiv.scrollHeight;
+      };
+
+      const clearLog = () => {
+        document.getElementById('log').innerHTML = '';
+      };
+
+      // Test data file endpoints
+      const testEndpoints = async () => {
+        const endpoints = [
+          '../data/raw/system_status.json',
+          '../data/raw/realtime_results.json', 
+          '../data/raw/monitoring_dashboard.json',
+          '../data/raw/news_data.csv',
+          '../data/raw/training_features.csv'
+        ];
+
+        const resultsDiv = document.getElementById('network-results');
+        resultsDiv.innerHTML = '<h3>Testing endpoints...</h3>';
+
+        for (const endpoint of endpoints) {
+          try {
+            const response = await fetch(endpoint);
+            const status = response.ok ? 'success' : 'error';
+            const statusText = response.ok ? '✅ OK' : `❌ ${response.status}`;
+            
+            log(`${endpoint}: ${statusText}`, status);
+            
+            if (response.ok) {
+              const contentType = response.headers.get('content-type');
+              if (contentType && contentType.includes('json')) {
+                const data = await response.json();
+                log(`  └─ JSON data loaded: ${JSON.stringify(data).length} chars`, 'success');
+              } else {
+                const text = await response.text();
+                log(`  └─ Text data loaded: ${text.length} chars`, 'success');
+              }
+            }
+          } catch (error) {
+            log(`${endpoint}: ❌ ${error.message}`, 'error');
+          }
+        }
+      };
+
+      // Test navigation functionality
+      const testNavigation = () => {
+        log('Testing navigation...', 'info');
+        
+        // Check if router exists
+        if (typeof createRouter !== 'undefined') {
+          log('✅ Router module available', 'success');
+        } else {
+          log('❌ Router module not found', 'error');
+        }
+
+        // Test navigation elements
+        const navItems = document.querySelectorAll('.nav-item');
+        if (navItems.length > 0) {
+          log(`✅ Found ${navItems.length} navigation items`, 'success');
+        } else {
+          log('❌ No navigation items found', 'error');
+        }
+
+        // Test mobile menu
+        const mobileToggle = document.getElementById('mobile-menu-toggle');
+        if (mobileToggle) {
+          log('✅ Mobile menu toggle found', 'success');
+        } else {
+          log('❌ Mobile menu toggle not found', 'error');
+        }
+      };
+
+      // Check Chart.js availability
+      const checkChartJS = () => {
+        if (typeof Chart !== 'undefined') {
+          log(`✅ Chart.js loaded: v${Chart.version}`, 'success');
+        } else {
+          log('❌ Chart.js not loaded', 'error');
+        }
+      };
+
+      // Generate mock data
+      const generateMockData = async () => {
+        log('Generating mock data...', 'info');
+        
+        const mockNewsData = \`title,content,sentiment,sentiment_score,timestamp,source,category
+"Market Update","Stock market shows positive trends","positive",0.8,"2025-08-12T10:00:00Z","Financial News","market"
+"Tech Stocks Rally","Technology sector leads gains","positive",0.9,"2025-08-12T10:15:00Z","Tech Today","sector"
+"Economic Forecast","Analysts predict steady growth","neutral",0.6,"2025-08-12T10:30:00Z","Economic Times","economy"
+\`;
+        
+        try {
+          const response = await fetch('../data/raw/news_data.csv', {
+            method: 'PUT',
+            body: mockNewsData,
+            headers: {
+              'Content-Type': 'text/csv'
+            }
+          });
+          
+          if (response.ok) {
+            log('✅ Mock news data generated', 'success');
+          } else {
+            log('❌ Failed to generate mock data (expected - read-only)', 'warning');
+          }
+        } catch (error) {
+          log('❌ Mock data generation failed (expected - read-only)', 'warning');
+        }
+      };
+
+      // Initialize debug checks
+      document.addEventListener('DOMContentLoaded', () => {
+        log('🔧 Debug tool initialized', 'info');
+        checkChartJS();
+        
+        // Auto-test endpoints on load
+        setTimeout(testEndpoints, 1000);
+      });
+
+      // Check data files status
+      const checkDataStatus = async () => {
+        const statusDiv = document.getElementById('data-status');
+        statusDiv.innerHTML = 'Checking data files...';
+        
+        try {
+          const systemStatus = await fetch('../data/raw/system_status.json');
+          const systemOK = systemStatus.ok;
+          
+          const realtimeResults = await fetch('../data/raw/realtime_results.json');
+          const realtimeOK = realtimeResults.ok;
+          
+          const newsData = await fetch('../data/raw/news_data.csv');
+          const newsOK = newsData.ok;
+          let newsEmpty = false;
+          
+          if (newsOK) {
+            const newsText = await newsData.text();
+            newsEmpty = newsText.trim().split('\\n').length <= 1; // Only header
+          }
+          
+          statusDiv.innerHTML = \`
+            <div>System Status: <span class="\${systemOK ? 'success' : 'error'}">\${systemOK ? '✅ OK' : '❌ Error'}</span></div>
+            <div>Realtime Results: <span class="\${realtimeOK ? 'success' : 'error'}">\${realtimeOK ? '✅ OK' : '❌ Error'}</span></div>
+            <div>News Data: <span class="\${newsOK && !newsEmpty ? 'success' : 'warning'}">\${
+              newsOK 
+                ? (newsEmpty ? '⚠️ Empty' : '✅ OK')
+                : '❌ Error'
+            }</span></div>
+          \`;
+          
+          if (newsEmpty) {
+            log('⚠️ News data file is empty - this may cause loading issues', 'warning');
+          }
+          
+        } catch (error) {
+          statusDiv.innerHTML = \`<span class="error">❌ Error checking files: \${error.message}</span>\`;
+          log(\`Error checking data status: \${error.message}\`, 'error');
+        }
+      };
+      
+      // Run data status check
+      setTimeout(checkDataStatus, 500);
+    </script>
+  </body>
+</html>

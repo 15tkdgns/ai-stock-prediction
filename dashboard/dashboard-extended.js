@@ -672,11 +672,23 @@ class DashboardExtensions {
   }
 
   updateAllXAICharts() {
-    const xaiPage = document.getElementById('page-xai');
-    if (!xaiPage) {
-      console.warn('XAI page container not found.');
+    // Check if any of the new XAI pages exist
+    const featureImportancePage = document.getElementById('page-feature-importance');
+    const shapAnalysisPage = document.getElementById('page-shap-analysis');
+    const modelExplainabilityPage = document.getElementById('page-model-explainability');
+    const predictionExplanationPage = document.getElementById('page-prediction-explanation');
+    
+    if (!featureImportancePage && !shapAnalysisPage && !modelExplainabilityPage && !predictionExplanationPage) {
+      console.warn('No XAI page containers found. Skipping XAI chart updates.');
       return;
     }
+    
+    console.log('[XAI DEBUG] XAI pages found:', {
+      featureImportance: !!featureImportancePage,
+      shapAnalysis: !!shapAnalysisPage,
+      modelExplainability: !!modelExplainabilityPage,
+      predictionExplanation: !!predictionExplanationPage
+    });
 
     console.log('XAI 데이터 확인:', this.xaiData ? 'Available' : 'Missing');
     console.log('XAI 데이터 내용:', this.xaiData);
@@ -3664,5 +3676,54 @@ console.log('Hello from ${filePath}');`
         },
       },
     });
+  }
+
+  // Missing functions that were being called but not implemented
+  renderSHAPDependencePlot() {
+    console.log('[XAI DEBUG] Rendering: SHAP Dependence Plot');
+    const container = document.getElementById('shap-dependence-plot');
+    if (!container) {
+      console.warn('[XAI DEBUG] Could not find shap-dependence-plot container.');
+      return;
+    }
+
+    const shapExplanations = this.xaiData?.explainability?.shap_explanations;
+    if (!shapExplanations) {
+      container.innerHTML = '<div class="xai-error"><p>SHAP dependence plot data not available.</p></div>';
+      return;
+    }
+
+    // Simple implementation - display placeholder or basic info
+    container.innerHTML = `
+      <div class="xai-placeholder">
+        <h4>SHAP Dependence Plot</h4>
+        <p>SHAP dependence plot visualization would be rendered here.</p>
+        <p>This feature requires additional implementation for interactive plotting.</p>
+      </div>
+    `;
+  }
+
+  renderSHAPForcePlot() {
+    console.log('[XAI DEBUG] Rendering: SHAP Force Plot');
+    const container = document.getElementById('shap-force-plot');
+    if (!container) {
+      console.warn('[XAI DEBUG] Could not find shap-force-plot container.');
+      return;
+    }
+
+    const shapExplanations = this.xaiData?.explainability?.shap_explanations;
+    if (!shapExplanations) {
+      container.innerHTML = '<div class="xai-error"><p>SHAP force plot data not available.</p></div>';
+      return;
+    }
+
+    // Simple implementation - display placeholder or basic info
+    container.innerHTML = `
+      <div class="xai-placeholder">
+        <h4>SHAP Force Plot</h4>
+        <p>SHAP force plot visualization would be rendered here.</p>
+        <p>This feature requires additional implementation for interactive plotting.</p>
+      </div>
+    `;
   }
 }

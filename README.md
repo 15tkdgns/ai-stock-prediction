@@ -43,16 +43,29 @@ pip install -r config/requirements.txt
 python src/utils/system_orchestrator.py
 ```
 
-### 3. 대시보드 실행
+### 3. 대시보드 실행 (개선됨!)
 
-웹 브라우저에서 `dashboard/index.html` 파일을 열어 실시간 대시보드를 확인할 수 있습니다.
-
+**🚀 권장 방법 (스마트 자동 서버):**
 ```bash
-# 간단한 HTTP 서버 실행 (선택사항)
 cd dashboard
-python -m http.server 8000
-# http://localhost:8000 에서 확인
+npm run dev        # 포트 충돌 자동 해결하는 http-server
 ```
+
+**🔧 대안 방법:**
+```bash
+cd dashboard
+npm run serve      # serve 사용
+npm run dev:force  # 기존 서버 강제 종료 후 시작
+
+# 또는 기존 방식
+python3 -m http.server 8080
+```
+
+**✨ 새로운 기능들:**
+- 포트 충돌 시 자동으로 다른 포트 탐색 (8080 → 8081 → 8082...)
+- 기존 서버 프로세스 자동 감지 및 관리
+- http-server, serve, Python 서버 중 선택 가능
+- 사용자 친화적인 상태 메시지
 
 ### 4. 개별 스크립트 실행 (옵션)
 

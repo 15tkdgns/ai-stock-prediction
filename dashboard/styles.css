@@ -348,8 +348,13 @@ canvas {
 
 /* Performance chart 특별 처리 */
 #performance-chart {
+  width: 100% !important;
+  height: 280px !important;
   max-height: 300px !important;
   margin-top: 10px;
+  display: block !important;
+  background-color: rgba(255, 255, 255, 0.02);
+  border-radius: 8px;
 }
 
 /* Prediction Chart Specific Styles */
@@ -5071,4 +5076,548 @@ video {
     font-size: 11px;
     gap: 15px;
   }
+}
+
+/* === Debug Dashboard Styles === */
+
+.debug-container {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 15px;
+  padding: 25px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.debug-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.debug-header h2 {
+  margin: 0;
+  color: var(--dark-color);
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.debug-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.debug-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  align-items: start;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* System Status Grid */
+.system-status-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+}
+
+.status-card {
+  display: flex;
+  align-items: center;
+  padding: 15px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+}
+
+.status-card:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px);
+}
+
+.status-indicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  margin-right: 12px;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.status-indicator.online {
+  background: #28a745;
+  box-shadow: 0 0 10px rgba(40, 167, 69, 0.3);
+}
+
+.status-indicator.online::before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: inherit;
+  animation: pulse 2s infinite;
+}
+
+.status-indicator.offline {
+  background: #dc3545;
+  box-shadow: 0 0 10px rgba(220, 53, 69, 0.3);
+}
+
+.status-indicator.warning {
+  background: #ffc107;
+  box-shadow: 0 0 10px rgba(255, 193, 7, 0.3);
+}
+
+.status-indicator.unknown {
+  background: #6c757d;
+  box-shadow: 0 0 10px rgba(108, 117, 125, 0.3);
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.3);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.status-info h4 {
+  margin: 0 0 4px 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.status-info span {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+/* Pipeline Container */
+.pipeline-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.pipeline-section {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  padding: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.pipeline-section h4 {
+  margin: 0 0 12px 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.chart-status-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.chart-status-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.2s ease;
+}
+
+.chart-status-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.chart-name {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.status-badge {
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.status-badge.implemented {
+  background: rgba(40, 167, 69, 0.2);
+  color: #28a745;
+}
+
+.status-badge.working {
+  background: rgba(40, 167, 69, 0.2);
+  color: #28a745;
+}
+
+.status-badge.pending {
+  background: rgba(255, 193, 7, 0.2);
+  color: #ffc107;
+}
+
+.status-badge.error {
+  background: rgba(220, 53, 69, 0.2);
+  color: #dc3545;
+}
+
+.status-badge.not-found {
+  background: rgba(108, 117, 125, 0.2);
+  color: #6c757d;
+}
+
+/* API Pipeline Status */
+.api-pipeline-status {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.api-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.api-name {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.api-status-indicator {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.api-response-time {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin-right: 8px;
+}
+
+/* Feature Status */
+.feature-status-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.feature-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.feature-name {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+/* Performance Metrics */
+.performance-metrics {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.metric-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.metric-label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.metric-value {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #667eea;
+  font-family: 'Courier New', monospace;
+}
+
+/* Error Log */
+.error-log {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.log-controls {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.btn-small {
+  padding: 4px 8px;
+  font-size: 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-primary);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-small:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.error-list {
+  max-height: 200px;
+  overflow-y: auto;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 6px;
+  padding: 10px;
+}
+
+.error-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 8px 10px;
+  background: rgba(220, 53, 69, 0.1);
+  border-left: 3px solid #dc3545;
+  border-radius: 4px;
+  margin-bottom: 8px;
+  font-size: 0.8rem;
+}
+
+.error-timestamp {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  font-family: 'Courier New', monospace;
+}
+
+.error-message {
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+/* Debug Console */
+.debug-console {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.console-output {
+  background: rgba(0, 0, 0, 0.8);
+  border-radius: 6px;
+  padding: 15px;
+  max-height: 300px;
+  overflow-y: auto;
+  font-family: 'Courier New', monospace;
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+
+.console-line {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 6px;
+  word-wrap: break-word;
+}
+
+.console-timestamp {
+  color: #569cd6;
+  min-width: 80px;
+  flex-shrink: 0;
+  font-size: 0.75rem;
+}
+
+.console-level {
+  min-width: 50px;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  flex-shrink: 0;
+}
+
+.console-level.info {
+  color: #4ec9b0;
+}
+
+.console-level.warn {
+  color: #dcdcaa;
+}
+
+.console-level.error {
+  color: #f48771;
+}
+
+.console-level.debug {
+  color: #9cdcfe;
+}
+
+.console-message {
+  color: #d4d4d4;
+  flex: 1;
+  word-break: break-word;
+}
+
+.console-controls {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.console-input {
+  flex: 1;
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  color: var(--text-primary);
+  font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
+}
+
+.console-input:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.2);
+}
+
+.console-input::placeholder {
+  color: var(--text-secondary);
+}
+
+/* Debug Dashboard Responsive */
+@media (max-width: 1200px) and (min-width: 769px) {
+  .debug-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .debug-grid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+  
+  .system-status-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  
+  .pipeline-container {
+    gap: 15px;
+  }
+  
+  .debug-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+  
+  .debug-actions {
+    width: 100%;
+    justify-content: flex-start;
+  }
+  
+  .console-output {
+    max-height: 200px;
+    font-size: 0.75rem;
+  }
+  
+  .console-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .console-input {
+    margin-bottom: 8px;
+  }
+}
+
+/* XAI Placeholder Styles */
+.xai-placeholder {
+  padding: 20px;
+  text-align: center;
+  background: var(--bg-secondary);
+  border: 1px dashed var(--border-color);
+  border-radius: var(--border-radius);
+  color: var(--text-secondary);
+}
+
+.xai-placeholder h4 {
+  color: var(--text-primary);
+  margin-bottom: 10px;
+}
+
+.xai-placeholder p {
+  margin: 5px 0;
+  font-size: 0.9rem;
+}
+
+/* Chart Error Styles */
+.chart-error {
+  padding: 20px;
+  text-align: center;
+  background: var(--bg-secondary);
+  border: 1px solid #e74c3c;
+  border-radius: var(--border-radius);
+  color: #e74c3c;
+  margin: 10px 0;
+}
+
+.chart-error p {
+  margin: 10px 0;
+  font-weight: bold;
+}
+
+.chart-error small {
+  display: block;
+  margin: 5px 0;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
 }

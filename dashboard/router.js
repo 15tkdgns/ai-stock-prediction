@@ -15,10 +15,7 @@ class Router {
       news: 'News Analysis',
       xai: 'XAI Analysis',
       training: 'Training Pipeline',
-      progress: 'Progress',
-      data: 'Data Explorer',
-      code: 'Source Code',
-      settings: 'Settings',
+      debug: 'Debug Dashboard',
     };
 
     // Set up navigation click events
@@ -120,20 +117,26 @@ class Router {
       case 'news':
         this.initializeNewsPage();
         break;
-      case 'data':
-        this.initializeDataPage();
-        break;
-      case 'code':
-        this.initializeCodePage();
-        break;
-      case 'settings':
-        this.initializeSettingsPage();
-        break;
       case 'xai':
         this.initializeXAIPage();
         break;
+      case 'feature-importance':
+        this.initializeFeatureImportancePage();
+        break;
+      case 'shap-analysis':
+        this.initializeShapAnalysisPage();
+        break;
+      case 'model-explainability':
+        this.initializeModelExplainabilityPage();
+        break;
+      case 'prediction-explanation':
+        this.initializePredictionExplanationPage();
+        break;
       case 'training':
         this.initializeTrainingPage();
+        break;
+      case 'debug':
+        this.initializeDebugPage();
         break;
     }
   }
@@ -273,6 +276,13 @@ class Router {
       // Destroy existing chart if it exists
       if (this.predictionChart) {
         this.predictionChart.destroy();
+        this.predictionChart = null;
+      }
+      
+      // Also check Chart.js global registry and destroy any existing chart on this canvas
+      const existingChart = Chart.getChart(ctx);
+      if (existingChart) {
+        existingChart.destroy();
       }
 
       this.predictionChart = new Chart(ctx.getContext('2d'), {
@@ -464,6 +474,13 @@ class Router {
       // 기존 차트가 있으면 제거
       if (this.sentimentChart) {
         this.sentimentChart.destroy();
+        this.sentimentChart = null;
+      }
+      
+      // Chart.js 글로벌 레지스트리에서도 제거
+      const existingChart = Chart.getChart(ctx);
+      if (existingChart) {
+        existingChart.destroy();
       }
 
       this.sentimentChart = new Chart(ctx.getContext('2d'), {
@@ -791,286 +808,6 @@ class Router {
     });
   }
 
-  initializeDataPage() {
-    console.log('initializeDataPage called');
-    // Initialize data table
-    this.loadDataTable('stock_data');
-
-    // Update data statistics
-    this.updateDataStats();
-
-    // Initialize data visualization chart
-    this.initializeDataVisualization();
-  }
-
-  loadDataTable(datasetType) {
-    const table = document.getElementById('data-table');
-    if (table) {
-      // Generate mock data
-      const mockData = this.generateMockData(datasetType);
-
-      table.innerHTML = `
-                <thead>
-                    <tr>${Object.keys(mockData[0] || {})
-                      .map((key) => `<th>${key}</th>`)
-                      .join('')}</tr>
-                </thead>
-                <tbody>
-                    ${mockData
-                      .map(
-                        (row) => `
-                        <tr>${Object.values(row)
-                          .map((value) => `<td>${value}</td>`)
-                          .join('')}</tr>
-                    `
-                      )
-                      .join('')}
-                </tbody>
-            `;
-    }
-  }
-
-  generateMockData(type) {
-    const data = [];
-    const count = 20;
-
-    for (let i = 0; i < count; i++) {
-      switch (type) {
-        case 'stock_data':
-          data.push({
-            Symbol: ['AAPL', 'GOOGL', 'MSFT', 'AMZN', 'TSLA'][i % 5],
-            Price: (Math.random() * 200 + 100).toFixed(2),
-            Volume: Math.floor(Math.random() * 1000000),
-            Change: ((Math.random() - 0.5) * 10).toFixed(2) + '%',
-          });
-          break;
-        case 'news_data':
-          data.push({
-            Title: `News Title ${i + 1}`,
-            Sentiment: ['Positive', 'Negative', 'Neutral'][
-              Math.floor(Math.random() * 3)
-            ],
-            Score: Math.random().toFixed(3),
-            Date: new Date(Date.now() - i * 3600000).toLocaleDateString(),
-          });
-          break;
-        default:
-          data.push({
-            ID: i + 1,
-            Value: Math.random().toFixed(4),
-            Status: ['Active', 'Inactive'][Math.floor(Math.random() * 2)],
-          });
-      }
-    }
-
-    return data;
-  }
-
-  updateDataStats() {
-    const container = document.getElementById('data-stats');
-    if (container) {
-      container.innerHTML = `
-                <div class="stat-item">
-                    <div class="stat-label">Total Data Count</div>
-                    <div class="stat-value">12,450</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-label">Last Updated</div>
-                    <div class="stat-value">${new Date().toLocaleTimeString()}</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-label">Data Quality</div>
-                    <div class="stat-value">98.7%</div>
-                </div>
-            `;
-    }
-  }
-
-  initializeDataVisualization() {
-    const ctx = document.getElementById('data-visualization');
-    if (ctx && ctx.getContext) {
-      if (this.dataVisChart) {
-        this.dataVisChart.destroy();
-      }
-      this.dataVisChart = new Chart(ctx.getContext('2d'), {
-        type: 'bar',
-        data: {
-          labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May'],
-          datasets: [
-            {
-              label: 'Data Collection Volume',
-              data: [1200, 1900, 3000, 2500, 2000],
-              backgroundColor: 'rgba(102, 126, 234, 0.6)',
-              borderColor: 'rgba(102, 126, 234, 1)',
-              borderWidth: 1,
-            },
-          ],
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          scales: {
-            y: {
-              beginAtZero: true,
-            },
-          },
-        },
-      });
-    }
-  }
-
-  initializeCodePage() {
-    console.log('initializeCodePage called');
-    // Set up file selection event
-    const fileSelector = document.getElementById('file-selector');
-    if (fileSelector) {
-      fileSelector.addEventListener('change', (e) => {
-        this.loadSourceFile(e.target.value);
-      });
-    }
-  }
-
-  async loadSourceFile(filePath) {
-    if (!filePath) return;
-
-    const codeDisplay = document.getElementById('code-display');
-    const filePathElement = document.getElementById('file-path');
-
-    if (filePathElement) {
-      filePathElement.textContent = filePath;
-    }
-
-    if (codeDisplay) {
-      try {
-        // Attempt to load actual file
-        const response = await fetch(`../${filePath}`);
-        let code;
-
-        if (response.ok) {
-          code = await response.text();
-        } else {
-          // Display mock code if file not found
-          code = this.getMockCode(filePath);
-        }
-
-        // Detect language
-        const language = this.detectLanguage(filePath);
-        codeDisplay.className = `language-${language}`;
-        codeDisplay.textContent = code;
-
-        // Apply syntax highlighting with Prism.js
-        if (window.Prism) {
-          Prism.highlightElement(codeDisplay);
-        }
-      } catch (error) {
-        console.error('File load failed:', error);
-        codeDisplay.textContent = '// Could not load file.';
-      }
-    }
-  }
-
-  detectLanguage(filePath) {
-    const extension = filePath.split('.').pop().toLowerCase();
-    const languageMap = {
-      py: 'python',
-      js: 'javascript',
-      html: 'html',
-      css: 'css',
-      json: 'json',
-    };
-    return languageMap[extension] || 'text';
-  }
-
-  getMockCode(filePath) {
-    const mockCodes = {
-      'dashboard/dashboard.js': `// Main Dashboard JavaScript file
-class DashboardManager {
-    constructor() {
-        this.charts = {};
-        this.updateInterval = 5000;
-        this.init();
-    }
-    
-    async init() {
-        this.setupCharts();
-        this.startRealTimeUpdates();
-        this.loadInitialData();
-    }
-    
-    // Chart setup
-    setupCharts() {
-        this.setupPerformanceChart();
-        this.setupVolumeChart();
-    }
-}`,
-      'src/models/model_training.py': `# Model Training Script
-import pandas as pd
-import numpy as np
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.model_selection import train_test_split
-
-class ModelTrainer:
-    def __init__(self):
-        self.models = {}
-        
-    def train_random_forest(self, X, y):
-        """Train Random Forest model"""
-        X_train, X_test, y_train, y_test = train_test_split(
-            X, y, test_size=0.2, random_state=42
-        )
-        
-        model = RandomForestClassifier(
-            n_estimators=100,
-            max_depth=15,
-            random_state=42
-        )
-        
-        model.fit(X_train, y_train)
-        return model`,
-    };
-
-    return mockCodes[filePath] || '// Could not load code.';
-  }
-
-  initializeSettingsPage() {
-    console.log('initializeSettingsPage called');
-    this.loadCurrentSettings();
-    this.setupSettingsEvents();
-  }
-
-  loadCurrentSettings() {
-    // Settings load logic
-  }
-
-  setupSettingsEvents() {
-    const saveBtn = document.querySelector('#page-settings .btn-primary');
-    if (saveBtn) {
-      // Prevent multiple listeners by replacing the element's clone
-      const newSaveBtn = saveBtn.cloneNode(true);
-      saveBtn.parentNode.replaceChild(newSaveBtn, saveBtn);
-      newSaveBtn.addEventListener('click', () => this.saveSettings());
-    }
-  }
-
-  saveSettings() {
-    // Display success message
-    this.showAlert('Settings saved.', 'success');
-  }
-
-  showAlert(message, type = 'info') {
-    const alertDiv = document.createElement('div');
-    alertDiv.className = `alert alert-${type}`;
-    alertDiv.textContent = message;
-
-    const container = document.querySelector('.page.active');
-    if (container) {
-      container.insertBefore(alertDiv, container.firstChild);
-
-      setTimeout(() => {
-        alertDiv.remove();
-      }, 3000);
-    }
-  }
 
   // Utility methods
   generateTimeLabels(count) {
@@ -1471,6 +1208,448 @@ class ModelTrainer:
   setupTrainingControls() {
     // Training control buttons would be implemented here
     console.log('Training controls set up');
+  }
+
+  // Initialize Feature Importance page
+  initializeFeatureImportancePage() {
+    console.log('Initializing Feature Importance page');
+    this.renderFeatureImportanceChart();
+    this.renderFeatureDetailChart();
+  }
+
+  // Initialize SHAP Analysis page
+  initializeShapAnalysisPage() {
+    console.log('Initializing SHAP Analysis page');
+    this.renderShapSummaryChart();
+    this.renderShapWaterfallChart();
+  }
+
+  // Initialize Model Explainability page
+  initializeModelExplainabilityPage() {
+    console.log('Initializing Model Explainability page');
+    this.renderModelExplainabilityChart();
+    this.renderPartialDependenceChart();
+  }
+
+  // Initialize Prediction Explanation page
+  initializePredictionExplanationPage() {
+    console.log('Initializing Prediction Explanation page');
+    this.renderPredictionExplanationChart();
+    this.renderLocalFeatureImportanceChart();
+  }
+
+  // Feature Importance Chart
+  renderFeatureImportanceChart() {
+    if (!window.ChartUtils) {
+      console.error('ChartUtils not available');
+      return;
+    }
+
+    const chart = ChartUtils.createChartSafe('feature-importance-chart', {
+      type: 'bar',
+      data: {
+        labels: [
+          'Volume Trend',
+          'RSI',
+          'Moving Average',
+          'Price Change',
+          'Market Cap',
+          'News Sentiment',
+          'Volatility',
+          'Trading Volume',
+        ],
+        datasets: [
+          {
+            label: 'Feature Importance',
+            data: [0.85, 0.72, 0.68, 0.61, 0.54, 0.48, 0.42, 0.38],
+            backgroundColor: 'rgba(102, 126, 234, 0.8)',
+            borderColor: 'rgba(102, 126, 234, 1)',
+            borderWidth: 1,
+            borderRadius: 4,
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        indexAxis: 'y',
+        plugins: {
+          legend: { display: false },
+          title: {
+            display: true,
+            text: 'Feature Importance Analysis',
+          },
+        },
+        scales: {
+          x: {
+            beginAtZero: true,
+            max: 1,
+            title: { display: true, text: 'Importance Score' },
+          },
+        },
+      },
+    });
+  }
+
+  // Feature Detail Chart
+  renderFeatureDetailChart() {
+    const ctx = document.getElementById('feature-detail-chart');
+    if (!ctx) return;
+
+    const existingChart = Chart.getChart(ctx);
+    if (existingChart) {
+      existingChart.destroy();
+    }
+
+    new Chart(ctx, {
+      type: 'scatter',
+      data: {
+        datasets: [
+          {
+            label: 'Feature Impact',
+            data: Array.from({ length: 50 }, () => ({
+              x: Math.random() * 100,
+              y: (Math.random() - 0.5) * 10,
+            })),
+            backgroundColor: 'rgba(102, 126, 234, 0.6)',
+            borderColor: 'rgba(102, 126, 234, 1)',
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          title: {
+            display: true,
+            text: 'Feature Value vs Impact',
+          },
+        },
+        scales: {
+          x: { title: { display: true, text: 'Feature Value' } },
+          y: { title: { display: true, text: 'Impact on Prediction' } },
+        },
+      },
+    });
+  }
+
+  // SHAP Summary Chart
+  renderShapSummaryChart() {
+    const ctx = document.getElementById('shap-summary-plot');
+    if (!ctx) {
+      console.warn('SHAP summary plot element not found');
+      return;
+    }
+
+    const existingChart = Chart.getChart(ctx);
+    if (existingChart) {
+      existingChart.destroy();
+    }
+
+    new Chart(ctx, {
+      type: 'scatter',
+      data: {
+        datasets: [
+          {
+            label: 'High Feature Value',
+            data: Array.from({ length: 30 }, (_, i) => ({
+              x: (Math.random() - 0.5) * 2,
+              y: i % 8,
+            })),
+            backgroundColor: 'rgba(231, 76, 60, 0.7)',
+            borderColor: 'rgba(231, 76, 60, 1)',
+            pointRadius: 4,
+          },
+          {
+            label: 'Low Feature Value',
+            data: Array.from({ length: 30 }, (_, i) => ({
+              x: (Math.random() - 0.5) * 2,
+              y: i % 8,
+            })),
+            backgroundColor: 'rgba(52, 152, 219, 0.7)',
+            borderColor: 'rgba(52, 152, 219, 1)',
+            pointRadius: 4,
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          title: {
+            display: true,
+            text: 'SHAP Summary Plot',
+          },
+        },
+        scales: {
+          x: { title: { display: true, text: 'SHAP Value' } },
+          y: {
+            type: 'linear',
+            labels: [
+              'Volume Trend',
+              'RSI',
+              'Moving Average',
+              'Price Change',
+              'Market Cap',
+              'News Sentiment',
+              'Volatility',
+              'Trading Volume',
+            ],
+            title: { display: true, text: 'Features' },
+          },
+        },
+      },
+    });
+  }
+
+  // SHAP Waterfall Chart
+  renderShapWaterfallChart() {
+    const ctx = document.getElementById('shap-force-plot');
+    if (!ctx) return;
+
+    const existingChart = Chart.getChart(ctx);
+    if (existingChart) {
+      existingChart.destroy();
+    }
+
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['Base Value', 'Volume', 'RSI', 'MA', 'Price', 'Final'],
+        datasets: [
+          {
+            label: 'SHAP Values',
+            data: [0.5, 0.15, -0.08, 0.12, -0.05, 0.64],
+            backgroundColor: [
+              'rgba(128, 128, 128, 0.8)',
+              'rgba(46, 204, 113, 0.8)',
+              'rgba(231, 76, 60, 0.8)',
+              'rgba(46, 204, 113, 0.8)',
+              'rgba(231, 76, 60, 0.8)',
+              'rgba(102, 126, 234, 0.8)',
+            ],
+            borderWidth: 1,
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          title: {
+            display: true,
+            text: 'SHAP Waterfall Chart - Single Prediction',
+          },
+        },
+        scales: {
+          y: { title: { display: true, text: 'Prediction Value' } },
+        },
+      },
+    });
+  }
+
+  // Model Explainability Chart
+  renderModelExplainabilityChart() {
+    const ctx = document.getElementById('lime-explanation');
+    if (!ctx) {
+      console.warn('LIME explanation chart element not found');
+      return;
+    }
+
+    const existingChart = Chart.getChart(ctx);
+    if (existingChart) {
+      existingChart.destroy();
+    }
+
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: [
+          'High Volume',
+          'Bullish RSI',
+          'Upward MA',
+          'Positive News',
+          'Low Volatility',
+        ],
+        datasets: [
+          {
+            label: 'LIME Explanation',
+            data: [0.3, 0.25, 0.2, 0.15, -0.1],
+            backgroundColor: function(context) {
+              const value = context.parsed.y;
+              return value > 0 ? 'rgba(46, 204, 113, 0.8)' : 'rgba(231, 76, 60, 0.8)';
+            },
+            borderWidth: 1,
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          title: {
+            display: true,
+            text: 'LIME Local Explanation',
+          },
+        },
+        scales: {
+          y: { title: { display: true, text: 'Feature Contribution' } },
+        },
+      },
+    });
+  }
+
+  // Partial Dependence Chart
+  renderPartialDependenceChart() {
+    const ctx = document.getElementById('partial-dependence-chart');
+    if (!ctx) return;
+
+    const existingChart = Chart.getChart(ctx);
+    if (existingChart) {
+      existingChart.destroy();
+    }
+
+    const xValues = Array.from({ length: 50 }, (_, i) => i * 2);
+    const yValues = xValues.map(x => Math.sin(x / 20) + x / 100 + Math.random() * 0.1);
+
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: xValues,
+        datasets: [
+          {
+            label: 'Partial Dependence',
+            data: yValues,
+            borderColor: 'rgba(102, 126, 234, 1)',
+            backgroundColor: 'rgba(102, 126, 234, 0.1)',
+            borderWidth: 2,
+            fill: true,
+            tension: 0.4,
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          title: {
+            display: true,
+            text: 'Partial Dependence Plot - RSI Feature',
+          },
+        },
+        scales: {
+          x: { title: { display: true, text: 'RSI Value' } },
+          y: { title: { display: true, text: 'Predicted Probability' } },
+        },
+      },
+    });
+  }
+
+  // Prediction Explanation Chart
+  renderPredictionExplanationChart() {
+    if (!window.ChartUtils) {
+      console.error('ChartUtils not available');
+      return;
+    }
+
+    const chart = ChartUtils.createChartSafe('prediction-explanation-chart', {
+      type: 'doughnut',
+      data: {
+        labels: ['Technical Analysis', 'Market Sentiment', 'Volume Analysis', 'News Impact'],
+        datasets: [
+          {
+            data: [35, 25, 25, 15],
+            backgroundColor: [
+              'rgba(102, 126, 234, 0.8)',
+              'rgba(118, 75, 162, 0.8)',
+              'rgba(52, 152, 219, 0.8)',
+              'rgba(46, 204, 113, 0.8)',
+            ],
+            borderWidth: 2,
+            borderColor: '#fff',
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          title: {
+            display: true,
+            text: 'Prediction Contribution Breakdown',
+          },
+          legend: { position: 'bottom' },
+        },
+      },
+    });
+  }
+
+  // Local Feature Importance Chart
+  renderLocalFeatureImportanceChart() {
+    if (!window.ChartUtils) {
+      console.error('ChartUtils not available');
+      return;
+    }
+
+    const chart = ChartUtils.createChartSafe('local-feature-importance-chart', {
+      type: 'radar',
+      data: {
+        labels: ['Technical', 'Volume', 'Sentiment', 'Price', 'Volatility', 'Market'],
+        datasets: [
+          {
+            label: 'Current Prediction',
+            data: [8.2, 7.5, 6.8, 9.1, 5.5, 7.8],
+            borderColor: 'rgba(102, 126, 234, 1)',
+            backgroundColor: 'rgba(102, 126, 234, 0.2)',
+            borderWidth: 2,
+          },
+          {
+            label: 'Average Importance',
+            data: [7.0, 6.5, 6.0, 7.5, 6.0, 6.8],
+            borderColor: 'rgba(231, 76, 60, 1)',
+            backgroundColor: 'rgba(231, 76, 60, 0.2)',
+            borderWidth: 2,
+            borderDash: [5, 5],
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          title: {
+            display: true,
+            text: 'Local vs Global Feature Importance',
+          },
+        },
+        scales: {
+          r: {
+            beginAtZero: true,
+            max: 10,
+          },
+        },
+      },
+    });
+  }
+
+  // Initialize Debug Page
+  initializeDebugPage() {
+    console.log('Initializing Debug page');
+    
+    // Debug dashboard will be initialized by debug-dashboard.js
+    if (window.debugDashboard) {
+      window.debugDashboard.init();
+    } else {
+      // Create new debug dashboard instance if not exists
+      if (typeof DebugDashboard !== 'undefined') {
+        window.debugDashboard = new DebugDashboard();
+        window.debugDashboard.init();
+      } else {
+        console.warn('DebugDashboard class not available');
+      }
+    }
   }
 }
 

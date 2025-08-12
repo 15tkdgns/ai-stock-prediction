@@ -1,423 +1,951 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Stock Prediction System - Dashboard</title>
-
-    <!-- Preload critical resources -->
-    <link rel="preload" href="src/main.js" as="script" type="module" />
-    <link
-      rel="preload"
-      href="https://cdn.jsdelivr.net/npm/chart.js"
-      as="script"
-    />
-
-    <!-- CSS -->
-    <link rel="stylesheet" href="styles.css" />
-
-    <!-- Chart.js -->
+    <link rel="stylesheet" href="styles.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-    <!-- Module preloading for better performance -->
-    <link rel="modulepreload" href="src/lib/errors.js" />
-    <link rel="modulepreload" href="src/lib/result.js" />
-    <link rel="modulepreload" href="src/utils/functional.js" />
-    <link rel="modulepreload" href="src/services/http.js" />
-  </head>
-  <body>
-    <!-- Loading Indicator -->
-    <div id="loading-indicator" class="loading-indicator">
-      <div class="loading-spinner"></div>
-      <div class="loading-text">Loading Modern Dashboard...</div>
-    </div>
-
-    <!-- Mobile Menu Toggle -->
-    <button
-      class="mobile-menu-toggle"
-      id="mobile-menu-toggle"
-      aria-label="Toggle navigation menu"
-    >
-      ☰
-    </button>
-
-    <!-- Main Dashboard Container -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/date-fns@2.29.3/index.min.js"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+</head>
+<body>
+    <button class="mobile-menu-toggle" id="mobile-menu-toggle">☰</button>
     <div class="dashboard-container">
-      <!-- Navigation Sidebar -->
-      <nav class="sidebar" role="navigation" aria-label="Main navigation">
-        <div class="sidebar-header">
-          <h2>AI Stock Predictor</h2>
-          <div class="status-indicator">
-            <span
-              id="system-status"
-              class="status-dot online"
-              aria-label="System status"
-            ></span>
-            <span class="status-text">Online</span>
-          </div>
-        </div>
-
-        <ul class="nav-menu" role="menubar">
-          <li role="none">
-            <a
-              href="#dashboard"
-              class="nav-link active"
-              data-page="dashboard"
-              role="menuitem"
-              aria-current="page"
-            >
-              <span class="nav-icon" aria-hidden="true">📊</span> Dashboard
-            </a>
-          </li>
-          <li role="none">
-            <a
-              href="#models"
-              class="nav-link"
-              data-page="models"
-              role="menuitem"
-            >
-              <span class="nav-icon" aria-hidden="true">🤖</span> Model
-              Performance
-            </a>
-          </li>
-          <li role="none">
-            <a
-              href="#predictions"
-              class="nav-link"
-              data-page="predictions"
-              role="menuitem"
-            >
-              <span class="nav-icon" aria-hidden="true">📈</span> Real-time
-              Predictions
-            </a>
-          </li>
-          <li role="none">
-            <a href="#news" class="nav-link" data-page="news" role="menuitem">
-              <span class="nav-icon" aria-hidden="true">📰</span> News Analysis
-            </a>
-          </li>
-          <li role="none">
-            <a href="#xai" class="nav-link" data-page="xai" role="menuitem">
-              <span class="nav-icon" aria-hidden="true">🧠</span> XAI Analysis
-            </a>
-          </li>
-          <li role="none">
-            <a
-              href="#training"
-              class="nav-link"
-              data-page="training"
-              role="menuitem"
-            >
-              <span class="nav-icon" aria-hidden="true">⚙️</span> Training
-              Pipeline
-            </a>
-          </li>
-          <li role="none">
-            <a
-              href="#progress"
-              class="nav-link"
-              data-page="progress"
-              role="menuitem"
-            >
-              <span class="nav-icon" aria-hidden="true">📈</span> Progress
-            </a>
-          </li>
-          <li role="none">
-            <a href="#data" class="nav-link" data-page="data" role="menuitem">
-              <span class="nav-icon" aria-hidden="true">🗂️</span> Data Explorer
-            </a>
-          </li>
-          <li role="none">
-            <a
-              href="#settings"
-              class="nav-link"
-              data-page="settings"
-              role="menuitem"
-            >
-              <span class="nav-icon" aria-hidden="true">⚙️</span> Settings
-            </a>
-          </li>
-        </ul>
-      </nav>
-
-      <!-- Main Content Area -->
-      <main class="main-content" role="main">
-        <!-- Header -->
-        <header class="header">
-          <div class="header-content">
-            <h1 id="page-title">Dashboard</h1>
-            <div class="header-actions">
-              <div class="last-update">
-                Last updated: <span id="last-update-time">--:--:--</span>
-              </div>
-              <button
-                class="btn btn-outline"
-                id="refresh-btn"
-                aria-label="Refresh data"
-              >
-                🔄 Refresh
-              </button>
+        <!-- Navigation Sidebar -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <h2>AI Stock Predictor</h2>
+                <div class="status-indicator">
+                    <span id="system-status" class="status-dot online"></span>
+                    <span class="status-text">Online</span>
+                </div>
             </div>
-          </div>
-        </header>
+            
+            <ul class="nav-menu">
+                <li><a href="#dashboard" class="nav-link active" data-page="dashboard">
+                    <span class="nav-icon">📊</span> Dashboard
+                </a></li>
+                <li><a href="#models" class="nav-link" data-page="models">
+                    <span class="nav-icon">🤖</span> Model Performance
+                </a></li>
+                <li><a href="#predictions" class="nav-link" data-page="predictions">
+                    <span class="nav-icon">📈</span> Real-time Predictions
+                </a></li>
+                <li><a href="#news" class="nav-link" data-page="news">
+                    <span class="nav-icon">📰</span> News Analysis
+                </a></li>
+                <li><a href="#feature-importance" class="nav-link" data-page="feature-importance">
+                    <span class="nav-icon">📊</span> Feature Importance
+                </a></li>
+                <li><a href="#shap-analysis" class="nav-link" data-page="shap-analysis">
+                    <span class="nav-icon">🔍</span> SHAP Analysis
+                </a></li>
+                <li><a href="#model-explainability" class="nav-link" data-page="model-explainability">
+                    <span class="nav-icon">🤖</span> Model Explainability
+                </a></li>
+                <li><a href="#prediction-explanation" class="nav-link" data-page="prediction-explanation">
+                    <span class="nav-icon">💡</span> Prediction Explanation
+                </a></li>
+                <li><a href="#debug" class="nav-link" data-page="debug">
+                    <span class="nav-icon">🔍</span> Debug Dashboard
+                </a></li>
+            </ul>
+            
+        </nav>
 
-        <!-- Page Content Container -->
-        <div class="page-content">
-          <!-- Dashboard Page -->
-          <div id="page-dashboard" class="page active">
-            <div class="dashboard-grid">
-              <!-- System Status Widget -->
-              <section
-                class="widget medium-widget"
-                aria-labelledby="system-status-title"
-              >
-                <h2 id="system-status-title">System Status</h2>
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="content-header">
+                <h1 id="page-title">Dashboard</h1>
+                <div class="header-actions">
+                    <div class="live-indicator">
+                        <div class="live-dot"></div>
+                        <span>Real-time Updates</span>
+                    </div>
+                    <div class="translate-container">
+                        <button class="btn btn-translate" id="translate-btn">
+                            <span>🌐</span> EN
+                        </button>
+                        <div class="language-dropdown" id="language-dropdown">
+                            <div class="language-option" data-lang="en">🇺🇸 English</div>
+                            <div class="language-option" data-lang="ko">🇰🇷 한국어</div>
+                            <div class="language-option" data-lang="ja">🇯🇵 日본語</div>
+                            <div class="language-option" data-lang="zh">🇨🇳 中文</div>
+                            <div class="language-option" data-lang="es">🇪🇸 Español</div>
+                            <div class="language-option" data-lang="fr">🇫🇷 Français</div>
+                            <div class="language-option" data-lang="de">🇩🇪 Deutsch</div>
+                        </div>
+                    </div>
+                    <button class="btn btn-gradient" onclick="dashboard.refreshAllData()">
+                        <span>🔄</span> Refresh
+                    </button>
+                    <button class="btn btn-export" onclick="dashboard.exportData()">
+                        <span>💾</span> Export
+                    </button>
+                    <button class="btn btn-fullscreen" onclick="dashboard.toggleFullscreen()">
+                        <span>🔍</span> Fullscreen
+                    </button>
+                </div>
+            </header>
+
+            <!-- Page Content Container -->
+            <div class="page-content">
+                <!-- Dashboard Page -->
+                <div id="page-dashboard" class="page active">
+                            <!-- Real-time System Status -->
+                            <section class="widget large-widget">
+                <h2>Real-time System Status</h2>
                 <div class="system-metrics">
-                  <div class="metric-card">
-                    <div class="metric-label">CPU Usage</div>
-                    <div class="metric-value" id="cpu-usage">--</div>
-                  </div>
-                  <div class="metric-card">
-                    <div class="metric-label">Memory Usage</div>
-                    <div class="metric-value" id="memory-usage">--</div>
-                  </div>
-                  <div class="metric-card">
-                    <div class="metric-label">Disk Usage</div>
-                    <div class="metric-value" id="disk-usage">--</div>
-                  </div>
+                    <div class="metric-card">
+                        <h3>Model Performance</h3>
+                        <div id="model-accuracy" class="metric-value">--</div>
+                        <div class="metric-label">Accuracy</div>
+                    </div>
+                    <div class="metric-card">
+                        <h3>Processing Speed</h3>
+                        <div id="processing-speed" class="metric-value">--</div>
+                        <div class="metric-label">Predictions/sec</div>
+                    </div>
+                    <div class="metric-card">
+                        <h3>Active Models</h3>
+                        <div id="active-models" class="metric-value">--</div>
+                        <div class="metric-label">Count</div>
+                    </div>
+                    <div class="metric-card">
+                        <h3>Data Sources</h3>
+                        <div id="data-sources" class="metric-value">--</div>
+                        <div class="metric-label">Connected</div>
+                    </div>
                 </div>
-              </section>
+            </section>
 
-              <!-- Real-time Predictions Widget -->
-              <section
-                class="widget medium-widget"
-                aria-labelledby="predictions-title"
-              >
-                <h2 id="predictions-title">Real-time Predictions</h2>
-                <div id="predictions-container" class="predictions-list">
-                  <!-- Dynamically populated -->
+            <!-- Model Performance Chart -->
+            <section class="widget medium-widget">
+                <h2>Model Performance Trend</h2>
+                <div class="model-performance-info">
+                    <strong>Reference Stock:</strong> Current model performance is measured against the <span id="performance-stock-info">S&P 500 overall average</span>.
                 </div>
-              </section>
+                <canvas id="performance-chart"></canvas>
+            </section>
 
-              <!-- Performance Chart Widget -->
-              <section
-                class="widget large-widget"
-                aria-labelledby="performance-chart-title"
-              >
-                <h2 id="performance-chart-title">System Performance</h2>
-                <div class="chart-container">
-                  <canvas
-                    id="system-performance-chart"
-                    aria-label="System performance chart"
-                  ></canvas>
+            <!-- Real-time Predictions -->
+            <section class="widget medium-widget">
+                <h2>Real-time Prediction Results</h2>
+                <div class="predictions-container" id="realtime-predictions-dashboard">
+                    <div class="prediction-item">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span class="stock-symbol">AAPL</span>
+                            <span class="prediction-direction up">+2.3%</span>
+                        </div>
+                        <div class="prediction-confidence">
+                            <span class="confidence">Confidence: 87%</span>
+                            <div class="confidence-bar">
+                                <div class="confidence-fill" style="width: 87%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="prediction-item">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span class="stock-symbol">GOOGL</span>
+                            <span class="prediction-direction down">-1.2%</span>
+                        </div>
+                        <div class="prediction-confidence">
+                            <span class="confidence">Confidence: 92%</span>
+                            <div class="confidence-bar">
+                                <div class="confidence-fill" style="width: 92%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="prediction-item">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span class="stock-symbol">MSFT</span>
+                            <span class="prediction-direction up">+0.8%</span>
+                        </div>
+                        <div class="prediction-confidence">
+                            <span class="confidence">Confidence: 79%</span>
+                            <div class="confidence-bar">
+                                <div class="confidence-fill" style="width: 79%"></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-              </section>
+            </section>
 
-              <!-- Model Accuracy Widget -->
-              <section
-                class="widget medium-widget"
-                aria-labelledby="accuracy-chart-title"
-              >
-                <h2 id="accuracy-chart-title">Model Accuracy</h2>
-                <div class="chart-container">
-                  <canvas
-                    id="prediction-accuracy-chart"
-                    aria-label="Prediction accuracy chart"
-                  ></canvas>
+            <!-- Trading Volume Chart -->
+            <section class="widget large-widget">
+                <h2>Trading Volume Analysis</h2>
+                <div class="volume-analysis-container">
+                    <div class="volume-summary" id="volume-summary">
+                        <div class="volume-metric">
+                            <span class="label">Total Volume</span>
+                            <span id="total-volume">310.6M</span>
+                        </div>
+                        <div class="volume-metric">
+                            <span class="label">Average Volume</span>
+                            <span id="avg-volume">44.4M</span>
+                        </div>
+                        <div class="volume-metric">
+                            <span class="label">Max Volume</span>
+                            <span id="max-volume">NVDA (89.1M)</span>
+                        </div>
+                        <div class="volume-metric">
+                            <span class="label">Unusual Volume Detected</span>
+                            <span class="metric-value alert" id="volume-alerts">2 cases</span>
+                        </div>
+                    </div>
+                    <canvas id="volume-chart"></canvas>
                 </div>
-              </section>
+            </section>
 
-              <!-- Market Events Widget -->
-              <section
-                class="widget medium-widget"
-                aria-labelledby="events-chart-title"
-              >
-                <h2 id="events-chart-title">Market Events</h2>
-                <div class="chart-container">
-                  <canvas
-                    id="market-events-chart"
-                    aria-label="Market events chart"
-                  ></canvas>
+            <!-- System Logs -->
+            <section class="widget large-widget">
+                <h2>System Logs</h2>
+                <div class="log-container" id="system-logs">
+                    <div class="log-entry info">
+                        <span class="timestamp">14:32:15</span>
+                        <span class="log-level">INFO</span>
+                        <span class="log-message">Model training completed - Accuracy: 89.3%</span>
+                    </div>
+                    <div class="log-entry success">
+                        <span class="timestamp">14:31:42</span>
+                        <span class="log-level">SUCCESS</span>
+                        <span class="log-message">Data collection pipeline operating normally</span>
+                    </div>
+                    <div class="log-entry warning">
+                        <span class="timestamp">14:30:18</span>
+                        <span class="log-level">WARNING</span>
+                        <span class="log-message">API response delay detected: average 1.2 seconds</span>
+                    </div>
                 </div>
-              </section>
-            </div>
-          </div>
+            </section>
 
-          <!-- Other Pages (Placeholder Templates) -->
-          <div id="page-models" class="page">
-            <div class="models-grid">
-              <section class="widget large-widget">
-                <h2>Model Performance Overview</h2>
-                <div class="loading-placeholder">Loading model data...</div>
-              </section>
-            </div>
-          </div>
+            <!-- Model Comparison -->
+            <section class="widget medium-widget">
+                <h2>Model Comparison</h2>
+                <canvas id="model-comparison-chart"></canvas>
+            </section>
 
-          <div id="page-predictions" class="page">
-            <div class="predictions-grid">
-              <section class="widget large-widget">
-                <h2>Real-time Prediction Stream</h2>
-                <div class="loading-placeholder">Loading predictions...</div>
-              </section>
-            </div>
-          </div>
+            <!-- Alert Panel -->
+            <section class="widget small-widget">
+                <h2>Alerts</h2>
+                <div class="alert-list">
+                    <div class="alert-item high">
+                        <span class="alert-icon">⚠️</span>
+                        <span class="alert-message">High Volatility Detected</span>
+                    </div>
+                    <div class="alert-item medium">
+                        <span class="alert-icon">📊</span>
+                        <span class="alert-message">Model Retraining Recommended</span>
+                    </div>
+                    <div class="alert-item low">
+                        <span class="alert-icon">💾</span>
+                        <span class="alert-message">Backup Completed</span>
+                    </div>
+                </div>
+            </section>
+                </div>
 
-          <div id="page-news" class="page">
-            <div class="news-grid">
-              <section class="widget large-widget">
-                <h2>News Analysis Dashboard</h2>
-                <div class="loading-placeholder">Loading news data...</div>
-              </section>
-            </div>
-          </div>
+                <!-- Models Performance Page -->
+                <div id="page-models" class="page">
+                    <div class="models-container">
+                        <div class="models-grid">
+                            <div class="widget large-widget">
+                                <h2>Model Performance Comparison</h2>
+                                <div class="model-comparison-table">
+                                    <table class="performance-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Model</th>
+                                                <th>Accuracy</th>
+                                                <th>Precision</th>
+                                                <th>Recall</th>
+                                                <th>F1-Score</th>
+                                                <th>Processing Time</th>
+                                                <th>Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="model-performance-table">
+                                            <!-- Dynamically generated -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            
+                            <div class="widget medium-widget">
+                                <h2>Model Architecture</h2>
+                                <div class="model-architecture" id="model-architecture">
+                                    <!-- Dynamically generated -->
+                                </div>
+                            </div>
+                            
+                            <div class="widget medium-widget">
+                                <h2>Hyperparameters</h2>
+                                <div class="hyperparameters" id="hyperparameters">
+                                    <!-- Dynamically generated -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-          <div id="page-xai" class="page">
-            <div class="xai-grid">
-              <section class="widget large-widget">
-                <h2>XAI Model Explanations</h2>
-                <div class="loading-placeholder">Loading XAI analysis...</div>
-              </section>
-            </div>
-          </div>
+                <!-- Real-time Predictions Page -->
+                <div id="page-predictions" class="page">
+                    <div class="predictions-container">
+                        <div class="predictions-header">
+                            <h2>Real-time Stock Predictions</h2>
+                            <div class="prediction-controls">
+                                <select id="stock-selector">
+                                    <option value="all">All Stocks</option>
+                                    <option value="AAPL">Apple (AAPL)</option>
+                                    <option value="GOOGL">Google (GOOGL)</option>
+                                    <option value="MSFT">Microsoft (MSFT)</option>
+                                </select>
+                                <select id="timeframe-selector">
+                                    <option value="1d">1 Day</option>
+                                    <option value="1w">1 Week</option>
+                                    <option value="1m">1 Month</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="predictions-grid">
+                            <div class="widget large-widget">
+                                <h3>Prediction Chart</h3>
+                                <div class="stock-selector-container">
+                                    <div class="stock-selector-label">Select Stock for Chart:</div>
+                                    <select class="stock-selector" id="prediction-stock-selector">
+                                        <option value="AAPL">Apple Inc. (AAPL)</option>
+                                        <option value="GOOGL">Alphabet Inc. (GOOGL)</option>
+                                        <option value="MSFT">Microsoft Corp. (MSFT)</option>
+                                        <option value="AMZN">Amazon.com Inc. (AMZN)</option>
+                                        <option value="TSLA">Tesla Inc. (TSLA)</option>
+                                        <option value="META">Meta Platforms Inc. (META)</option>
+                                        <option value="NVDA">NVIDIA Corp. (NVDA)</option>
+                                        <option value="NFLX">Netflix Inc. (NFLX)</option>
+                                        <option value="JPM">JPMorgan Chase & Co. (JPM)</option>
+                                        <option value="UNH">UnitedHealth Group Inc. (UNH)</option>
+                                    </select>
+                                    <div class="chart-description" id="prediction-chart-description">
+                                        Currently displaying real-time price prediction chart for Apple Inc. (AAPL). 
+                                        The blue solid line represents the actual price, and the red dashed line represents the AI model's predicted price.
+                                    </div>
+                                </div>
+                                <div class="chart-wrapper">
+                                    <canvas id="prediction-chart"></canvas>
+                                </div>
+                            </div>
+                            
+                            <div class="widget medium-widget">
+                                <h3>Prediction Confidence</h3>
+                                <div class="confidence-meters" id="confidence-meters">
+                                    <!-- 동적으로 생성됨 -->
+                                </div>
+                            </div>
+                            
+                            <div class="widget large-widget">
+                                <h3>S&P 500 Prediction Results</h3>
+                                <div class="table-controls">
+                                    <div class="pagination-info">
+                                        <span id="pagination-info">1-20 of 500 Stocks</span>
+                                    </div>
+                                    <div class="table-search">
+                                        <input type="text" id="symbol-search" placeholder="Search Stock (e.g., AAPL)">
+                                        <select id="sector-filter">
+                                            <option value="all">All Sectors</option>
+                                            <option value="Technology">Technology</option>
+                                            <option value="Healthcare">Healthcare</option>
+                                            <option value="Financials">Financials</option>
+                                            <option value="Consumer">Consumer</option>
+                                            <option value="Industrials">Industrials</option>
+                                            <option value="Energy">Energy</option>
+                                            <option value="Utilities">Utilities</option>
+                                            <option value="Materials">Materials</option>
+                                            <option value="Real Estate">Real Estate</option>
+                                            <option value="Communication">Communication</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="predictions-table-container">
+                                    <table class="predictions-table">
+                                        <thead>
+                                            <tr>
+                                                <th>No.</th>
+                                                <th>Symbol</th>
+                                                <th>Company Name</th>
+                                                <th>Sector</th>
+                                                <th>Current Price</th>
+                                                <th>Predicted Price</th>
+                                                <th>Change %</th>
+                                                <th>Confidence</th>
+                                                <th>Prediction Time</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="predictions-table-body">
+                                            <!-- Dynamically generated -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="pagination-container">
+                                    <div class="pagination-controls">
+                                    <button id="prev-page" class="pagination-btn">◀ Previous</button>
+                                    <div class="page-numbers" id="page-numbers">
+                                        <!-- Dynamically generated -->
+                                    </div>
+                                    <button id="next-page" class="pagination-btn">Next ▶</button>
+                                </div>
+                                <div class="pagination-summary">
+                                    <select id="items-per-page">
+                                        <option value="10">10 items</option>
+                                        <option value="20" selected>20 items</option>
+                                        <option value="50">50 items</option>
+                                        <option value="100">100 items</option>
+                                    </select>
+                                </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-          <div id="page-training" class="page">
-            <div class="training-grid">
-              <section class="widget large-widget">
-                <h2>Training Pipeline Status</h2>
-                <div class="loading-placeholder">Loading training data...</div>
-              </section>
-            </div>
-          </div>
+                <!-- News Analysis Page -->
+                <div id="page-news" class="page">
+                    <div class="news-container">
+                        <div class="news-header">
+                            <h2>Real-time News Analysis</h2>
+                            <div class="news-controls">
+                                <select id="news-category">
+                                    <option value="all">All Categories</option>
+                                    <option value="market">Market</option>
+                                    <option value="stock">Individual Stock</option>
+                                    <option value="economy">Economy</option>
+                                </select>
+                                <select id="sentiment-filter">
+                                    <option value="all">All Sentiments</option>
+                                    <option value="positive">Positive</option>
+                                    <option value="negative">Negative</option>
+                                    <option value="neutral">Neutral</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="news-grid">
+                            <div class="widget large-widget">
+                                <h3>Sentiment Analysis Chart</h3>
+                                <canvas id="sentiment-chart"></canvas>
+                            </div>
+                            
+                            <div class="widget medium-widget">
+                                <h3>News Summary</h3>
+                                <div class="news-summary" id="news-summary">
+                                    <div class="summary-item">
+                                        <h4>Key Trends</h4>
+                                        <p>The market is generally showing a positive sentiment today.</p>
+                                    </div>
+                                    <div class="summary-item">
+                                        <h4>High Impact News</h4>
+                                        <p>Fed interest rate hike comments are significantly impacting the market.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="widget medium-widget">
+                                <h3>LLM Analysis Summary</h3>
+                                <div class="llm-analysis-summary" id="llm-analysis-summary">
+                                    <div class="summary-item">
+                                        <h4>Market Sentiment (LLM)</h4>
+                                        <p id="llm-market-sentiment">Loading...</p>
+                                    </div>
+                                    <div class="summary-item">
+                                        <h4>Key Event Category (LLM)</h4>
+                                        <p id="llm-event-category">Loading...</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="widget large-widget">
+                                <h3>Real-time News Feed</h3>
+                                <div class="news-feed-controls">
+                                    <button id="load-more-news" class="btn btn-gradient">Load More News</button>
+                                    <span id="news-loading-indicator" class="loading-indicator" style="display: none;">
+                                        <div class="live-dot"></div>
+                                        Loading news...
+                                    </span>
+                                </div>
+                                <div class="news-feed" id="news-feed">
+                                    <!-- Dynamically generated -->
+                                </div>
+                                <div id="news-scroll-end" class="scroll-end-message" style="display: none;">
+                                    All news loaded.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-          <div id="page-progress" class="page">
-            <div class="progress-grid">
-              <section class="widget large-widget">
-                <h2>System Progress Overview</h2>
-                <div class="loading-placeholder">Loading progress data...</div>
-              </section>
-            </div>
-          </div>
 
-          <div id="page-data" class="page">
-            <div class="data-grid">
-              <section class="widget large-widget">
-                <h2>Data Explorer</h2>
-                <div class="loading-placeholder">Loading data explorer...</div>
-              </section>
-            </div>
-          </div>
+                <!-- Feature Importance Page -->
+                <div id="page-feature-importance" class="page">
+                    <div class="xai-container">
+                        <div class="xai-header">
+                            <h2>Feature Importance Analysis</h2>
+                            <div class="xai-controls">
+                                <select id="feature-model-selector">
+                                    <option value="random_forest">Random Forest</option>
+                                    <option value="gradient_boosting">Gradient Boosting</option>
+                                    <option value="neural_network">Neural Network</option>
+                                </select>
+                                <button class="btn" id="refresh-feature-btn">Refresh Analysis</button>
+                            </div>
+                        </div>
+                        
+                        <div class="widget">
+                            <h3>Feature Importance Overview</h3>
+                            <p class="xai-description">
+                                Feature importance analysis identifies which features have the greatest impact on model predictions. This helps understand what data points the AI considers most valuable for making stock predictions.
+                            </p>
+                        </div>
 
-          <div id="page-settings" class="page">
-            <div class="settings-grid">
-              <section class="widget large-widget">
-                <h2>System Settings</h2>
-                <div class="loading-placeholder">Loading settings...</div>
-              </section>
+                        <div class="widget">
+                            <h3>Global Feature Analysis</h3>
+                            <div class="xai-grid">
+                                <div id="feature-importance-chart" class="xai-chart-container">
+                                    <h4>Feature Importance Ranking</h4>
+                                    <p>Shows the features that the model considers most important when generating predictions.</p>
+                                </div>
+                                <div id="partial-dependence-plot" class="xai-chart-container">
+                                    <h4>Partial Dependence Plot</h4>
+                                    <p>Shows how the model's predictions change when the value of a specific feature changes.</p>
+                                </div>
+                                <div id="feature-correlation-heatmap" class="xai-chart-container">
+                                    <h4>Feature Correlation Heatmap</h4>
+                                    <div id="correlation-heatmap-chart"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SHAP Analysis Page -->
+                <div id="page-shap-analysis" class="page">
+                    <div class="xai-container">
+                        <div class="xai-header">
+                            <h2>SHAP (SHapley Additive exPlanations) Analysis</h2>
+                            <div class="xai-controls">
+                                <select id="shap-model-selector">
+                                    <option value="random_forest">Random Forest</option>
+                                    <option value="gradient_boosting">Gradient Boosting</option>
+                                    <option value="neural_network">Neural Network</option>
+                                </select>
+                                <button class="btn" id="refresh-shap-btn">Refresh Analysis</button>
+                            </div>
+                        </div>
+                        
+                        <div class="widget">
+                            <h3>SHAP Overview</h3>
+                            <p class="xai-description">
+                                SHAP values provide a unified framework for understanding model predictions by showing the contribution of each feature to individual predictions and overall model behavior.
+                            </p>
+                        </div>
+
+                        <div class="widget">
+                            <h3>SHAP Analysis Results</h3>
+                            <div class="xai-grid">
+                                <div id="shap-summary-plot" class="xai-chart-container">
+                                    <h4>SHAP Summary Plot</h4>
+                                    <p>Shows the magnitude and direction of each feature's impact on the model output across the entire dataset.</p>
+                                </div>
+                                <div id="shap-force-plot" class="xai-chart-container">
+                                    <h4>SHAP Force Plot</h4>
+                                    <p>Visually shows how much each feature contributed to increasing or decreasing the prediction for a selected individual prediction.</p>
+                                </div>
+                                <div id="shap-dependence-plot" class="xai-chart-container">
+                                    <h4>SHAP Dependence Plot</h4>
+                                    <p>Shows the relationship between a feature's value and its impact on the model's output.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="widget">
+                            <h3>Individual Prediction Analysis</h3>
+                            <div class="xai-controls">
+                                <p class="xai-description">
+                                    Analyze SHAP values for specific stock predictions to understand individual prediction reasoning.
+                                </p>
+                                <select id="shap-stock-selector">
+                                    <option value="AAPL">Apple (AAPL)</option>
+                                    <option value="MSFT">Microsoft (MSFT)</option>
+                                    <option value="GOOGL">Google (GOOGL)</option>
+                                    <option value="AMZN">Amazon (AMZN)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Model Explainability Page -->
+                <div id="page-model-explainability" class="page">
+                    <div class="xai-container">
+                        <div class="xai-header">
+                            <h2>Advanced Model Explainability</h2>
+                            <div class="xai-controls">
+                                <select id="explainability-model-selector">
+                                    <option value="random_forest">Random Forest</option>
+                                    <option value="gradient_boosting">Gradient Boosting</option>
+                                    <option value="neural_network">Neural Network</option>
+                                </select>
+                                <button class="btn" id="refresh-explainability-btn">Refresh Analysis</button>
+                            </div>
+                        </div>
+                        
+                        <div class="widget">
+                            <h3>Model Interpretability Overview</h3>
+                            <p class="xai-description">
+                                Advanced techniques for understanding complex model behavior including gradient-based attribution, layer-wise analysis, and decision boundaries.
+                            </p>
+                        </div>
+
+                        <div class="widget">
+                            <h3>Advanced Interpretability Methods</h3>
+                            <div class="xai-grid">
+                                <div id="decision-tree-viz" class="xai-chart-container">
+                                    <h4>Decision Tree Visualization</h4>
+                                    <div id="decision-tree-container"></div>
+                                </div>
+                                <div id="gradient-analysis" class="xai-chart-container">
+                                    <h4>Gradient-based Attribution</h4>
+                                    <canvas id="gradient-attribution-chart"></canvas>
+                                </div>
+                                <div id="layer-wise-relevance" class="xai-chart-container">
+                                    <h4>Layer-wise Relevance Propagation</h4>
+                                    <canvas id="lrp-chart"></canvas>
+                                </div>
+                                <div id="integrated-gradients" class="xai-chart-container">
+                                    <h4>Integrated Gradients</h4>
+                                    <canvas id="integrated-gradients-chart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="widget">
+                            <h3>Model Performance Analysis</h3>
+                            <div class="xai-grid">
+                                <div id="model-performance-metrics" class="xai-chart-container">
+                                    <h4>Performance Metrics Dashboard</h4>
+                                    <canvas id="performance-metrics-chart"></canvas>
+                                </div>
+                                <div id="learning-curves" class="xai-chart-container">
+                                    <h4>Learning Curves</h4>
+                                    <canvas id="learning-curves-chart"></canvas>
+                                </div>
+                                <div id="validation-curves" class="xai-chart-container">
+                                    <h4>Validation Curves</h4>
+                                    <canvas id="validation-curves-chart"></canvas>
+                                </div>
+                                <div id="confusion-matrix" class="xai-chart-container">
+                                    <h4>Confusion Matrix and Error Analysis</h4>
+                                    <p>Shows how well the model's predictions match actual values and analyzes what types of errors it makes.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Prediction Explanation Page -->
+                <div id="page-prediction-explanation" class="page">
+                    <div class="xai-container">
+                        <div class="xai-header">
+                            <h2>Individual Prediction Explanations</h2>
+                            <div class="xai-controls">
+                                <select id="prediction-model-selector">
+                                    <option value="random_forest">Random Forest</option>
+                                    <option value="gradient_boosting">Gradient Boosting</option>
+                                    <option value="neural_network">Neural Network</option>
+                                </select>
+                                <button class="btn" id="refresh-prediction-btn">Refresh Analysis</button>
+                            </div>
+                        </div>
+                        
+                        <div class="widget">
+                            <h3>Prediction Explanation Overview</h3>
+                            <p class="xai-description">
+                                Detailed analysis of individual predictions including LIME explanations, counterfactual analysis, and what-if scenarios to understand specific prediction reasoning.
+                            </p>
+                        </div>
+
+                        <div class="widget">
+                            <h3>Local Prediction Analysis</h3>
+                            <div class="xai-controls">
+                                <p class="xai-description">
+                                    Analyzes in detail why a specific prediction was made. You can check which factors positively or negatively influenced the recent prediction of a particular stock.
+                                </p>
+                                <select id="explanation-stock-selector">
+                                    <option value="AAPL">Apple (AAPL)</option>
+                                    <option value="MSFT">Microsoft (MSFT)</option>
+                                    <option value="GOOGL">Google (GOOGL)</option>
+                                    <option value="AMZN">Amazon (AMZN)</option>
+                                </select>
+                            </div>
+                            <div class="xai-grid">
+                                <div id="lime-explanation" class="xai-chart-container">
+                                    <h4>LIME Explanation</h4>
+                                    <p>Approximates a complex model with a locally simple model to explain the main contributing features for a specific prediction.</p>
+                                </div>
+                                <div id="local-feature-importance" class="xai-chart-container">
+                                    <h4>Local Feature Importance</h4>
+                                    <canvas id="local-feature-importance-chart"></canvas>
+                                </div>
+                                <div id="counterfactual-what-if" class="xai-chart-container">
+                                    <h4>Counterfactual/What-if Analysis</h4>
+                                    <p>Shows what features need to be minimally changed to alter the prediction result. (e.g., "If the 5-day moving average was 2% higher, the prediction would have been 'up' instead of 'down'.")</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="widget">
+                            <h3>Real-time Model Monitoring</h3>
+                            <div class="xai-grid">
+                                <div id="prediction-confidence-dist" class="xai-chart-container">
+                                    <h4>Prediction Confidence Distribution</h4>
+                                    <canvas id="confidence-distribution-chart"></canvas>
+                                </div>
+                                <div id="model-drift-detection" class="xai-chart-container">
+                                    <h4>Data Drift Detection</h4>
+                                    <canvas id="drift-detection-chart"></canvas>
+                                </div>
+                                <div id="prediction-vs-actual" class="xai-chart-container">
+                                    <h4>Prediction vs Actual</h4>
+                                    <canvas id="prediction-actual-chart"></canvas>
+                                </div>
+                                <div id="ensemble-voting" class="xai-chart-container">
+                                    <h4>Ensemble Model Voting</h4>
+                                    <canvas id="ensemble-voting-chart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="widget">
+                            <h3>Model Behavior Summary and Recommendations</h3>
+                            <div id="xai-summary-recommendation">
+                                <p><strong>Current Model Behavior Summary:</strong></p>
+                                <ul>
+                                    <li>The current model tends to use <strong>'recent 5-day trading volume change'</strong> and <strong>'news article sentiment score'</strong> as the most important predictors.</li>
+                                    <li>Specifically, when predicting technology stocks, it gives high weight to the <strong>'correlation with the Nasdaq index'</strong> feature.</li>
+                                    <li>The model shows more reliance on long-term moving averages than short-term volatility.</li>
+                                </ul>
+                                <p><strong>Recommendations:</strong></p>
+                                <ul>
+                                    <li>If prediction confidence is below 80%, it is recommended to take a conservative approach as the prediction is likely influenced by volatile market conditions.</li>
+                                    <li>You can refer to 'Counterfactual Analysis' to see what factors can change predictions and use this for your investment strategy.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <!-- Debug Dashboard Page -->
+                <div id="page-debug" class="page">
+                    <div class="debug-container">
+                        <div class="debug-header">
+                            <h2>🔍 System Debug Dashboard</h2>
+                            <div class="debug-actions">
+                                <button class="btn btn-primary" onclick="debugDashboard.refreshAll()">
+                                    <span>🔄</span> Refresh All
+                                </button>
+                                <button class="btn btn-export" onclick="debugDashboard.exportReport()">
+                                    <span>📊</span> Export Report
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="debug-grid">
+                            <!-- System Overview -->
+                            <div class="widget large-widget">
+                                <h3>📊 System Overview</h3>
+                                <div class="system-status-grid">
+                                    <div class="status-card">
+                                        <div class="status-indicator" id="overall-status"></div>
+                                        <div class="status-info">
+                                            <h4>Overall System</h4>
+                                            <span id="overall-status-text">Checking...</span>
+                                        </div>
+                                    </div>
+                                    <div class="status-card">
+                                        <div class="status-indicator" id="server-status"></div>
+                                        <div class="status-info">
+                                            <h4>Server Connection</h4>
+                                            <span id="server-status-text">Checking...</span>
+                                        </div>
+                                    </div>
+                                    <div class="status-card">
+                                        <div class="status-indicator" id="network-status"></div>
+                                        <div class="status-info">
+                                            <h4>Network Status</h4>
+                                            <span id="network-status-text">Checking...</span>
+                                        </div>
+                                    </div>
+                                    <div class="status-card">
+                                        <div class="status-indicator" id="api-status"></div>
+                                        <div class="status-info">
+                                            <h4>API Services</h4>
+                                            <span id="api-status-text">Checking...</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Chart Rendering Status -->
+                            <div class="widget large-widget">
+                                <h3>📈 Chart Rendering Status</h3>
+                                <div class="pipeline-container">
+                                    <div class="pipeline-section">
+                                        <h4>Dashboard Charts</h4>
+                                        <div class="chart-status-list" id="dashboard-charts-status">
+                                            <!-- Dynamically populated -->
+                                        </div>
+                                    </div>
+                                    <div class="pipeline-section">
+                                        <h4>Prediction Charts</h4>
+                                        <div class="chart-status-list" id="prediction-charts-status">
+                                            <!-- Dynamically populated -->
+                                        </div>
+                                    </div>
+                                    <div class="pipeline-section">
+                                        <h4>XAI Charts</h4>
+                                        <div class="chart-status-list" id="xai-charts-status">
+                                            <!-- Dynamically populated -->
+                                        </div>
+                                    </div>
+                                    <div class="pipeline-section">
+                                        <h4>Training Charts</h4>
+                                        <div class="chart-status-list" id="training-charts-status">
+                                            <!-- Dynamically populated -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- API & Data Pipeline Status -->
+                            <div class="widget medium-widget">
+                                <h3>🔗 API & Data Pipeline</h3>
+                                <div class="api-pipeline-status" id="api-pipeline-status">
+                                    <!-- Dynamically populated -->
+                                </div>
+                            </div>
+
+                            <!-- Feature Status -->
+                            <div class="widget medium-widget">
+                                <h3>⚙️ Feature Status</h3>
+                                <div class="feature-status-list" id="feature-status-list">
+                                    <!-- Dynamically populated -->
+                                </div>
+                            </div>
+
+                            <!-- Performance Metrics -->
+                            <div class="widget medium-widget">
+                                <h3>⚡ Performance Metrics</h3>
+                                <div class="performance-metrics" id="performance-metrics">
+                                    <div class="metric-item">
+                                        <span class="metric-label">Chart Load Time:</span>
+                                        <span class="metric-value" id="chart-load-time">-</span>
+                                    </div>
+                                    <div class="metric-item">
+                                        <span class="metric-label">API Response Time:</span>
+                                        <span class="metric-value" id="api-response-time">-</span>
+                                    </div>
+                                    <div class="metric-item">
+                                        <span class="metric-label">Memory Usage:</span>
+                                        <span class="metric-value" id="memory-usage">-</span>
+                                    </div>
+                                    <div class="metric-item">
+                                        <span class="metric-label">JS Heap Size:</span>
+                                        <span class="metric-value" id="js-heap-size">-</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Error Log -->
+                            <div class="widget medium-widget">
+                                <h3>🚨 Recent Errors</h3>
+                                <div class="error-log" id="error-log">
+                                    <div class="log-controls">
+                                        <button class="btn-small" onclick="debugDashboard.clearErrors()">Clear</button>
+                                        <button class="btn-small" onclick="debugDashboard.refreshErrors()">Refresh</button>
+                                    </div>
+                                    <div class="error-list" id="error-list">
+                                        <!-- Dynamically populated -->
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Debug Console -->
+                            <div class="widget large-widget">
+                                <h3>🖥️ Debug Console</h3>
+                                <div class="debug-console">
+                                    <div class="console-output" id="console-output">
+                                        <div class="console-line">
+                                            <span class="console-timestamp">[2024-08-12 14:33:00]</span>
+                                            <span class="console-level info">[INFO]</span>
+                                            <span class="console-message">Debug Dashboard initialized</span>
+                                        </div>
+                                    </div>
+                                    <div class="console-controls">
+                                        <input type="text" id="console-input" placeholder="Enter debug command..." class="console-input">
+                                        <button class="btn-small" onclick="debugDashboard.executeCommand()">Execute</button>
+                                        <button class="btn-small" onclick="debugDashboard.clearConsole()">Clear</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
-        </div>
-      </main>
+        </main>
     </div>
 
-    <!-- Error Toast Container -->
-    <div
-      id="toast-container"
-      class="toast-container"
-      aria-live="polite"
-      aria-atomic="true"
-    ></div>
-
-    <!-- Main Application Script -->
-    <script type="module">
-      // Import and start the modern application
-      import { initializeApp } from './src/main.js';
-
-      // The application will initialize automatically
-      console.log('[HTML] Modern dashboard loading...');
+    <!-- External Dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Core Modules (Load First) -->
+    <script src="modules/ModuleManager.js"></script>
+    <script src="modules/EventBus.js"></script>
+    <script src="modules/DataService.js"></script>
+    <script src="modules/APIManager.js"></script>
+    <script src="modules/ChartManager.js"></script>
+    <script src="modules/PageController.js"></script>
+    <script src="modules/ApplicationController.js"></script>
+    
+    <!-- Legacy Scripts (Keep for compatibility) -->
+    <script src="chart-utils.js"></script>
+    <script src="common-functions.js"></script>
+    <script src="translator.js"></script>
+    <script src="router.js"></script>
+    <script src="sp500-api-manager.js"></script>
+    <script src="api-config-panel.js"></script>
+    <script src="news-analyzer.js"></script>
+    <script src="dashboard-extended.js"></script>
+    <script src="dashboard.js"></script>
+    <script src="debug-dashboard.js"></script>
+    
+    <!-- Module System Integration -->
+    <script>
+      // Initialize module system when DOM is ready
+      document.addEventListener('DOMContentLoaded', () => {
+        console.log('🎯 Starting modular dashboard system...');
+        
+        // Check if modules are properly loaded
+        if (!window.ModuleManager) {
+          console.error('❌ ModuleManager failed to load!');
+          return;
+        }
+        
+        console.log('✅ Module system ready');
+      });
     </script>
-
-    <style>
-      /* Loading Indicator Styles */
-      .loading-indicator {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: var(--background-color, #f8f9fa);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        z-index: 9999;
-      }
-
-      .loading-spinner {
-        width: 40px;
-        height: 40px;
-        border: 4px solid #e3e3e3;
-        border-top: 4px solid #007bff;
-        border-radius: 50%;
-        animation: spin 1s linear infinite;
-      }
-
-      .loading-text {
-        margin-top: 1rem;
-        color: #6c757d;
-        font-size: 0.9rem;
-      }
-
-      @keyframes spin {
-        0% {
-          transform: rotate(0deg);
-        }
-        100% {
-          transform: rotate(360deg);
-        }
-      }
-
-      .loading-placeholder {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        min-height: 200px;
-        color: #6c757d;
-        font-style: italic;
-      }
-
-      .error-message {
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        background: #fff;
-        border: 1px solid #dc3545;
-        border-radius: 8px;
-        padding: 1rem;
-        max-width: 400px;
-        z-index: 10000;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-      }
-
-      .error-message h3 {
-        color: #dc3545;
-        margin: 0 0 0.5rem 0;
-        font-size: 1rem;
-      }
-
-      .error-message p {
-        margin: 0 0 0.5rem 0;
-        font-size: 0.9rem;
-      }
-
-      .error-message button {
-        background: #dc3545;
-        color: white;
-        border: none;
-        padding: 0.25rem 0.5rem;
-        border-radius: 4px;
-        cursor: pointer;
-        font-size: 0.8rem;
-      }
-    </style>
-  </body>
+</body>
 </html>

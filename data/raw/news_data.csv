@@ -1,1 +1,8 @@
 title,content,sentiment,sentiment_score,timestamp,source,category
+"S&P 500 Reaches New High","The S&P 500 index reached a new all-time high today driven by strong tech sector performance","positive",0.8,"2025-08-12T09:00:00Z","MarketWatch","market"
+"Federal Reserve Policy Update","Fed maintains current interest rates amid economic uncertainty","neutral",0.5,"2025-08-12T09:15:00Z","Reuters","policy"
+"Tech Stocks Rally Continues","Technology companies lead market gains with strong earnings reports","positive",0.9,"2025-08-12T09:30:00Z","TechCrunch","sector"
+"Energy Sector Mixed Results","Oil prices fluctuate as energy companies report varied quarterly results","neutral",0.4,"2025-08-12T09:45:00Z","Bloomberg","sector"
+"Banking Stocks Show Strength","Financial sector demonstrates resilience with solid lending growth","positive",0.7,"2025-08-12T10:00:00Z","Wall Street Journal","sector"
+"Market Volatility Expected","Analysts predict increased volatility ahead of earnings season","negative",0.3,"2025-08-12T10:15:00Z","CNBC","analysis"
+"Consumer Confidence Rising","Recent surveys show improving consumer sentiment and spending","positive",0.8,"2025-08-12T10:30:00Z","Economic Times","economy"

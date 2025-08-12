@@ -7,8 +7,13 @@
     "src/lib/polyfills.js"
   ],
   "scripts": {
-    "dev": "python3 server.py",
-    "start": "python3 server.py",
+    "dev": "./start-dev.sh http-server",
+    "serve": "./start-dev.sh serve",
+    "start": "npm run dev",
+    "python-server": "./start-dev.sh python",
+    "dev:force": "./start-dev.sh http-server --force",
+    "dev:simple": "npx http-server -p 8080 -c-1 --cors",
+    "serve:simple": "npx serve -s . -p 8080",
     "test": "echo \"No tests configured\" && exit 0",
     "lint": "eslint .",
     "format": "prettier --write ."
