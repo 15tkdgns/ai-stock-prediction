@@ -49,6 +49,9 @@
                 <li><a href="#prediction-explanation" class="nav-link" data-page="prediction-explanation">
                     <span class="nav-icon">💡</span> Prediction Explanation
                 </a></li>
+                <li><a href="#architecture" class="nav-link" data-page="architecture">
+                    <span class="nav-icon">🏗️</span> System Architecture
+                </a></li>
                 <li><a href="#debug" class="nav-link" data-page="debug">
                     <span class="nav-icon">🔍</span> Debug Dashboard
                 </a></li>
@@ -80,7 +83,7 @@
                             <div class="language-option" data-lang="de">🇩🇪 Deutsch</div>
                         </div>
                     </div>
-                    <button class="btn btn-gradient" onclick="dashboard.refreshAllData()">
+                    <button class="btn btn-gradient" onclick="dashboard.refreshAllData(); if(window.recoverAllCharts) window.recoverAllCharts();">
                         <span>🔄</span> Refresh
                     </button>
                     <button class="btn btn-export" onclick="dashboard.exportData()">
@@ -132,48 +135,6 @@
                 <canvas id="performance-chart"></canvas>
             </section>
 
-            <!-- Real-time Predictions -->
-            <section class="widget medium-widget">
-                <h2>Real-time Prediction Results</h2>
-                <div class="predictions-container" id="realtime-predictions-dashboard">
-                    <div class="prediction-item">
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <span class="stock-symbol">AAPL</span>
-                            <span class="prediction-direction up">+2.3%</span>
-                        </div>
-                        <div class="prediction-confidence">
-                            <span class="confidence">Confidence: 87%</span>
-                            <div class="confidence-bar">
-                                <div class="confidence-fill" style="width: 87%"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="prediction-item">
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <span class="stock-symbol">GOOGL</span>
-                            <span class="prediction-direction down">-1.2%</span>
-                        </div>
-                        <div class="prediction-confidence">
-                            <span class="confidence">Confidence: 92%</span>
-                            <div class="confidence-bar">
-                                <div class="confidence-fill" style="width: 92%"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="prediction-item">
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <span class="stock-symbol">MSFT</span>
-                            <span class="prediction-direction up">+0.8%</span>
-                        </div>
-                        <div class="prediction-confidence">
-                            <span class="confidence">Confidence: 79%</span>
-                            <div class="confidence-bar">
-                                <div class="confidence-fill" style="width: 79%"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
 
             <!-- Trading Volume Chart -->
             <section class="widget large-widget">
@@ -201,27 +162,6 @@
                 </div>
             </section>
 
-            <!-- System Logs -->
-            <section class="widget large-widget">
-                <h2>System Logs</h2>
-                <div class="log-container" id="system-logs">
-                    <div class="log-entry info">
-                        <span class="timestamp">14:32:15</span>
-                        <span class="log-level">INFO</span>
-                        <span class="log-message">Model training completed - Accuracy: 89.3%</span>
-                    </div>
-                    <div class="log-entry success">
-                        <span class="timestamp">14:31:42</span>
-                        <span class="log-level">SUCCESS</span>
-                        <span class="log-message">Data collection pipeline operating normally</span>
-                    </div>
-                    <div class="log-entry warning">
-                        <span class="timestamp">14:30:18</span>
-                        <span class="log-level">WARNING</span>
-                        <span class="log-message">API response delay detected: average 1.2 seconds</span>
-                    </div>
-                </div>
-            </section>
 
             <!-- Model Comparison -->
             <section class="widget medium-widget">
@@ -229,24 +169,6 @@
                 <canvas id="model-comparison-chart"></canvas>
             </section>
 
-            <!-- Alert Panel -->
-            <section class="widget small-widget">
-                <h2>Alerts</h2>
-                <div class="alert-list">
-                    <div class="alert-item high">
-                        <span class="alert-icon">⚠️</span>
-                        <span class="alert-message">High Volatility Detected</span>
-                    </div>
-                    <div class="alert-item medium">
-                        <span class="alert-icon">📊</span>
-                        <span class="alert-message">Model Retraining Recommended</span>
-                    </div>
-                    <div class="alert-item low">
-                        <span class="alert-icon">💾</span>
-                        <span class="alert-message">Backup Completed</span>
-                    </div>
-                </div>
-            </section>
                 </div>
 
                 <!-- Models Performance Page -->
@@ -288,6 +210,16 @@
                                     <!-- Dynamically generated -->
                                 </div>
                             </div>
+                            
+                            <div class="widget medium-widget">
+                                <h2>Training Performance</h2>
+                                <canvas id="training-loss-chart"></canvas>
+                            </div>
+                            
+                            <div class="widget medium-widget">
+                                <h2>Cross Validation Results</h2>
+                                <canvas id="cross-validation-chart"></canvas>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -297,19 +229,6 @@
                     <div class="predictions-container">
                         <div class="predictions-header">
                             <h2>Real-time Stock Predictions</h2>
-                            <div class="prediction-controls">
-                                <select id="stock-selector">
-                                    <option value="all">All Stocks</option>
-                                    <option value="AAPL">Apple (AAPL)</option>
-                                    <option value="GOOGL">Google (GOOGL)</option>
-                                    <option value="MSFT">Microsoft (MSFT)</option>
-                                </select>
-                                <select id="timeframe-selector">
-                                    <option value="1d">1 Day</option>
-                                    <option value="1w">1 Week</option>
-                                    <option value="1m">1 Month</option>
-                                </select>
-                            </div>
                         </div>
                         
                         <div class="predictions-grid">
@@ -318,19 +237,20 @@
                                 <div class="stock-selector-container">
                                     <div class="stock-selector-label">Select Stock for Chart:</div>
                                     <select class="stock-selector" id="prediction-stock-selector">
-                                        <option value="AAPL">Apple Inc. (AAPL)</option>
-                                        <option value="GOOGL">Alphabet Inc. (GOOGL)</option>
-                                        <option value="MSFT">Microsoft Corp. (MSFT)</option>
-                                        <option value="AMZN">Amazon.com Inc. (AMZN)</option>
-                                        <option value="TSLA">Tesla Inc. (TSLA)</option>
-                                        <option value="META">Meta Platforms Inc. (META)</option>
-                                        <option value="NVDA">NVIDIA Corp. (NVDA)</option>
-                                        <option value="NFLX">Netflix Inc. (NFLX)</option>
-                                        <option value="JPM">JPMorgan Chase & Co. (JPM)</option>
+                                        <option value="A">Agilent Technologies Inc. (A)</option>
+                                        <option value="ABBV">AbbVie Inc. (ABBV)</option>
+                                        <option value="ABT">Abbott Laboratories (ABT)</option>
+                                        <option value="ACN">Accenture plc (ACN)</option>
+                                        <option value="ADBE">Adobe Inc. (ADBE)</option>
+                                        <option value="AES">The AES Corporation (AES)</option>
+                                        <option value="AFL">Aflac Incorporated (AFL)</option>
+                                        <option value="AMD">Advanced Micro Devices Inc. (AMD)</option>
+                                        <option value="AOS">A. O. Smith Corporation (AOS)</option>
+                                        <option value="MMM">3M Company (MMM)</option>
                                         <option value="UNH">UnitedHealth Group Inc. (UNH)</option>
                                     </select>
                                     <div class="chart-description" id="prediction-chart-description">
-                                        Currently displaying real-time price prediction chart for Apple Inc. (AAPL). 
+                                        Currently displaying real-time price prediction chart for Agilent Technologies Inc. (A). 
                                         The blue solid line represents the actual price, and the red dashed line represents the AI model's predicted price.
                                     </div>
                                 </div>
@@ -436,6 +356,7 @@
                             <div class="widget large-widget">
                                 <h3>Sentiment Analysis Chart</h3>
                                 <canvas id="sentiment-chart"></canvas>
+                                <canvas id="sentiment-timeline-chart" style="margin-top: 20px;"></canvas>
                             </div>
                             
                             <div class="widget medium-widget">
@@ -466,6 +387,13 @@
                                 </div>
                             </div>
                             
+                            <div class="widget medium-widget">
+                                <h3>Advanced NLP Analysis</h3>
+                                <canvas id="topic-modeling-visualization"></canvas>
+                                <canvas id="attention-weights-chart" style="margin-top: 15px;"></canvas>
+                                <canvas id="embedding-tsne-chart" style="margin-top: 15px;"></canvas>
+                            </div>
+                            
                             <div class="widget large-widget">
                                 <h3>Real-time News Feed</h3>
                                 <div class="news-feed-controls">
@@ -491,7 +419,7 @@
                 <div id="page-feature-importance" class="page">
                     <div class="xai-container">
                         <div class="xai-header">
-                            <h2>Feature Importance Analysis</h2>
+                            <h2>Feature Importance Analysis <span style="color: #ff6b6b; font-size: 0.8em;">(Mock Data)</span></h2>
                             <div class="xai-controls">
                                 <select id="feature-model-selector">
                                     <option value="random_forest">Random Forest</option>
@@ -515,14 +443,24 @@
                                 <div id="feature-importance-chart" class="xai-chart-container">
                                     <h4>Feature Importance Ranking</h4>
                                     <p>Shows the features that the model considers most important when generating predictions.</p>
+                                    <canvas id="feature-importance-canvas" style="margin-top: 10px;"></canvas>
                                 </div>
                                 <div id="partial-dependence-plot" class="xai-chart-container">
                                     <h4>Partial Dependence Plot</h4>
                                     <p>Shows how the model's predictions change when the value of a specific feature changes.</p>
+                                    <canvas id="partial-dependence-chart"></canvas>
                                 </div>
                                 <div id="feature-correlation-heatmap" class="xai-chart-container">
                                     <h4>Feature Correlation Heatmap</h4>
                                     <div id="correlation-heatmap-chart"></div>
+                                </div>
+                                <div class="xai-chart-container">
+                                    <h4>Feature Distribution Chart</h4>
+                                    <canvas id="feature-distribution-chart"></canvas>
+                                </div>
+                                <div class="xai-chart-container">
+                                    <h4>Feature Detail Chart</h4>
+                                    <canvas id="feature-detail-chart"></canvas>
                                 </div>
                             </div>
                         </div>
@@ -555,16 +493,19 @@
                             <h3>SHAP Analysis Results</h3>
                             <div class="xai-grid">
                                 <div id="shap-summary-plot" class="xai-chart-container">
-                                    <h4>SHAP Summary Plot</h4>
+                                    <h4>SHAP Summary Plot <span style="color: #ff6b6b; font-size: 0.7em;">(Mock Data)</span></h4>
                                     <p>Shows the magnitude and direction of each feature's impact on the model output across the entire dataset.</p>
+                                    <canvas id="shap-summary-chart" style="margin-top: 10px;"></canvas>
                                 </div>
                                 <div id="shap-force-plot" class="xai-chart-container">
                                     <h4>SHAP Force Plot</h4>
                                     <p>Visually shows how much each feature contributed to increasing or decreasing the prediction for a selected individual prediction.</p>
+                                    <div id="shap-force-chart"></div>
                                 </div>
                                 <div id="shap-dependence-plot" class="xai-chart-container">
                                     <h4>SHAP Dependence Plot</h4>
                                     <p>Shows the relationship between a feature's value and its impact on the model's output.</p>
+                                    <canvas id="shap-dependence-chart"></canvas>
                                 </div>
                             </div>
                         </div>
@@ -576,10 +517,16 @@
                                     Analyze SHAP values for specific stock predictions to understand individual prediction reasoning.
                                 </p>
                                 <select id="shap-stock-selector">
-                                    <option value="AAPL">Apple (AAPL)</option>
-                                    <option value="MSFT">Microsoft (MSFT)</option>
-                                    <option value="GOOGL">Google (GOOGL)</option>
-                                    <option value="AMZN">Amazon (AMZN)</option>
+                                    <option value="A">Agilent Technologies (A)</option>
+                                    <option value="ABBV">AbbVie Inc. (ABBV)</option>
+                                    <option value="ABT">Abbott Laboratories (ABT)</option>
+                                    <option value="ACN">Accenture plc (ACN)</option>
+                                    <option value="ADBE">Adobe Inc. (ADBE)</option>
+                                    <option value="AES">AES Corporation (AES)</option>
+                                    <option value="AFL">Aflac Inc. (AFL)</option>
+                                    <option value="AMD">Advanced Micro Devices (AMD)</option>
+                                    <option value="AOS">A. O. Smith Corp. (AOS)</option>
+                                    <option value="MMM">3M Company (MMM)</option>
                                 </select>
                             </div>
                         </div>
@@ -677,52 +624,50 @@
                         </div>
 
                         <div class="widget">
-                            <h3>Local Prediction Analysis</h3>
+                            <h3>Current Prediction Analysis</h3>
                             <div class="xai-controls">
                                 <p class="xai-description">
-                                    Analyzes in detail why a specific prediction was made. You can check which factors positively or negatively influenced the recent prediction of a particular stock.
+                                    Analyzes in detail why a specific prediction was made. Shows confidence levels and feature contributions for the current prediction.
                                 </p>
                                 <select id="explanation-stock-selector">
-                                    <option value="AAPL">Apple (AAPL)</option>
-                                    <option value="MSFT">Microsoft (MSFT)</option>
-                                    <option value="GOOGL">Google (GOOGL)</option>
-                                    <option value="AMZN">Amazon (AMZN)</option>
+                                    <option value="A">Agilent Technologies (A)</option>
+                                    <option value="ABBV">AbbVie Inc. (ABBV)</option>
+                                    <option value="ABT">Abbott Laboratories (ABT)</option>
+                                    <option value="ACN">Accenture plc (ACN)</option>
+                                    <option value="ADBE">Adobe Inc. (ADBE)</option>
+                                    <option value="AES">AES Corporation (AES)</option>
+                                    <option value="AFL">Aflac Inc. (AFL)</option>
+                                    <option value="AMD">Advanced Micro Devices (AMD)</option>
+                                    <option value="AOS">A. O. Smith Corp. (AOS)</option>
+                                    <option value="MMM">3M Company (MMM)</option>
                                 </select>
                             </div>
                             <div class="xai-grid">
-                                <div id="lime-explanation" class="xai-chart-container">
-                                    <h4>LIME Explanation</h4>
-                                    <p>Approximates a complex model with a locally simple model to explain the main contributing features for a specific prediction.</p>
+                                <div id="individual-prediction" class="xai-chart-container">
+                                    <h4>Current Prediction Analysis</h4>
+                                    <canvas id="individual-prediction-chart"></canvas>
                                 </div>
-                                <div id="local-feature-importance" class="xai-chart-container">
-                                    <h4>Local Feature Importance</h4>
-                                    <canvas id="local-feature-importance-chart"></canvas>
+                                <div id="feature-contribution" class="xai-chart-container">
+                                    <h4>Feature Contribution Breakdown</h4>
+                                    <canvas id="feature-contribution-chart"></canvas>
                                 </div>
-                                <div id="counterfactual-what-if" class="xai-chart-container">
-                                    <h4>Counterfactual/What-if Analysis</h4>
-                                    <p>Shows what features need to be minimally changed to alter the prediction result. (e.g., "If the 5-day moving average was 2% higher, the prediction would have been 'up' instead of 'down'.")</p>
+                                <div id="similar-predictions" class="xai-chart-container">
+                                    <h4>Similar Historical Predictions</h4>
+                                    <canvas id="similar-predictions-chart"></canvas>
                                 </div>
                             </div>
                         </div>
                         
                         <div class="widget">
-                            <h3>Real-time Model Monitoring</h3>
+                            <h3>Prediction Performance Analysis</h3>
                             <div class="xai-grid">
-                                <div id="prediction-confidence-dist" class="xai-chart-container">
-                                    <h4>Prediction Confidence Distribution</h4>
-                                    <canvas id="confidence-distribution-chart"></canvas>
+                                <div id="prediction-confidence" class="xai-chart-container">
+                                    <h4>Confidence Over Time</h4>
+                                    <canvas id="prediction-confidence-chart"></canvas>
                                 </div>
-                                <div id="model-drift-detection" class="xai-chart-container">
-                                    <h4>Data Drift Detection</h4>
-                                    <canvas id="drift-detection-chart"></canvas>
-                                </div>
-                                <div id="prediction-vs-actual" class="xai-chart-container">
-                                    <h4>Prediction vs Actual</h4>
-                                    <canvas id="prediction-actual-chart"></canvas>
-                                </div>
-                                <div id="ensemble-voting" class="xai-chart-container">
-                                    <h4>Ensemble Model Voting</h4>
-                                    <canvas id="ensemble-voting-chart"></canvas>
+                                <div id="prediction-timeline" class="xai-chart-container">
+                                    <h4>24-Hour Prediction Timeline</h4>
+                                    <canvas id="prediction-timeline-chart"></canvas>
                                 </div>
                             </div>
                         </div>
@@ -747,6 +692,33 @@
                 </div>
 
 
+
+                <!-- System Architecture Page -->
+                <div id="page-architecture" class="page">
+                    <div class="architecture-container">
+                        <div class="architecture-header">
+                            <h2>🏗️ System Architecture Overview</h2>
+                            <div class="architecture-controls">
+                                <select id="arch-view-mode" onchange="architecture.changeView()">
+                                    <option value="overview">System Overview</option>
+                                    <option value="data-flow">Data Flow</option>
+                                    <option value="component">Component Details</option>
+                                    <option value="real-time">Real-time Status</option>
+                                </select>
+                                <button class="btn btn-primary" onclick="architecture.refreshArchitecture()">
+                                    <span>🔄</span> Refresh
+                                </button>
+                                <button class="btn btn-export" onclick="architecture.exportDiagram()">
+                                    <span>💾</span> Export Diagram
+                                </button>
+                            </div>
+                        </div>
+
+                        <div id="architecture-diagram" class="architecture-diagram-container">
+                            <!-- Architecture content will be rendered here -->
+                        </div>
+                    </div>
+                </div>
 
                 <!-- Debug Dashboard Page -->
                 <div id="page-debug" class="page">
@@ -911,6 +883,14 @@
     <!-- External Dependencies -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
+    <!-- Constants and Utilities -->
+    <script type="module" src="constants/ElementIDs.js"></script>
+    
+    <!-- XAI Modules -->
+    <script type="module" src="modules/XAI/FeatureImportanceRenderer.js"></script>
+    <script type="module" src="modules/XAI/ShapAnalysisRenderer.js"></script>
+    <script type="module" src="modules/XAI/XAIManager.js"></script>
+    
     <!-- Core Modules (Load First) -->
     <script src="modules/ModuleManager.js"></script>
     <script src="modules/EventBus.js"></script>
@@ -930,12 +910,13 @@
     <script src="news-analyzer.js"></script>
     <script src="dashboard-extended.js"></script>
     <script src="dashboard.js"></script>
+    <script src="architecture.js"></script>
     <script src="debug-dashboard.js"></script>
     
     <!-- Module System Integration -->
     <script>
       // Initialize module system when DOM is ready
-      document.addEventListener('DOMContentLoaded', () => {
+      document.addEventListener('DOMContentLoaded', async () => {
         console.log('🎯 Starting modular dashboard system...');
         
         // Check if modules are properly loaded
@@ -945,7 +926,137 @@
         }
         
         console.log('✅ Module system ready');
+        
+        // Initialize XAI Module System
+        try {
+          console.log('🔬 Initializing XAI Module System...');
+          
+          // Import XAI modules using dynamic import
+          const { XAIManager } = await import('./modules/XAI/XAIManager.js');
+          
+          // Create global XAI manager instance
+          window.xaiManager = new XAIManager();
+          
+          // Initialize XAI system
+          await window.xaiManager.init();
+          
+          console.log('✅ XAI Module System initialized successfully');
+          
+          // Override dashboard-extended.js XAI methods if available
+          if (window.dashboardExtended) {
+            // Replace XAI methods with new module calls
+            window.dashboardExtended.updateAllXAICharts = () => {
+              console.log('[OVERRIDE] Using new XAI module system');
+              window.xaiManager.updateAllXAICharts();
+            };
+            
+            window.dashboardExtended.loadXAIData = async () => {
+              console.log('[OVERRIDE] Using new XAI module loadXAIData');
+              await window.xaiManager.loadXAIData();
+            };
+          }
+          
+        } catch (error) {
+          console.error('❌ Failed to initialize XAI Module System:', error);
+        }
       });
+      
+      // Global chart recovery function
+      function recoverAllCharts() {
+        console.log('🔧 Attempting to recover all charts...');
+        
+        // Recover dashboard charts
+        if (window.dashboard && typeof window.dashboard.refreshAllCharts === 'function') {
+          console.log('✅ Recovering dashboard charts...');
+          window.dashboard.refreshAllCharts();
+        }
+        
+        // Recover router charts
+        if (window.router && window.router.currentPage) {
+          console.log(`✅ Re-initializing ${window.router.currentPage} page charts...`);
+          setTimeout(() => {
+            switch (window.router.currentPage) {
+              case 'predictions':
+                if (typeof window.router.retryPredictionCharts === 'function') {
+                  window.router.retryPredictionCharts();
+                }
+                break;
+              case 'news':
+                if (typeof window.router.retryNewsCharts === 'function') {
+                  window.router.retryNewsCharts();
+                }
+                break;
+              case 'feature-importance':
+              case 'shap-analysis':
+                if (window.xaiManager && window.xaiManager.isInitialized) {
+                  window.xaiManager.updateAllXAICharts();
+                }
+                break;
+              case 'model-explainability':
+                if (typeof window.router.retryModelExplainabilityCharts === 'function') {
+                  window.router.retryModelExplainabilityCharts();
+                }
+                break;
+              case 'prediction-explanation':
+                console.log('🔧 Recovering Prediction Explanation charts...');
+                if (typeof window.router.initializePredictionExplanationPage === 'function') {
+                  window.router.initializePredictionExplanationPage();
+                }
+                break;
+            }
+          }, 500);
+        }
+      }
+      
+      // Make recovery function globally available
+      window.recoverAllCharts = recoverAllCharts;
+      
+      // Auto-recover charts after full page load
+      setTimeout(() => {
+        recoverAllCharts();
+      }, 3000);
+
+      // Test function for debugging selectors
+      function testSelectors() {
+        console.log('🔧 Testing selectors after syntax fix...');
+        console.log('dashboardExtended available:', !!window.dashboardExtended);
+        
+        if (window.dashboardExtended) {
+          console.log('✅ dashboardExtended is available!');
+          console.log('Calling setupRealtimePredictionsControls...');
+          window.dashboardExtended.setupRealtimePredictionsControls();
+          
+          // Test if event listeners are working
+          const stockSelector = document.getElementById('stock-selector');
+          const timeframeSelector = document.getElementById('timeframe-selector');
+          
+          if (stockSelector && timeframeSelector) {
+            console.log('🎯 Testing event triggers...');
+            stockSelector.dispatchEvent(new Event('change'));
+            timeframeSelector.dispatchEvent(new Event('change'));
+          }
+        } else {
+          console.error('❌ dashboardExtended still not available!');
+        }
+        
+        // Test direct DOM access
+        const stockSelector = document.getElementById('stock-selector');
+        const timeframeSelector = document.getElementById('timeframe-selector');
+        
+        console.log('Direct DOM access:');
+        console.log('- stock-selector found:', !!stockSelector);
+        console.log('- timeframe-selector found:', !!timeframeSelector);
+        
+        if (stockSelector) {
+          console.log('- stock-selector options:', stockSelector.options.length);
+          console.log('- stock-selector value:', stockSelector.value);
+        }
+        
+        if (timeframeSelector) {
+          console.log('- timeframe-selector options:', timeframeSelector.options.length);
+          console.log('- timeframe-selector value:', timeframeSelector.value);
+        }
+      }
     </script>
 </body>
 </html>
